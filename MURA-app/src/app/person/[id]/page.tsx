@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PersonView } from "@/components/person/person-view";
 
-export const metadata: Metadata = { title: "Person" };
+export const metadata: Metadata = { title: "Человек" };
 
 /**
  * A person is addressed by canonical archive id.

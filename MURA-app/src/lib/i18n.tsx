@@ -10,6 +10,7 @@ const ui = {
     begin: "Начать",
     tagline: "Голос вашей семьи.\nНавсегда.",
     memoryLives: "Каждое воспоминание заслуживает жить.",
+    goodNight: "Доброй ночи",
     goodMorning: "Доброе утро",
     goodAfternoon: "Добрый день",
     goodEvening: "Добрый вечер",
@@ -17,7 +18,12 @@ const ui = {
     recordMemory: "Записать воспоминание",
     pressAndSpeak: "Нажмите и говорите",
     familyTree: "Семейное древо",
-    recentRecordings: "Недавние записи",
+    // One object, one word. The archive used to call the same thing
+    // «рассказ» in the tab bar, «воспоминание» on its own page and «запись»
+    // on Home — three names for one object, so the user had to work out that
+    // they were the same. «Запись» and «рассказ» stay in the domain model
+    // (Recording, Story) and in the code, but not in the interface.
+    recentRecordings: "Недавние воспоминания",
     people: "человек",
     memories: "воспоминаний",
     new: "Новое",
@@ -99,12 +105,23 @@ const ui = {
     reviewCountMany: "вопросов",
     relFather: "Отец",
     relMother: "Родитель",
+    // Gender-safe, like «Со слов {name}» elsewhere. These label a specific
+    // person whose gender the archive never recorded, so «Супруг(а)» was the
+    // same defect the product already rejected in «Рассказал(а)» — and
+    // «Брат/сестра», «Дедушка/бабушка», «Внук/внучка» were the same defect
+    // wearing a slash. A slash is a shorthand for "we are guessing"; spelling
+    // the alternative out says plainly that the archive knows the relation
+    // but not the person's gender.
+    // The centre card names its own frame, because «бабушка» alone does not
+    // say whose grandmother. `relation_to_speaker` arrives lowercase from the
+    // archive, so the sentence is built around it rather than capitalised.
+    relToNarrator: "{relation} рассказчика",
     relParent: "Родитель",
     relChild: "Ребёнок",
-    relSpouse: "Супруг(а)",
-    relSibling: "Брат/сестра",
-    relGrandparent: "Дедушка/бабушка",
-    relGrandchild: "Внук/внучка",
+    relSpouse: "В браке",
+    relSibling: "Брат или сестра",
+    relGrandparent: "Дедушка или бабушка",
+    relGrandchild: "Внук или внучка",
     treeEmptyTitle: "Семейное древо начнёт расти после первых рассказов",
     treeEmptyBody: "Когда вы запишете рассказ, MURA найдёт в нём людей и связи и покажет их здесь.",
     treeLoading: "Открываем семейное древо…",
@@ -139,7 +156,7 @@ const ui = {
     navFamily: "Семья",
     navRecord: "Записать",
     navAsk: "Спросить",
-    navStories: "Рассказы",
+    navStories: "Воспоминания",
     navSettings: "Настройки",
     navPrimary: "Основное",
     skipToContent: "Перейти к содержимому",
@@ -264,6 +281,7 @@ const ui = {
     begin: "Бастау",
     tagline: "Отбасыңыздың дауысы.\nМәңгілікке.",
     memoryLives: "Әрбір естелік өмір сүруге лайық.",
+    goodNight: "Қайырлы түн",
     goodMorning: "Қайырлы таң",
     goodAfternoon: "Қайырлы күн",
     goodEvening: "Қайырлы кеш",
@@ -271,7 +289,7 @@ const ui = {
     recordMemory: "Естелік жазу",
     pressAndSpeak: "Басыңыз да, сөйлей беріңіз",
     familyTree: "Отбасы шежіресі",
-    recentRecordings: "Соңғы жазбалар",
+    recentRecordings: "Соңғы естеліктер",
     people: "адам",
     memories: "естелік",
     new: "Жаңа",
@@ -346,11 +364,12 @@ const ui = {
     reviewCountMany: "сұрақ",
     relFather: "Әкесі",
     relMother: "Ата-анасы",
+    relToNarrator: "Әңгімешінің {relation}",
     relParent: "Ата-анасы",
     relChild: "Баласы",
     relSpouse: "Жұбайы",
     relSibling: "Бауыры",
-    relGrandparent: "Атасы/әжесі",
+    relGrandparent: "Атасы не әжесі",
     relGrandchild: "Немересі",
     treeEmptyTitle: "Шежіре алғашқы әңгімелерден кейін өсе бастайды",
     treeEmptyBody: "Әңгіме жазғаныңызда MURA ондағы адамдар мен байланыстарды тауып, осында көрсетеді.",
@@ -382,7 +401,7 @@ const ui = {
     navFamily: "Отбасы",
     navRecord: "Жазу",
     navAsk: "Сұрау",
-    navStories: "Әңгімелер",
+    navStories: "Естеліктер",
     navSettings: "Параметрлер",
     navPrimary: "Негізгі",
     skipToContent: "Мазмұнға өту",
@@ -515,6 +534,27 @@ type ContextValue = {
 
 const I18nContext = createContext<ContextValue | null>(null);
 
+/**
+ * Which greeting belongs to an hour of the day.
+ *
+ * Four parts, not three. The old ladder was `hour < 12 ? morning : ...`, so
+ * everything from midnight onwards was «Доброе утро» — and 00:04 is exactly
+ * when someone sits up talking with a grandparent, which is the moment this
+ * product is built for.
+ *
+ * Pure and exported so the boundaries can be tested at every hour rather than
+ * at whatever time the suite happens to run.
+ */
+export function greetingKeyForHour(
+  hour: number,
+): "goodNight" | "goodMorning" | "goodAfternoon" | "goodEvening" {
+  if (hour < 5) return "goodNight";
+  if (hour < 12) return "goodMorning";
+  if (hour < 18) return "goodAfternoon";
+  if (hour < 23) return "goodEvening";
+  return "goodNight";
+}
+
 export function MuraI18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>("ru");
 
@@ -538,8 +578,7 @@ export function MuraI18nProvider({ children }: { children: React.ReactNode }) {
         (text, [name, replacement]) => text.replace(`{${name}}`, String(replacement)),
         ui[locale][key] as string,
       );
-    const greetingForHour = (hour: number) =>
-      t(hour < 12 ? "goodMorning" : hour < 18 ? "goodAfternoon" : "goodEvening");
+    const greetingForHour = (hour: number) => t(greetingKeyForHour(hour));
     return { locale, setLocale, t, greetingForHour };
   }, [locale]);
 

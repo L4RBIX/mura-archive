@@ -17,6 +17,19 @@ interface TreeCanvasProps {
   onCenterChange: (id: string) => void;
 }
 
+/**
+ * Sentence case for a label built partly from archive data.
+ *
+ * `relation_to_speaker` arrives lowercase («бабушка», «муж бабушки») while every
+ * other card label comes from the dictionary capitalised, so the two sat side by
+ * side as «бабушка рассказчика» next to «В браке» and read as a rendering bug.
+ * Only the first character is touched: «муж бабушки» must not become
+ * «Муж Бабушки».
+ */
+function sentenceCase(value: string): string {
+  return value ? value[0].toLocaleUpperCase("ru") + value.slice(1) : value;
+}
+
 function toggle(set: Set<string>, id: string): Set<string> {
   const next = new Set(set);
   if (next.has(id)) next.delete(id);
@@ -105,9 +118,26 @@ export function TreeCanvas({ relations, centerId, onCenterChange }: TreeCanvasPr
                   key={`${centerId}:${node.id}`}
                   node={node}
                   person={person}
+                  /*
+                   * Two different questions used to share this one slot, which
+                   * is why a card could read «бабушка» next to one reading
+                   * «Супруг(а)»: the first is who that person is to the
+                   * narrator, the second is who they are to the person in the
+                   * centre. Same styling, same position, different frame of
+                   * reference — and the lowercase/capitalised split made it
+                   * look like a rendering bug rather than a distinction.
+                   *
+                   * The slot now means one thing only: relation to the centre.
+                   * The centre has no relation to itself, so it states its
+                   * narrator-relation explicitly instead, naming the frame.
+                   */
                   relationLabel={
                     node.role === "center"
-                      ? (person.relation_to_speaker ?? "")
+                      ? person.relation_to_speaker
+                        ? sentenceCase(
+                            t("relToNarrator", { relation: person.relation_to_speaker }),
+                          )
+                        : ""
                       : key
                         ? t(key)
                         : ""

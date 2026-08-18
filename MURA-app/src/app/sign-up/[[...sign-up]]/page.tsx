@@ -3,7 +3,7 @@ import { SignUp } from "@clerk/nextjs";
 import { AuthFrame } from "@/components/auth/auth-frame";
 import { safeRedirectPath } from "@/lib/auth/redirect";
 
-export const metadata: Metadata = { title: "Sign up" };
+export const metadata: Metadata = { title: "Создать аккаунт" };
 
 /**
  * Signing up creates a Clerk account and nothing else.

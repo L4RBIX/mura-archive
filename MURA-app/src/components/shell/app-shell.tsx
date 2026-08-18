@@ -77,9 +77,6 @@ function DesktopRail() {
         })}
       </ul>
 
-      <div className="mt-auto pt-6">
-        <LanguageSwitcher variant="inline" />
-      </div>
     </nav>
   );
 }

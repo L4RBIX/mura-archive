@@ -3,7 +3,7 @@ import { SignIn } from "@clerk/nextjs";
 import { AuthFrame } from "@/components/auth/auth-frame";
 import { safeRedirectPath } from "@/lib/auth/redirect";
 
-export const metadata: Metadata = { title: "Sign in" };
+export const metadata: Metadata = { title: "Войти" };
 
 /**
  * Clerk's own sign-in component.
