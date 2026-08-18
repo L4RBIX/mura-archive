@@ -1,4 +1,9 @@
+"use client";
+
+import { Search } from "lucide-react";
 import type { ReactNode } from "react";
+import { useArchiveSearch } from "@/components/search/search-provider";
+import { useMuraI18n } from "@/lib/i18n";
 import { BackButton } from "./back-button";
 import {
   PageContainer,
@@ -50,6 +55,32 @@ export function AppHeader({
   standalone = false,
   width = "default",
 }: AppHeaderProps) {
+  const { t } = useMuraI18n();
+  const search = useArchiveSearch();
+
+  // One trigger, rendered by the header rather than passed in by all nine
+  // screens. Absent on the focus screens and before sign-in, where there is no
+  // provider and nothing to search.
+  const searchButton = search ? (
+    <button
+      type="button"
+      onClick={search.open}
+      aria-keyshortcuts="Control+K Meta+K"
+      aria-label={t("searchOpen")}
+      className="flex size-11 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-sand hover:text-ink focus-ring"
+    >
+      <Search aria-hidden className="size-5" strokeWidth={1.8} />
+    </button>
+  ) : null;
+
+  const rightSlot =
+    actions || searchButton ? (
+      <>
+        {actions}
+        {searchButton}
+      </>
+    ) : null;
+
   return (
     <header className="pt-screen">
       {/* Mobile: back, centred title, actions. The three-column grid keeps the
@@ -69,13 +100,13 @@ export function AppHeader({
           <span aria-hidden />
         )}
         <div className="flex justify-end">
-          {actions ?? <span aria-hidden className="size-11" />}
+          {rightSlot ?? <span aria-hidden className="size-11" />}
         </div>
       </div>
 
       {/* Desktop. A standalone screen keeps the bar above and skips this, so it
           does not end up with two headers. */}
-      {!standalone && (title || actions) && (
+      {!standalone && (title || rightSlot) && (
         <PageContainer width={width} className="hidden pb-1 lg:block">
           <div className="flex min-h-11 items-center justify-between gap-4">
             {title && !ownTitle ? (
@@ -85,7 +116,7 @@ export function AppHeader({
             ) : (
               <span aria-hidden />
             )}
-            {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+            {rightSlot && <div className="flex shrink-0 items-center gap-2">{rightSlot}</div>}
           </div>
         </PageContainer>
       )}

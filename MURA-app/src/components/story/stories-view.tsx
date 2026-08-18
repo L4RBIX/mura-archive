@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
 import { AppHeader } from "@/components/layout/app-header";
@@ -13,11 +13,11 @@ import {
   fetchArchivePeople,
   fetchArchiveStories,
   type ArchivePerson,
-  type ArchiveStoryPage,
+  type ArchiveStorySummary,
 } from "@/lib/mura/archive-api";
-import { useArchiveResource } from "@/lib/mura/use-archive";
+import { useArchivePages, useArchiveResource } from "@/lib/mura/use-archive";
 
-/** One page of memories. Core clamps this server-side too. */
+/** One page of memories. Core clamps this to 1..100 server-side as well. */
 const PAGE_SIZE = 30;
 
 /**
@@ -27,47 +27,62 @@ const PAGE_SIZE = 30;
  * by when the events happened, which it usually does not. Inventing a
  * chronology for undated memories would put a false history on a family.
  *
- * The first page only. A family archive is meant to grow for years, so the
- * endpoint pages and this asks for a bounded slice.
+ * This asked for 30 and stopped — no next page, no indication anything had been
+ * cut. For a product whose promise is an archive a family adds to for years,
+ * memory 31 onwards was simply unreachable. It pages now, and says how much of
+ * the archive is on screen while there is more.
  */
-interface StoriesBundle {
-  page: ArchiveStoryPage;
-  /** Canonical people, so a card can name who is in a memory by id. */
-  peopleById: Map<string, ArchivePerson>;
-}
-
 function StoriesContent() {
   const { t, locale } = useMuraI18n();
-  const load = useCallback(
-    async (familyId: string, signal: AbortSignal): Promise<StoriesBundle> => {
-      // Both at once: the list cannot render its people chips without the
-      // people, so staggering them would only add a waterfall.
-      const [page, people] = await Promise.all([
-        fetchArchiveStories(familyId, { limit: PAGE_SIZE, signal }),
-        fetchArchivePeople(familyId, signal),
-      ]);
-      return {
-        page,
-        peopleById: new Map(people.map((person) => [person.person_id, person])),
-      };
+
+  const loadStories = useCallback(
+    async (familyId: string, offset: number, signal: AbortSignal) => {
+      const page = await fetchArchiveStories(familyId, {
+        limit: PAGE_SIZE,
+        offset,
+        signal,
+      });
+      return { items: page.items, total: page.page.total };
     },
     [],
   );
-  const stories = useArchiveResource<StoriesBundle>(load);
+  const stories = useArchivePages<ArchiveStorySummary>(loadStories);
+
+  // People are loaded once and reused by every page; a second page of memories
+  // does not need the family's people fetched again.
+  const loadPeople = useCallback(
+    (familyId: string, signal: AbortSignal) => fetchArchivePeople(familyId, signal),
+    [],
+  );
+  const people = useArchiveResource<ArchivePerson[]>(loadPeople);
+  const peopleById = useMemo(
+    () => new Map((people.data ?? []).map((person) => [person.person_id, person])),
+    [people.data],
+  );
+
   const labels = storyLinkLabels(t);
-  const page = stories.data?.page;
+
+  // `ArchiveState` speaks the single-resource shape; the paged list carries the
+  // same four fields, so it is adapted rather than duplicated.
+  const asResource = {
+    status: stories.status,
+    data: stories.items,
+    familyId: stories.familyId,
+    error: stories.error,
+    reload: stories.reload,
+  };
 
   return (
     <div className="pb-16">
       <AppHeader title={t("storiesTitle")} fallbackHref="/home" />
 
       <ArchiveState
-        resource={stories}
+        resource={asResource}
         loadingLabel={t("storiesLoading")}
-        isEmpty={(page?.items.length ?? 0) === 0}
+        isEmpty={stories.items.length === 0}
         empty={
           <PageContainer>
-            <div className="mx-auto max-w-[46ch] py-14 text-center">
+            <div className="mx-auto max-w-measure py-14 text-center">
               <h1 className="text-balance text-section font-bold leading-snug tracking-[-0.02em]">
                 {t("storiesEmptyTitle")}
               </h1>
@@ -83,24 +98,41 @@ function StoriesContent() {
       >
         <PageContainer>
           <ul className="space-y-2.5 pt-1">
-            {page?.items.map((story) => (
+            {stories.items.map((story) => (
               <li key={story.story_id}>
                 <StoryLink
                   story={story}
                   locale={locale}
                   labels={labels}
-                  peopleById={stories.data?.peopleById}
+                  peopleById={peopleById}
                 />
               </li>
             ))}
           </ul>
-          {/* The list was silently cut at 30 with no way to tell. Saying how
-              much of the archive is on screen is the honest minimum until
-              step 3 makes the rest reachable. */}
-          {page && page.page.total > page.items.length && (
-            <p className="pt-4 text-meta text-muted">
-              {t("storiesShownOf", { shown: page.items.length, total: page.page.total })}
-            </p>
+
+          {/* Announced, because the list grows below the button that grew it
+              and a sighted user sees that happen while a screen reader user
+              would not. */}
+          <p className="sr-only" role="status" aria-live="polite">
+            {t("storiesShownOf", { shown: stories.items.length, total: stories.total })}
+          </p>
+
+          {stories.hasMore && (
+            <div className="flex flex-col items-center gap-2 pt-6">
+              <Button
+                variant="soft"
+                onClick={stories.loadMore}
+                disabled={stories.loadingMore}
+              >
+                {stories.loadingMore ? t("storiesLoadingMore") : t("storiesLoadMore")}
+              </Button>
+              <p className="text-meta text-muted">
+                {t("storiesShownOf", {
+                  shown: stories.items.length,
+                  total: stories.total,
+                })}
+              </p>
+            </div>
           )}
         </PageContainer>
       </ArchiveState>

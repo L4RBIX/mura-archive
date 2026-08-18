@@ -1,12 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { DemoBadge } from "@/components/demo/demo-notice";
 import { AuthStrip } from "@/components/family/auth-strip";
 import { ArchiveDoorways } from "@/components/home/archive-doorways";
 import { RecordButton } from "@/components/record/record-button";
+import { useArchiveSearch } from "@/components/search/search-provider";
 import { PageContainer } from "@/components/shell/page-container";
 import { StoryLink, storyLinkLabels } from "@/components/story/story-link";
 import { useMuraI18n } from "@/lib/i18n";
@@ -70,6 +72,7 @@ export function HomeView() {
   const data = overview.data?.archive;
   const labels = storyLinkLabels(t);
   const { family } = useMuraSession();
+  const search = useArchiveSearch();
   const familyName = family.selectedFamily?.name ?? null;
   const stories = data?.recent_stories ?? [];
   // Signed out there is no archive to summarise, and there is no longer a
@@ -80,7 +83,12 @@ export function HomeView() {
   return (
     <PageContainer width="wide" className="pb-16 pt-screen">
       <motion.div variants={container} initial="hidden" animate="visible">
-        <motion.header variants={item}>
+        {/* Home writes its own header rather than using AppHeader, so the
+            search trigger has to be placed here too — otherwise the one screen
+            everybody lands on would be the only one where search was reachable
+            by keyboard shortcut alone. */}
+        <motion.header variants={item} className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
           <p className="text-meta text-muted">
             {greeting}
             {/* Below `lg` there is no rail, so nothing on the screen said whose
@@ -98,6 +106,18 @@ export function HomeView() {
           <h1 className="mt-1 text-title font-bold leading-[1.08] tracking-[-0.03em] sm:text-display">
             {t("todaysMemories")}
           </h1>
+          </div>
+          {search && (
+            <button
+              type="button"
+              onClick={search.open}
+              aria-keyshortcuts="Control+K Meta+K"
+              aria-label={t("searchOpen")}
+              className="mt-1 flex size-11 shrink-0 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-sand hover:text-ink focus-ring"
+            >
+              <Search aria-hidden className="size-5" strokeWidth={1.8} />
+            </button>
+          )}
         </motion.header>
 
         <motion.div variants={item} className="mt-6">

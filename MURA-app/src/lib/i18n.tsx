@@ -99,6 +99,21 @@ const ui = {
     conflictCountMany: "расхождений",
     // «Показано 30 из 128» — the list was silently cut at 30 before.
     storiesShownOf: "Показано {shown} из {total}",
+    storiesLoadMore: "Показать ещё",
+    searchOpen: "Поиск по архиву",
+    searchTitle: "Поиск по архиву",
+    searchPlaceholder: "Имя или слово из рассказа",
+    searchClose: "Закрыть поиск",
+    searchAll: "Всё",
+    searchPerson: "Человек",
+    searchNothing: "Ничего не нашлось",
+    searchLoading: "Открываем архив…",
+    searchResultCount: "Найдено: {count}",
+    // The reach of the search, said plainly. Core has no search endpoint, so
+    // this filters the page it could load — and an empty result must not read
+    // as «в вашем архиве этого нет».
+    searchPartial: "Поиск идёт по {loaded} воспоминаниям из {total}. Остальные пока не участвуют.",
+    storiesLoadingMore: "Загружаем…",
     // Not «Рассказал(а)»: a bracketed suffix is a developer working around
     // grammatical gender in front of the reader, in the middle of what is
     // meant to be a memoir. «Со слов» is genderless, natural, and archival —
@@ -372,6 +387,18 @@ const ui = {
     conflictCountFew: "алшақтық",
     conflictCountMany: "алшақтық",
     storiesShownOf: "{total} ішінен {shown} көрсетілді",
+    storiesLoadMore: "Тағы көрсету",
+    searchOpen: "Мұрағаттан іздеу",
+    searchTitle: "Мұрағаттан іздеу",
+    searchPlaceholder: "Есім немесе әңгімеден сөз",
+    searchClose: "Іздеуді жабу",
+    searchAll: "Барлығы",
+    searchPerson: "Адам",
+    searchNothing: "Ештеңе табылмады",
+    searchLoading: "Мұрағат ашылуда…",
+    searchResultCount: "Табылды: {count}",
+    searchPartial: "Іздеу {total} естеліктің {loaded} бойынша жүреді. Қалғаны әзірге қамтылмаған.",
+    storiesLoadingMore: "Жүктелуде…",
     storyToldBy: "{name} айтқан",
     storyAudioUnavailable: "Аудиожазба қолжетімсіз.",
     storySourceTitle: "Дереккөз",

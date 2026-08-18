@@ -23,6 +23,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import { SearchProvider } from "@/components/search/search-provider";
 import { FamilyContext } from "@/components/shell/family-context";
 import { hasAppChrome, isActive, isPreProduct, NAV_ITEMS } from "@/components/shell/navigation";
 import { LanguageSwitcher, useMuraI18n } from "@/lib/i18n";
@@ -152,8 +153,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     );
   }
 
+  // Search is mounted only inside the product chrome: the pre-product screens
+  // have no archive to search.
   return (
-    <>
+    <SearchProvider>
       <a
         href="#mura-content"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-meta focus:font-semibold focus:text-raised"
@@ -173,6 +176,6 @@ export function AppShell({ children }: { children: ReactNode }) {
       </main>
 
       <MobileTabBar />
-    </>
+    </SearchProvider>
   );
 }
