@@ -23,7 +23,7 @@ export function BackButton({ fallbackHref = "/home" }: BackButtonProps) {
       type="button"
       aria-label={t("goBack")}
       onClick={goBack}
-      className="flex size-11 items-center justify-center rounded-full bg-raised text-ink shadow-soft transition-transform duration-200 active:scale-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+      className="flex size-11 items-center justify-center rounded-full bg-raised text-ink shadow-soft transition-transform duration-200 active:scale-95 focus-ring"
     >
       <ChevronLeft className="size-5" strokeWidth={2} />
     </button>

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { READING_WIDTH } from "@/components/shell/page-container";
 import { TranscriptReader } from "@/components/story/transcript-reader";
 import { formatDuration } from "@/lib/format";
@@ -65,7 +65,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
   if (!memory) {
     return (
       <div>
-        <ScreenHeader title={t("memory")} fallbackHref="/home" />
+        <AppHeader title={t("memory")} fallbackHref="/home" ownTitle width="reading" />
         <p className="mx-auto max-w-[46ch] px-6 pt-16 text-center text-muted">{t("memoryNotFound")}</p>
       </div>
     );
@@ -73,7 +73,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
 
   return (
     <div className="pb-20">
-      <ScreenHeader title={t("memory")} fallbackHref="/home" />
+      <AppHeader title={t("memory")} fallbackHref="/home" ownTitle width="reading" />
       <motion.article
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}

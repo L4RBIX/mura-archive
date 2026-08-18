@@ -19,6 +19,50 @@
   --color-periwinkle: #d6d9ee;
   --color-sand: #ece9e2;
 
+  /*
+   * State colours.
+   *
+   * `record-view` reached past the palette for a raw Tailwind `text-red-700`,
+   * which is the one saturated colour in an otherwise earth-toned product — and
+   * it was the *only* way the interface could say "this failed", so degradation
+   * notices had nowhere to go and ended up as grey caption text.
+   *
+   * Measured against both surfaces the product actually uses, so a warning is
+   * legible whether it sits on the page or inside a card:
+   *   danger  #8f2f21 — 6.64:1 on paper, 7.24:1 on raised
+   *   warning #7a5410 — 5.55:1 on paper, 6.05:1 on raised
+   *   success #2f6b3f — 5.24:1 on paper, 5.71:1 on raised
+   * The two surface tints carry their own text at 6.14:1 and 5.32:1.
+   *
+   * Deliberately desaturated: an archive of family memory should be able to
+   * report a problem without looking like an error console.
+   */
+  --color-danger: #8f2f21;
+  --color-danger-surface: #f2dcd6;
+  --color-warning: #7a5410;
+  --color-warning-surface: #f0e3c8;
+  --color-success: #2f6b3f;
+
+  /*
+   * Content widths.
+   *
+   * These were decided per component, so the product had three different
+   * answers to "how wide is a page" — 560px in settings, 720px from the
+   * container, 1100px on home — and no way to tell which was intended. Named
+   * here, they become a choice a screen makes from a list rather than a number
+   * it invents.
+   *
+   * `reading` is in `ch` because the constraint is characters per line, not
+   * pixels, so it survives a change to the type scale.
+   */
+  --container-reading: 70ch;   /* long-form prose; ~63 Cyrillic chars at 18px */
+  --container-form: 560px;     /* settings, auth, single-column forms */
+  --container-default: 720px;  /* lists and cards */
+  --container-focus: 520px;    /* record/processing: one task, nothing beside it */
+  --container-wide: 1100px;    /* dense multi-column surfaces */
+  --container-wide-2xl: 1280px; /* the same surfaces once the window is 1536+ */
+  --container-measure: 46ch;   /* short helper text inside an already-bounded parent */
+
   --font-sans: "SF Pro Display", "SF Pro Text", -apple-system,
     BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", ui-sans-serif, system-ui,
     sans-serif;
@@ -124,6 +168,40 @@
 /* Where in-app page content begins: notch clearance plus the page rhythm. */
 @utility pt-screen {
   padding-top: calc(max(env(safe-area-inset-top), 12px) + 6px);
+}
+
+/*
+ * The page gutter.
+ *
+ * Every screen was writing `px-5 sm:px-6 lg:px-8` by hand, so the gutter was a
+ * convention held together by copy-paste — and a screen that forgot one step
+ * simply had a different margin from its neighbours. One utility, one answer,
+ * and the `2xl` step exists because a 20px gutter on a 1920px window looks like
+ * the content is trying to escape.
+ */
+@utility px-page {
+  padding-inline: 1.25rem;
+  @media (width >= 40rem) { padding-inline: 1.5rem; }
+  @media (width >= 64rem) { padding-inline: 2rem; }
+  @media (width >= 96rem) { padding-inline: 2.5rem; }
+}
+
+/*
+ * Focus ring.
+ *
+ * This exact four-class incantation was repeated in 14 components. Repetition
+ * is how a control eventually ships without it: nothing fails, the ring is just
+ * quietly absent. One name, applied everywhere, and a missing ring becomes a
+ * missing word rather than a missing pattern.
+ */
+@utility focus-ring {
+  &:focus-visible {
+    outline: 2px solid --alpha(var(--color-ink) / 40%);
+    /* A round button wants the ring further out than a text link does, so the
+       offset is a variable rather than a second copy of the whole rule:
+       `[--focus-ring-offset:8px]` on the element that needs it. */
+    outline-offset: var(--focus-ring-offset, 2px);
+  }
 }
 
 /* Paper grain, layered once over the whole app at very low opacity. */

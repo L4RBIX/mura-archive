@@ -4,7 +4,7 @@ import { HelpCircle, Scale } from "lucide-react";
 import { useCallback } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { PageContainer } from "@/components/shell/page-container";
 import { useMuraI18n } from "@/lib/i18n";
 import { fetchArchiveReviewItems, type ArchiveReviewItem } from "@/lib/mura/archive-api";
@@ -38,7 +38,7 @@ function ReviewContent() {
 
   return (
     <div className="pb-16">
-      <ScreenHeader title={t("reviewTitle")} fallbackHref="/home" />
+      <AppHeader title={t("reviewTitle")} fallbackHref="/home" />
 
       <ArchiveState
         resource={review}

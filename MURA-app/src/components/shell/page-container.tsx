@@ -7,38 +7,49 @@
  * Removing the cap without replacing it would have traded a phone-sized app
  * for 1440px lines of Russian prose, which is worse.
  *
- * `reading` is deliberately in `ch`: the constraint is characters per line,
- * not pixels, so it holds when the type scale changes.
+ * Replacing it per component was the second mistake. Settings declared its own
+ * `max-w-[560px]`, home used `wide`, lists used `default` — three widths, no
+ * way to tell which was deliberate, and nothing stopping a fourth. The widths
+ * now live in `@theme` as `--container-*`; this file only names *which* one a
+ * surface gets, and every page is expected to come through here.
+ *
+ * `reading` and `measure` are deliberately in `ch`: the constraint is
+ * characters per line, not pixels, so they survive a change to the type scale.
  */
 
 import type { ReactNode } from "react";
 
-export type ContentWidth = "reading" | "default" | "wide" | "full";
+export type ContentWidth =
+  | "reading"
+  | "form"
+  | "default"
+  | "focus"
+  | "wide"
+  | "full";
 
 /**
- * Exported so a screen that lays out its own article element still reads the
+ * Exported so a screen that lays out its own `article` element still reads the
  * measure from here rather than restating it.
+ *
+ * 70ch measures ~63 characters of real story text at 18px — checked against
+ * «Мамин хлеб по утрам», not derived on paper. `ch` resolves against the 16px
+ * container font while the prose is 18px, which is why the previous 62ch bought
+ * only ~54 characters and read as a narrow column.
  */
-export const READING_WIDTH = "max-w-[70ch]";
+export const READING_WIDTH = "max-w-reading";
 
 const WIDTH: Record<ContentWidth, string> = {
-  /*
-   * The long-reading measure.
-   *
-   * `ch` resolves against *this* element's font, which is the 16px body — but
-   * the prose inside is 18px, so `62ch` was buying a column that measured only
-   * ~54 Cyrillic characters per line once the padding came off. Short of the
-   * 60-70 that long prose actually wants, and Russian and Kazakh words are
-   * longer than the English these rules are usually quoted for.
-   *
-   * 70ch here measures ~63 characters of real story text at 18px. Checked
-   * against «Мамин хлеб по утрам» rather than derived on paper.
-   */
   reading: READING_WIDTH,
-  // Cards, forms and lists. Wide enough for two columns, narrow enough to scan.
-  default: "max-w-[720px]",
-  // Dense surfaces that benefit from room but still need a margin.
-  wide: "max-w-[1100px]",
+  // Settings, auth and anything that is a single column of controls.
+  form: "max-w-form",
+  // Cards and lists. Wide enough for two columns, narrow enough to scan.
+  default: "max-w-default",
+  // One task and nothing beside it: record, processing.
+  focus: "max-w-focus",
+  // Dense surfaces that benefit from room but still need a margin. This is the
+  // one width that grows past `xl`: prose must not, but a grid of cards and a
+  // side panel genuinely have more to show when the window is 1536 or wider.
+  wide: "max-w-wide 2xl:max-w-wide-2xl",
   // Canvases that own the viewport.
   full: "max-w-none",
 };
@@ -53,7 +64,7 @@ export function PageContainer({
   children: ReactNode;
 }) {
   return (
-    <div className={`mx-auto w-full px-5 sm:px-6 lg:px-8 ${WIDTH[width]} ${className ?? ""}`}>
+    <div className={`mx-auto w-full px-page ${WIDTH[width]} ${className ?? ""}`}>
       {children}
     </div>
   );

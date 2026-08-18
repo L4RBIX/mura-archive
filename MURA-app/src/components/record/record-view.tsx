@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { Lastochka } from "@/components/mascot/lastochka";
 import { submitRecording } from "@/lib/mura/core-api";
 import { processingHref } from "@/lib/mura/recording-workflow";
@@ -205,10 +205,14 @@ export function RecordView() {
 
   return (
     <div className="flex h-dvh flex-col">
-      <ScreenHeader
+      <AppHeader
         title={t("newMemory")}
         fallbackHref="/home"
-        right={
+        // Focus mode: this screen deliberately has no rail, so the back button
+        // is the only way out and stays at every width. Step 5 revisits how the
+        // screen uses desktop space; the header behaviour is unchanged here.
+        standalone
+        actions={
           <AnimatePresence>
             {(status !== "idle" || uploading) && (
               <TimerChip
@@ -234,7 +238,7 @@ export function RecordView() {
             {/* `min-h-full` keeps the column optically centred on a tall
                 screen while still allowing a 667px one to scroll rather than
                 clip the record button. */}
-            <div className="mx-auto flex min-h-full w-full max-w-[520px] flex-col items-center justify-center gap-5 px-6 pb-8 text-center sm:px-8">
+            <div className="mx-auto flex min-h-full w-full max-w-focus flex-col items-center justify-center gap-5 px-6 pb-8 text-center sm:px-8">
               {/* 312px put the swallow, a two-line heading and a two-line hint
                   above the microphone, which landed the one control on this
                   screen at y=568 of an 844px phone — and off a 667px one
@@ -258,19 +262,19 @@ export function RecordView() {
               ) : (
                 // Never a silently disabled button: say which condition failed
                 // and, where the user can act, what to do about it.
-                <p className="max-w-[320px] text-meta leading-relaxed text-muted">
+                <p className="max-w-measure text-meta leading-relaxed text-muted">
                   {capture.available
                     ? t(processing === "unconfigured" ? "processingUnconfigured" : "coreUnavailable")
                     : t(BLOCKER_MESSAGE[capture.reason])}
                 </p>
               )}
               {capture.available && maySubmit && notice === "queued_later" && (
-                <p className="max-w-[320px] text-meta leading-relaxed text-muted">
+                <p className="max-w-measure text-meta leading-relaxed text-muted">
                   {t("processingDelayedNotice")}
                 </p>
               )}
               {(recorderError || uploadError) && (
-                <p className="max-w-[320px] text-meta leading-relaxed text-red-700">
+                <p className="max-w-measure text-meta leading-relaxed text-danger">
                   {recorderError ? t("microphoneError") : t("uploadError")}
                 </p>
               )}
@@ -279,7 +283,7 @@ export function RecordView() {
         ) : (
           <motion.div
             key="recording"
-            className="mx-auto flex min-h-0 w-full max-w-[760px] flex-1 flex-col px-5 sm:px-6"
+            className="mx-auto flex min-h-0 w-full max-w-default flex-1 flex-col px-5 sm:px-6"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}

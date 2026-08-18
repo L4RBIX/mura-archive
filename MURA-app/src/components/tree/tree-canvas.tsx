@@ -156,7 +156,7 @@ export function TreeCanvas({ relations, centerId, onCenterChange }: TreeCanvasPr
         type="button"
         onClick={() => recenter(0, 0, 1)}
         aria-label={t("centerTree")}
-        className="absolute bottom-5 right-5 z-10 flex size-12 items-center justify-center rounded-full bg-raised text-ink shadow-card transition-transform duration-200 active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+        className="absolute bottom-5 right-5 z-10 flex size-12 items-center justify-center rounded-full bg-raised text-ink shadow-card transition-transform duration-200 active:scale-90 focus-ring"
       >
         <LocateFixed className="size-5" strokeWidth={1.8} />
       </button>

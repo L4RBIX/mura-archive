@@ -38,7 +38,7 @@ function DesktopRail() {
     >
       <Link
         href="/home"
-        className="mb-7 block rounded-control px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+        className="mb-7 block rounded-control px-2 focus-ring"
       >
         <span className="block text-caption font-semibold uppercase tracking-[0.28em] text-muted">
           мұра
@@ -61,7 +61,7 @@ function DesktopRail() {
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-3 rounded-control px-3 py-2.5 text-body font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40 ${
+                className={`flex items-center gap-3 rounded-control px-3 py-2.5 text-body font-medium transition-colors focus-ring ${
                   active
                     ? "bg-ink text-raised"
                     : item.primary
@@ -90,7 +90,7 @@ function MobileTabBar() {
       aria-label={t("navPrimary")}
       className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/[0.06] bg-raised/95 backdrop-blur lg:hidden"
     >
-      <ul className="mx-auto flex max-w-[560px] items-stretch justify-around px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1.5">
+      <ul className="mx-auto flex max-w-form items-stretch justify-around px-1 pb-[max(env(safe-area-inset-bottom),8px)] pt-1.5">
         {NAV_ITEMS.map((item) => {
           const active = isActive(pathname, item.href);
           const Icon = item.icon;
@@ -101,7 +101,7 @@ function MobileTabBar() {
                 aria-current={active ? "page" : undefined}
                 // 56px tall: comfortably past the 44px touch-target floor
                 // without eating the screen on a small phone.
-                className="flex min-h-[56px] flex-col items-center justify-center gap-1 rounded-control px-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+                className="flex min-h-[56px] flex-col items-center justify-center gap-1 rounded-control px-1 focus-ring"
               >
                 <span
                   className={`flex size-8 items-center justify-center rounded-full transition-colors ${

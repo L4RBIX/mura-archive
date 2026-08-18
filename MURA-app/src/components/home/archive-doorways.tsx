@@ -63,7 +63,7 @@ function Doorway({
   return (
     <Link
       href={href}
-      className="group flex items-center gap-3.5 py-3.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+      className="group flex items-center gap-3.5 py-3.5 transition-colors focus-ring"
     >
       <Icon aria-hidden className="size-5 shrink-0 text-ink/45" strokeWidth={1.8} />
       <span className="min-w-0 flex-1">

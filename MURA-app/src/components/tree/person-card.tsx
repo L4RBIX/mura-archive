@@ -62,7 +62,7 @@ export function PersonCard({
         onClick={() => onOpen(person.person_id)}
         onPointerUp={(e) => e.stopPropagation()}
         className={cn(
-          "flex size-full flex-col justify-between rounded-panel px-4 py-3.5 text-left shadow-soft transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40",
+          "flex size-full flex-col justify-between rounded-panel px-4 py-3.5 text-left shadow-soft transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] focus-ring",
           isCenter ? "bg-ink text-raised" : "bg-raised text-ink",
         )}
       >

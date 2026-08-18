@@ -3,7 +3,8 @@
 import { AccountSection } from "@/components/family/account-section";
 import { AuthStrip } from "@/components/family/auth-strip";
 import { FamilySwitcher } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
+import { PageContainer } from "@/components/shell/page-container";
 import { LanguageSwitcher, useMuraI18n } from "@/lib/i18n";
 import type { FamilyRole } from "@/lib/mura/core-api";
 import { useMuraSession } from "@/lib/mura/session-provider";
@@ -43,18 +44,6 @@ function FamilySection() {
 }
 
 /**
- * Settings as a product page rather than a stack of cards.
- *
- * Sections are labelled so the page can be scanned, and the language control
- * lives here as well as in the chrome -- the rail is where you change it in
- * passing, this is where you look for it.
- *
- * Nothing unsupported is offered. There is no member administration because
- * Core has no invitation lifecycle, and inventing "add by email" would create
- * memberships nobody agreed to. The swallow holds one calm pose; the voice
- * preview she once fronted was removed with the rest of the assistant.
- */
-/**
  * One group of settings: a label, a hairline, and the controls.
  *
  * This replaces three `rounded-panel bg-raised p-5` cards, each of which
@@ -78,6 +67,9 @@ function LanguageSection() {
   const { t } = useMuraI18n();
   return (
     <>
+      {/* A control's width, not a content width: the segmented RU/KK toggle
+          stretches to its container, and a 560px-wide pair of two-letter
+          buttons looks like a mistake. Deliberately not a container token. */}
       <div className="max-w-[320px]">
         <LanguageSwitcher variant="inline" />
       </div>
@@ -92,9 +84,15 @@ export function SettingsView() {
   const { t } = useMuraI18n();
   return (
     <div className="flex min-h-dvh flex-col">
-      <ScreenHeader title={t("settings")} fallbackHref="/home" />
+      <AppHeader title={t("settings")} fallbackHref="/home" width="form" />
 
-      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-7 px-5 pb-[max(env(safe-area-inset-bottom),32px)] pt-2 sm:px-6 lg:px-8">
+      {/* Settings used to declare `max-w-[560px]` and its own gutter, which is
+          how the product ended up with a third content width nobody chose.
+          The width is now a name from the container's list. */}
+      <PageContainer
+        width="form"
+        className="flex flex-col gap-7 pb-[max(env(safe-area-inset-bottom),32px)] pt-2"
+      >
         {/* No demo archive sits below this screen, so it must not promise one. */}
         <AuthStrip hintKey="signInToSaveHintSettings" />
 
@@ -109,7 +107,7 @@ export function SettingsView() {
         <Group label={t("settingsLanguage")}>
           <LanguageSection />
         </Group>
-      </div>
+      </PageContainer>
     </div>
   );
 }

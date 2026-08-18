@@ -64,7 +64,7 @@ export function FamilyContext({ className }: { className?: string }) {
           id="family-context-switcher"
           value={family.selectedFamilyId ?? ""}
           onChange={(event) => selectFamily(event.target.value)}
-          className="w-full cursor-pointer appearance-none truncate rounded-control bg-transparent pr-6 text-body font-semibold text-ink outline-none focus-visible:ring-2 focus-visible:ring-ink/30"
+          className="w-full cursor-pointer appearance-none truncate rounded-control bg-transparent pr-6 text-body font-semibold text-ink outline-none focus-ring"
         >
           {family.families.map((entry) => (
             <option key={entry.family_id} value={entry.family_id}>

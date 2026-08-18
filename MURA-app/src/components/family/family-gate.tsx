@@ -32,12 +32,12 @@ function Notice({
 }) {
   return (
     <div
-      className="mx-auto flex min-h-dvh w-full max-w-[440px] flex-col items-center justify-center gap-3 px-6 text-center sm:px-8"
+      className="mx-auto flex min-h-dvh w-full max-w-measure flex-col items-center justify-center gap-3 px-6 text-center sm:px-8"
       role="status"
       aria-live="polite"
     >
       <p className="text-balance text-section font-semibold leading-snug">{title}</p>
-      {hint && <p className="max-w-[320px] text-body leading-relaxed text-muted">{hint}</p>}
+      {hint && <p className="max-w-measure text-body leading-relaxed text-muted">{hint}</p>}
       {action}
     </div>
   );
@@ -72,13 +72,13 @@ export function AuthActions({ className }: { className?: string }) {
           label, and just under the touch-target floor. */}
       <Link
         href={`/sign-in${query}`}
-        className="flex h-11 items-center rounded-full bg-clay px-5 text-meta font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+        className="flex h-11 items-center rounded-full bg-clay px-5 text-meta font-semibold focus-ring"
       >
         {t("signIn")}
       </Link>
       <Link
         href={`/sign-up${query}`}
-        className="flex h-11 items-center rounded-full bg-sand px-5 text-meta font-semibold text-ink/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+        className="flex h-11 items-center rounded-full bg-sand px-5 text-meta font-semibold text-ink/70 focus-ring"
       >
         {t("signUp")}
       </Link>
@@ -115,12 +115,12 @@ function CreateFamily() {
   };
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-[560px] flex-col items-center justify-center px-6 sm:px-8">
+    <div className="mx-auto flex min-h-dvh w-full max-w-form flex-col items-center justify-center px-6 sm:px-8">
       {/* First run is an emotional moment, not a form to dispatch. The swallow
           and the breathing room are the difference between "create a
           workspace" and "start your family archive". */}
       <MascotStage state="idle" size={200} className="mb-2" />
-      <div className="w-full max-w-[400px] text-center">
+      <div className="w-full max-w-measure text-center">
         <h1 className="text-balance text-title font-bold leading-tight tracking-[-0.03em]">
           {t("noFamilyTitle")}
         </h1>
@@ -148,7 +148,7 @@ function CreateFamily() {
           </button>
         </form>
         {failed && (
-          <p className="mt-3 text-meta leading-relaxed text-red-700">
+          <p className="mt-3 text-meta leading-relaxed text-danger">
             {t("createFamilyFailed")}
           </p>
         )}
@@ -207,7 +207,7 @@ export function FamilySwitcher({ className }: { className?: string }) {
         // Full width and 44px: this names the family whose memories the whole
         // app is about, and it was a 36px pill holding a name long enough to
         // reach the edge of a phone.
-        className="h-11 w-full max-w-full rounded-control bg-raised px-3.5 text-body font-semibold outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+        className="h-11 w-full max-w-full rounded-control bg-raised px-3.5 text-body font-semibold outline-none focus-ring"
       >
         {family.families.map((entry) => (
           <option key={entry.family_id} value={entry.family_id}>

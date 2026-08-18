@@ -3,7 +3,7 @@
 import { useCallback } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { PageContainer } from "@/components/shell/page-container";
 import { StoryLink } from "@/components/story/story-link";
 import { Button } from "@/components/ui/button";
@@ -33,7 +33,7 @@ function StoriesContent() {
 
   return (
     <div className="pb-16">
-      <ScreenHeader title={t("storiesTitle")} fallbackHref="/home" />
+      <AppHeader title={t("storiesTitle")} fallbackHref="/home" />
 
       <ArchiveState
         resource={stories}

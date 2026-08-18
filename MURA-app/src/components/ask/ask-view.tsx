@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DemoNotice } from "@/components/demo/demo-notice";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { MemoryAnswerCard } from "@/components/ask/memory-answer-card";
 import { MascotStage } from "@/components/mascot/mascot-stage";
 import { RecordButton } from "@/components/record/record-button";
@@ -105,7 +105,7 @@ export function AskView() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <ScreenHeader title={t("askMemory")} fallbackHref="/home" />
+      <AppHeader title={t("askMemory")} fallbackHref="/home" width="form" />
 
       {/* This screen answers *any* question with the same scripted fixture.
           Without this notice it reads as grounded family intelligence, which
@@ -115,7 +115,7 @@ export function AskView() {
         <DemoNotice surface="ask" className="mt-1 flex items-start gap-2.5 rounded-surface bg-clay/45 px-4 py-3 text-left" />
       </PageContainer>
 
-      <div className="mx-auto flex w-full max-w-[560px] flex-1 flex-col items-center px-5 pb-[max(env(safe-area-inset-bottom),24px)] sm:px-6">
+      <div className="mx-auto flex w-full max-w-form flex-1 flex-col items-center px-5 pb-[max(env(safe-area-inset-bottom),24px)] sm:px-6">
         <MascotStage state={state} size={300} className="mt-2" />
 
         <AnimatePresence mode="wait">
@@ -145,7 +145,7 @@ export function AskView() {
         </AnimatePresence>
 
         {/* Reserved height: the status line must never shift the layout. */}
-        <div className="flex min-h-[76px] w-full max-w-[330px] items-center justify-center px-2 py-4">
+        <div className="flex min-h-[76px] w-full max-w-measure items-center justify-center px-2 py-4">
           <AnimatePresence mode="wait">
             {status && (
               <motion.p
@@ -168,14 +168,14 @@ export function AskView() {
 
         <div className="mt-auto flex w-full flex-col items-center gap-4 pt-2">
           {listening ? (
-            <Button size="lg" className="w-full max-w-[300px]" onClick={finishListening}>
+            <Button size="lg" className="w-full max-w-measure" onClick={finishListening}>
               {t("askFinish")}
             </Button>
           ) : answering ? (
             <Button
               variant="soft"
               size="lg"
-              className="w-full max-w-[300px]"
+              className="w-full max-w-measure"
               onClick={askAgain}
             >
               {t("askAgain")}
@@ -187,12 +187,12 @@ export function AskView() {
           {supported === false &&
             previewMode === "explicit_language" &&
             !listening && (
-            <p className="max-w-[300px] text-center text-meta leading-relaxed text-ink/65">
+            <p className="max-w-measure text-center text-meta leading-relaxed text-ink/65">
               {t("liveTextUnavailable")}
             </p>
           )}
           {(error || recorderError) && listening && (
-            <p className="max-w-[300px] text-center text-meta leading-relaxed text-ink/65">
+            <p className="max-w-measure text-center text-meta leading-relaxed text-ink/65">
               {t("speechRecognitionError")}
             </p>
           )}

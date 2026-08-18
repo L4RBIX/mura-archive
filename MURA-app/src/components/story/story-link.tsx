@@ -21,7 +21,7 @@ export function StoryLink({
   return (
     <Link
       href={`/story/${encodeURIComponent(story.story_id)}`}
-      className="block rounded-surface bg-raised p-4 transition-colors duration-200 hover:bg-sand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+      className="block rounded-surface bg-raised p-4 transition-colors duration-200 hover:bg-sand focus-ring"
     >
       <p className="text-item font-semibold leading-snug">{story.title ?? untitled}</p>
       {/* Three lines is a preview. A 280-character excerpt at full height turns

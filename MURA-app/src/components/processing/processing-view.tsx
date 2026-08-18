@@ -272,7 +272,7 @@ export function ProcessingView() {
     // Fades rather than cuts on the way to the result, so there is never a
     // blank frame between the two screens.
     <motion.div
-      className="relative mx-auto flex h-dvh w-full max-w-[520px] flex-col items-center justify-center px-6 sm:px-8"
+      className="relative mx-auto flex h-dvh w-full max-w-focus flex-col items-center justify-center px-6 sm:px-8"
       animate={{ opacity: leaving ? 0 : 1 }}
       transition={{ duration: leaving ? 0.34 : 0.2, ease: EASE }}
     >
@@ -366,7 +366,7 @@ export function ProcessingView() {
 
       {!degraded && failed && (
         <div className="absolute inset-x-6 bottom-[max(env(safe-area-inset-bottom),28px)] flex flex-col items-center">
-          <p className="max-w-[360px] text-center text-meta leading-relaxed text-muted">
+          <p className="max-w-measure text-center text-meta leading-relaxed text-muted">
             {t("processingFailed")}
           </p>
           <button

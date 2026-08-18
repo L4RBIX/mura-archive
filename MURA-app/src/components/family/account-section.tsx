@@ -42,7 +42,7 @@ export function AccountSection() {
           // Outlined, not `bg-sand`. Sand reads as a button on a raised card,
           // but this group sits directly on paper now and #ece9e2 on #eee8df
           // is not a visible edge — the control had stopped looking like one.
-          className="h-11 shrink-0 rounded-full border border-ink/20 px-5 text-meta font-semibold text-ink/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+          className="h-11 shrink-0 rounded-full border border-ink/20 px-5 text-meta font-semibold text-ink/75 focus-ring"
         >
           {t("signOut")}
         </button>

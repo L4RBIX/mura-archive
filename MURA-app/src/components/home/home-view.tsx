@@ -58,7 +58,7 @@ export function HomeView() {
   const hasArchive = overview.status !== "idle";
 
   return (
-    <PageContainer width="wide" className="pb-16 pt-chrome">
+    <PageContainer width="wide" className="pb-16 pt-screen">
       <motion.div variants={container} initial="hidden" animate="visible">
         <motion.header variants={item}>
           <p className="text-meta text-muted">
@@ -85,18 +85,26 @@ export function HomeView() {
         </motion.div>
 
         {/*
-          The top band pairs the one action this product exists for with the
-          quiet ways into the archive.
+          One page grid, not a band stacked on a row.
 
-          It used to be a two-column grid running the height of the page, with
-          the doorways pinned 300px off to the right. That left a ~490x210 hole
-          between the record button and them at desktop, and the memories below
-          were stuck in a 680px column while a third of the window stayed
-          empty. Pairing the two at the top closes the hole, and the memories
-          get the full measure underneath.
+          The record button and the doorways used to sit in a flex row of their
+          own above a full-width memories list. Because that row only needed
+          ~640px, it left a ~460px hole to the right of it at 1440 while the
+          list underneath ran the full 1100 — two different widths on one page,
+          which reads as a layout fault rather than a composition.
+
+          Now everything the user reads sits in column one, so the record button
+          and the memories share an edge, and the archive doorways occupy
+          column two for the whole height of the page instead of a corner of it.
+          Source order is record → doorways → memories, which is also the right
+          order stacked on a phone; `col/row-start` puts them back into two
+          columns from `lg` without moving anything in the DOM.
         */}
-        <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-16">
-          <motion.div variants={item} className="flex justify-center sm:justify-start">
+        <div className="mt-8 grid gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_300px] 2xl:gap-x-16 2xl:grid-cols-[minmax(0,1fr)_340px]">
+          <motion.div
+            variants={item}
+            className="flex justify-center sm:justify-start lg:col-start-1 lg:row-start-1"
+          >
             <RecordButton
               href="/record"
               label={t("recordMemory")}
@@ -104,26 +112,31 @@ export function HomeView() {
             />
           </motion.div>
 
-          <motion.aside variants={item} className="min-w-0 lg:max-w-[380px] lg:flex-1">
+          <motion.aside
+            variants={item}
+            className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
+          >
             {data && <ArchiveDoorways overview={data} />}
             <Link
               href="/ask"
-              className="mt-3 flex items-center gap-2.5 py-2 text-meta focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+              className="mt-3 flex items-center gap-2.5 py-2 text-meta focus-ring"
             >
               <span className="font-medium text-ink/70">{t("askCardTitle")}</span>
               <DemoBadge />
             </Link>
           </motion.aside>
-        </div>
 
-        {hasArchive && (
-          <motion.section variants={item} className="mt-12">
+          {hasArchive && (
+          <motion.section
+            variants={item}
+            className="min-w-0 lg:col-start-1 lg:row-start-2"
+          >
             <h2 className="text-caption font-semibold uppercase tracking-[0.16em] text-muted">
               {t("recentRecordings")}
             </h2>
-            {/* Two columns once there is room, so an excerpt keeps a readable
-                measure instead of running the full width of a laptop. */}
-            <div className="mt-3 grid gap-2.5 lg:grid-cols-2">
+            {/* Two columns only once column one is genuinely wide enough —
+                which, beside a 300px aside, is `xl` and not `lg`. */}
+            <div className="mt-3 grid gap-2.5 xl:grid-cols-2">
               {stories.map((story) => (
                 <StoryLink
                   key={story.story_id}
@@ -141,13 +154,14 @@ export function HomeView() {
             {stories.length > 0 && (
               <Link
                 href="/stories"
-                className="mt-4 inline-block text-meta font-medium text-ink/70 underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+                className="mt-4 inline-block text-meta font-medium text-ink/70 underline underline-offset-4 focus-ring"
               >
                 {t("homeOpenStories")}
               </Link>
             )}
           </motion.section>
-        )}
+          )}
+        </div>
       </motion.div>
     </PageContainer>
   );

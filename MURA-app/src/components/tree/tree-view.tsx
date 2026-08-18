@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { drawableFrom } from "@/components/tree/layout";
 import { TreeCanvas } from "@/components/tree/tree-canvas";
 import { Button } from "@/components/ui/button";
@@ -82,7 +82,7 @@ function TreeContent() {
     <div className="flex h-dvh flex-col">
       {/* One heading, not two: the header already says «Семейное древо», and a
           page title repeating it underneath was pure duplication. */}
-      <ScreenHeader fallbackHref="/home" title={t("familyTree")} />
+      <AppHeader fallbackHref="/home" title={t("familyTree")} width="full" />
 
       <ArchiveState
         resource={graph}
@@ -124,7 +124,7 @@ function TreeContent() {
                       <Link
                         href={`/tree?center=${encodeURIComponent(person.person_id)}`}
                         scroll={false}
-                        className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+                        className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium focus-ring"
                       >
                         <PersonAvatar
                           personId={person.person_id}

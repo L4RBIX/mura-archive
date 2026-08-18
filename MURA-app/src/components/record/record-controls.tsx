@@ -30,7 +30,7 @@ function ControlTile({
       whileTap={{ scale: 0.95 }}
       onClick={onClick}
       className={cn(
-        "flex h-[76px] flex-1 flex-col items-center justify-center gap-1.5 rounded-surface text-ink shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40",
+        "flex h-[76px] flex-1 flex-col items-center justify-center gap-1.5 rounded-surface text-ink shadow-soft focus-ring",
         className,
       )}
     >

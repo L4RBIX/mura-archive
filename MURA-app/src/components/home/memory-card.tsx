@@ -11,7 +11,7 @@ export function MemoryCard({ story }: { story: Story }) {
   return (
     <Link
       href={`/story/${story.id}`}
-      className="block rounded-panel bg-raised p-5 shadow-soft transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+      className="block rounded-panel bg-raised p-5 shadow-soft transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.98] focus-ring"
     >
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">

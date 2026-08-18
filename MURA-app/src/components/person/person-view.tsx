@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback, useMemo, type ReactNode } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { PageContainer } from "@/components/shell/page-container";
 import { StoryLink } from "@/components/story/story-link";
 import { PersonAvatar } from "@/components/ui/person-avatar";
@@ -107,7 +107,7 @@ function PersonContent({ personId }: { personId: string }) {
 
   return (
     <div className="pb-16">
-      <ScreenHeader fallbackHref="/tree" />
+      <AppHeader fallbackHref="/tree" />
 
       <ArchiveState resource={bundle} loadingLabel={t("personLoading")}>
         {!person ? (
@@ -115,7 +115,7 @@ function PersonContent({ personId }: { personId: string }) {
             <p className="py-16 text-center text-body text-muted">{t("personNotFound")}</p>
           </PageContainer>
         ) : (
-          <PageContainer>
+          <PageContainer width="wide">
             <motion.div variants={container} initial="hidden" animate="visible" className="pt-2">
               <motion.header variants={item} className="flex items-start gap-4">
                 <PersonAvatar
@@ -133,8 +133,16 @@ function PersonContent({ personId }: { personId: string }) {
                 </div>
               </motion.header>
 
+              {/*
+                Who they are, then what is remembered about them.
+                Stacked on a phone, and from `xl` the standing facts — other
+                names, places, who they are connected to — move into a narrow
+                column beside the memories, which are the part of this page
+                someone actually came to read.
+              */}
+              <div className="mt-7 grid gap-x-12 gap-y-7 xl:grid-cols-[280px_minmax(0,1fr)] xl:items-start">
               {person.aliases.length > 0 && (
-                <motion.section variants={item} className="mt-7">
+                <motion.section variants={item} className="xl:col-start-1">
                   <SectionLabel>{t("personKnownAs")}</SectionLabel>
                   <p className="text-body leading-relaxed text-ink/80">
                     {person.aliases.join(" · ")}
@@ -143,7 +151,7 @@ function PersonContent({ personId }: { personId: string }) {
               )}
 
               {places.length > 0 && (
-                <motion.section variants={item} className="mt-7">
+                <motion.section variants={item} className="xl:col-start-1">
                   <SectionLabel>{t("personPlaces")}</SectionLabel>
                   <p className="text-body leading-relaxed text-ink/80">
                     {places.map((place) => place.value).join(" · ")}
@@ -152,7 +160,7 @@ function PersonContent({ personId }: { personId: string }) {
               )}
 
               {connections.length > 0 && (
-                <motion.section variants={item} className="mt-7">
+                <motion.section variants={item} className="xl:col-start-1">
                   <SectionLabel>{t("personConnections")}</SectionLabel>
                   <ul className="flex flex-wrap gap-2">
                     {connections.map((id) => {
@@ -162,7 +170,7 @@ function PersonContent({ personId }: { personId: string }) {
                         <li key={id}>
                           <Link
                             href={`/person/${encodeURIComponent(id)}`}
-                            className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+                            className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium shadow-soft focus-ring"
                           >
                             <PersonAvatar
                               personId={other.person_id}
@@ -178,7 +186,10 @@ function PersonContent({ personId }: { personId: string }) {
                 </motion.section>
               )}
 
-              <motion.section variants={item} className="mt-8">
+              <motion.section
+                variants={item}
+                className="xl:col-start-2 xl:row-start-1 xl:row-span-3"
+              >
                 <SectionLabel>{t("personStories")}</SectionLabel>
                 {stories.length === 0 ? (
                   <p className="rounded-surface bg-raised p-5 text-body leading-relaxed text-muted">
@@ -194,6 +205,7 @@ function PersonContent({ personId }: { personId: string }) {
                   </ul>
                 )}
               </motion.section>
+              </div>
             </motion.div>
           </PageContainer>
         )}

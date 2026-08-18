@@ -80,7 +80,7 @@ export function OnboardingView() {
 
       <motion.div
         {...reveal(0.9)}
-        className="relative flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-[420px]"
+        className="relative flex flex-col gap-5 sm:mx-auto sm:w-full sm:max-w-measure"
       >
         <p className="text-center text-body text-muted">
           {t("memoryLives")}

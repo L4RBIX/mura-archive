@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
-import { ScreenHeader } from "@/components/layout/screen-header";
+import { AppHeader } from "@/components/layout/app-header";
 import { READING_WIDTH } from "@/components/shell/page-container";
 import { RecordingPlayer } from "@/components/story/recording-player";
 import { PersonAvatar } from "@/components/ui/person-avatar";
@@ -50,7 +50,7 @@ function StoryContent({ storyId }: { storyId: string }) {
 
   return (
     <div className="pb-20">
-      <ScreenHeader title={t("memory")} fallbackHref="/stories" />
+      <AppHeader title={t("memory")} fallbackHref="/stories" ownTitle width="reading" />
 
       <ArchiveState resource={story} loadingLabel={t("storyLoading")}>
         {!data ? null : (
@@ -134,7 +134,7 @@ function StoryContent({ storyId }: { storyId: string }) {
                     <li key={person.person_id}>
                       <Link
                         href={`/person/${encodeURIComponent(person.person_id)}`}
-                        className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium shadow-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink/40"
+                        className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium shadow-soft focus-ring"
                       >
                         <PersonAvatar
                           personId={person.person_id}

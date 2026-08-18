@@ -15,11 +15,11 @@ import type { ReactNode } from "react";
  */
 export function AuthFrame({ children }: { children: ReactNode }) {
   return (
-    <div className="mx-auto grid min-h-dvh w-full max-w-[1100px] items-center gap-10 px-6 py-10 lg:grid-cols-2 lg:gap-16 lg:px-10">
+    <div className="mx-auto grid min-h-dvh w-full max-w-wide items-center gap-10 px-6 py-10 lg:grid-cols-2 lg:gap-16 lg:px-10">
       <div className="text-center lg:text-left">
         <Link
           href="/"
-          className="inline-block rounded-control focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink/40"
+          className="inline-block rounded-control [--focus-ring-offset:4px] focus-ring"
         >
           <span className="block text-caption font-semibold uppercase tracking-[0.3em] text-muted">
             Мұра

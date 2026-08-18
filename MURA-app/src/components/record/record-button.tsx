@@ -50,7 +50,7 @@ export function RecordButton({
   );
 
   const sharedClass = cn(
-    "group block rounded-panel focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-ink/40",
+    "group block rounded-panel [--focus-ring-offset:8px] focus-ring",
     className,
   );
 
