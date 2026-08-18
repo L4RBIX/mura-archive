@@ -1,0 +1,28 @@
+{
+  "actions": {
+    "actions/checkout": {
+      "sha": "9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0",
+      "tag": "v7.0.0"
+    },
+    "actions/dependency-review-action": {
+      "sha": "a1d282b36b6f3519aa1f3fc636f609c47dddb294",
+      "tag": "v5.0.0"
+    },
+    "actions/setup-python": {
+      "sha": "ece7cb06caefa5fff74198d8649806c4678c61a1",
+      "tag": "v6.3.0"
+    },
+    "actions/upload-artifact": {
+      "sha": "ea165f8d65b6e75b540449e92b4886f43607fa02",
+      "tag": "v4.6.2"
+    },
+    "github/codeql-action": {
+      "sha": "7211b7c8077ea37d8641b6271f6a365a22a5fbfa",
+      "tag": "v4.36.0"
+    },
+    "trufflesecurity/trufflehog": {
+      "sha": "27b0417c16317ca9a472a9a8092acce143b49c55",
+      "tag": "v3.95.9"
+    }
+  }
+}

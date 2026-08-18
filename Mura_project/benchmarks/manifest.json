@@ -1,0 +1,11 @@
+{
+  "schema_version": "benchmark-manifest-v1",
+  "datasets": [
+    {
+      "dataset_id": "synthetic_current_main",
+      "path": "synthetic/current_main.json",
+      "split": "validation",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "benchmark-manifest-v4",
+  "datasets": [
+    {
+      "dataset_id": "synthetic_current_main",
+      "path": "synthetic/current_main.json",
+      "split": "validation",
+      "enabled": true
+    },
+    {
+      "dataset_id": "anonymized_adversarial_v1",
+      "path": "adversarial/anonymized_v1.json",
+      "split": "test",
+      "enabled": true
+    },
+    {
+      "dataset_id": "extraction_safety_adversarial_v2",
+      "path": "adversarial/extraction_safety_v2.json",
+      "split": "test",
+      "enabled": true
+    },
+    {
+      "dataset_id": "claim_semantics_adversarial_v1",
+      "path": "adversarial/claim_semantics_v1.json",
+      "split": "test",
+      "enabled": true
+    },
+    {
+      "dataset_id": "events_stories_adversarial_v1",
+      "path": "adversarial/events_stories_v1.json",
+      "split": "test",
+      "enabled": true
+    }
+  ]
+}

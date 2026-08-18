@@ -1,0 +1,75 @@
+name: ASR Live Evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: Approved local audio manifest path on the self-hosted runner
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asr-live-evaluation-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    name: evaluate-live-asr
+    runs-on: [self-hosted, linux, x64, gpu]
+    timeout-minutes: 120
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          check-latest: false
+
+      - name: Install pinned ASR environment
+        run: python -m pip install --disable-pip-version-check -q -e ".[dev,kaggle]"
+
+      - name: Generate live hypotheses
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts
+          mura-evaluate-asr-live \
+            --manifest "${{ inputs.manifest_path }}" \
+            --output-dataset artifacts/live-asr-dataset.json \
+            --device cuda:0 \
+            --max-audio-seconds 1800
+
+      - name: Evaluate live hypotheses
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mura-evaluate-asr \
+            --dataset artifacts/live-asr-dataset.json \
+            --release-gates benchmarks/asr_release_gates.json \
+            --json-output artifacts/asr-report.json \
+            --markdown-output artifacts/asr-report.md \
+            --require-runtime-metadata \
+            2>&1 | tee artifacts/asr-output.txt
+
+      - name: Upload evaluation reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: asr-live-evaluation-${{ github.run_id }}
+          path: |
+            artifacts/asr-report.json
+            artifacts/asr-report.md
+            artifacts/asr-output.txt
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,10 @@
+{
+  "schema_version": "asr-release-gates-v1",
+  "minimum_case_count": 12,
+  "minimum_language_case_count": {"ru": 4, "kk": 4, "mixed": 4},
+  "maximum_word_error_rate": 0.12,
+  "maximum_character_error_rate": 0.08,
+  "minimum_boundary_merge_accuracy": 1.0,
+  "minimum_repeat_preservation": 1.0,
+  "minimum_duplicate_expectation_accuracy": 1.0
+}

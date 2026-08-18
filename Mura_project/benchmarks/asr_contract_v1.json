@@ -1,0 +1,120 @@
+{
+  "schema_version": "asr-evaluation-dataset-v1",
+  "dataset_id": "asr_contract_synthetic_v1",
+  "source_type": "synthetic",
+  "license_or_consent": "Synthetic text-only fixtures; no audio and no real family data.",
+  "description": "Contract fixtures for WER/CER accounting and deterministic chunk-boundary merging. These are not live model quality results.",
+  "cases": [
+    {
+      "case_id": "ru_exact",
+      "language": "ru",
+      "reference": "Ерлан родился в Алматы",
+      "hypothesis": "Ерлан родился в Алматы"
+    },
+    {
+      "case_id": "ru_substitution",
+      "language": "ru",
+      "reference": "Алия работала учителем",
+      "hypothesis": "Алия работала врачом"
+    },
+    {
+      "case_id": "ru_overlap_duplicate",
+      "language": "ru",
+      "reference": "Ерлан инженер болды кейін көшті",
+      "hypothesis": "Ерлан инженер болды кейін көшті",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 5.0, "text": "Ерлан инженер болды"},
+        {"index": 2, "start": 4.5, "end": 9.0, "text": "инженер болды кейін көшті"}
+      ],
+      "expected_merged_text": "Ерлан инженер болды кейін көшті",
+      "expected_duplicate_words_removed": 2
+    },
+    {
+      "case_id": "ru_repeat_without_overlap",
+      "language": "ru",
+      "reference": "Ерлан Ерлан Ерлан пришёл",
+      "hypothesis": "Ерлан Ерлан Ерлан пришёл",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 5.0, "text": "Ерлан Ерлан"},
+        {"index": 2, "start": 5.1, "end": 9.0, "text": "Ерлан пришёл"}
+      ],
+      "expected_merged_text": "Ерлан Ерлан Ерлан пришёл",
+      "required_repeat_phrases": ["Ерлан Ерлан Ерлан"],
+      "expected_duplicate_words_removed": 0
+    },
+    {
+      "case_id": "kk_exact",
+      "language": "kk",
+      "reference": "Айгүл Алматыда дүниеге келген",
+      "hypothesis": "Айгүл Алматыда дүниеге келген"
+    },
+    {
+      "case_id": "kk_deletion",
+      "language": "kk",
+      "reference": "Болат ауылда мұғалім болып жұмыс істеді",
+      "hypothesis": "Болат ауылда мұғалім жұмыс істеді"
+    },
+    {
+      "case_id": "kk_overlap_duplicate",
+      "language": "kk",
+      "reference": "Ол мектепте оқыды кейін университетке түсті",
+      "hypothesis": "Ол мектепте оқыды кейін университетке түсті",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 4.0, "text": "Ол мектепте оқыды"},
+        {"index": 2, "start": 3.6, "end": 8.0, "text": "мектепте оқыды кейін университетке түсті"}
+      ],
+      "expected_merged_text": "Ол мектепте оқыды кейін университетке түсті",
+      "expected_duplicate_words_removed": 2
+    },
+    {
+      "case_id": "kk_fuzzy_overlap_not_deleted",
+      "language": "kk",
+      "reference": "Ол ауылға барды ауылда қалды",
+      "hypothesis": "Ол ауылға барды ауылда қалды",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 4.0, "text": "Ол ауылға барды"},
+        {"index": 2, "start": 3.7, "end": 8.0, "text": "ауылда қалды"}
+      ],
+      "expected_merged_text": "Ол ауылға барды ауылда қалды",
+      "required_repeat_phrases": ["ауылға барды ауылда"],
+      "expected_duplicate_words_removed": 0
+    },
+    {
+      "case_id": "mixed_exact",
+      "language": "mixed",
+      "reference": "Алия мектепте учитель болып жұмыс істеді",
+      "hypothesis": "Алия мектепте учитель болып жұмыс істеді"
+    },
+    {
+      "case_id": "mixed_insertion",
+      "language": "mixed",
+      "reference": "Ерлан кейін Алматыға көшті",
+      "hypothesis": "Ерлан содан кейін Алматыға көшті"
+    },
+    {
+      "case_id": "mixed_overlap_duplicate",
+      "language": "mixed",
+      "reference": "Динара врач болды кейін зейнетке шықты",
+      "hypothesis": "Динара врач болды кейін зейнетке шықты",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 4.5, "text": "Динара врач болды"},
+        {"index": 2, "start": 4.0, "end": 9.0, "text": "врач болды кейін зейнетке шықты"}
+      ],
+      "expected_merged_text": "Динара врач болды кейін зейнетке шықты",
+      "expected_duplicate_words_removed": 2
+    },
+    {
+      "case_id": "mixed_empty_chunk",
+      "language": "mixed",
+      "reference": "Ол инженер болып работал",
+      "hypothesis": "Ол инженер болып работал",
+      "chunks": [
+        {"index": 1, "start": 0.0, "end": 3.0, "text": "Ол инженер болып"},
+        {"index": 2, "start": 2.8, "end": 4.0, "text": ""},
+        {"index": 3, "start": 4.1, "end": 7.0, "text": "работал"}
+      ],
+      "expected_merged_text": "Ол инженер болып работал",
+      "expected_duplicate_words_removed": 0
+    }
+  ]
+}

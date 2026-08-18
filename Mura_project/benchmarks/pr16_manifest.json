@@ -1,0 +1,11 @@
+{
+  "schema_version": "benchmark-manifest-v1",
+  "datasets": [
+    {
+      "dataset_id": "synthetic_pr16_multilingual",
+      "path": "synthetic/pr16_multilingual.json",
+      "split": "development",
+      "enabled": true
+    }
+  ]
+}

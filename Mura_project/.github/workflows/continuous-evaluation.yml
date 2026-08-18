@@ -1,0 +1,88 @@
+name: Continuous Evaluation
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: continuous-evaluation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    name: evaluate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          check-latest: false
+
+      - name: Install evaluator
+        run: python -m pip install --disable-pip-version-check -q -e ".[dev]"
+
+      - name: Run continuous release evaluation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts
+          mura-evaluate-ml-release \
+            --manifest benchmarks/release/ml_release_manifest.json \
+            --json-output artifacts/ml-release-report.json \
+            --markdown-output artifacts/ml-release-report.md \
+            2>&1 | tee artifacts/ml-release-output.txt
+          {
+            echo "# Continuous Mura evaluation"
+            echo
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Run: \`${GITHUB_RUN_ID}\`"
+            echo "- Trigger: \`${GITHUB_EVENT_NAME}\`"
+            echo
+            cat artifacts/ml-release-report.md
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Write evaluation metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from datetime import UTC, datetime
+          from pathlib import Path
+
+          payload = {
+              "schema_version": "continuous-evaluation-run-v1",
+              "commit_sha": os.environ["GITHUB_SHA"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "event_name": os.environ["GITHUB_EVENT_NAME"],
+              "created_at": datetime.now(UTC).isoformat(),
+              "manifest": "benchmarks/release/ml_release_manifest.json",
+              "release_gates": "composite-offline-ml-release",
+          }
+          Path("artifacts/evaluation-metadata.json").write_text(
+              json.dumps(payload, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload evaluation snapshot
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: continuous-evaluation-${{ github.run_id }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 30

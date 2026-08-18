@@ -1,0 +1,1508 @@
+{
+  "dataset_id": "claim_semantics_adversarial_v1",
+  "schema_version": "benchmark-v3",
+  "description": "Synthetic RU/KK/mixed claim-semantics safety fixtures. No real family data.",
+  "cases": [
+    {
+      "case_id": "sem_uncertainty_scope",
+      "title": "Uncertainty remains local to the migration clause",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "uncertainty",
+        "scope"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_uncertainty_scope",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Алия родилась в 1987 году, а переехала, кажется, в 2005 году.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Алия родилась в 1987 году, а переехала, кажется, в 2005 году.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_claim",
+            "segment_id": "seg_1",
+            "text": "Алия родилась в 1987 году, а переехала, кажется, в 2005 году.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_uncertainty_scope",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "birth",
+            "event_type": "birth",
+            "title": "Алия родилась",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": "1987",
+              "precision": "year",
+              "original_expression": "в 1987 году"
+            },
+            "location": null,
+            "description": "Алия родилась в 1987 году",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "event_id": "move",
+            "event_type": "move",
+            "title": "Алия переехала",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": "2005",
+              "precision": "year",
+              "original_expression": "в 2005 году"
+            },
+            "location": null,
+            "description": "переехала в 2005 году",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "uncertain_object_ids": [
+          "event:move"
+        ],
+        "temporal_kinds": {
+          "birth": "year",
+          "move": "year"
+        },
+        "required_issue_codes": []
+      }
+    },
+    {
+      "case_id": "sem_approximate_year",
+      "title": "Approximate year cannot become exact",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "temporal",
+        "approximate"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_approximate_year",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Алия родилась примерно в 1987 году.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Алия родилась примерно в 1987 году.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_claim",
+            "segment_id": "seg_1",
+            "text": "Алия родилась примерно в 1987 году.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_approximate_year",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "birth",
+            "event_type": "birth",
+            "title": "Алия родилась",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": "1987-01-01",
+              "precision": "day",
+              "kind": "exact_date",
+              "normalized_value": "1987-01-01",
+              "original_expression": "примерно в 1987 году"
+            },
+            "description": "Алия родилась примерно в 1987 году",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "uncertain_object_ids": [],
+        "temporal_kinds": {
+          "birth": "approximate"
+        },
+        "required_issue_codes": [
+          "temporal_precision_overstated"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_relative_date",
+      "title": "Relative date remains unresolved without anchor",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "temporal",
+        "relative"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_relative_date",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Алия переехала до свадьбы.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Алия переехала до свадьбы.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_claim",
+            "segment_id": "seg_1",
+            "text": "Алия переехала до свадьбы.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_relative_date",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "move",
+            "event_type": "move",
+            "title": "Алия переехала",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": null,
+              "precision": "unknown",
+              "original_expression": "до свадьбы"
+            },
+            "description": "Алия переехала до свадьбы",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "uncertain_object_ids": [],
+        "temporal_kinds": {
+          "move": "relative"
+        },
+        "required_issue_codes": [
+          "temporal_anchor_missing"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_former_spouse",
+      "title": "Former spouse is not current",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "former"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_former_spouse",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Ерлан — бывший муж Алии.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Ерлан — бывший муж Алии.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_former_spouse",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_former",
+            "relationship_type": "spouse",
+            "subject_mention_id": "erlan",
+            "subject_role": "spouse",
+            "object_mention_id": "alia",
+            "object_role": "spouse",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия",
+              "Алии"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "former_pair",
+            "relationship_type": "spouse",
+            "subject_person_key": "erlan",
+            "subject_role": "spouse",
+            "object_person_key": "alia",
+            "object_role": "spouse"
+          }
+        ],
+        "relationship_states": {
+          "rel_former": "former"
+        },
+        "required_issue_codes": [
+          "relationship_former_not_active"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_figurative_brother",
+      "title": "Figurative brother is not kinship",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "figurative",
+        "negation"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_figurative_brother",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Ерлан для Алии как брат, но они не родственники.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Ерлан для Алии как брат, но они не родственники.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_figurative_brother",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_fig",
+            "relationship_type": "sibling",
+            "subject_mention_id": "alia",
+            "subject_role": "sibling",
+            "object_mention_id": "erlan",
+            "object_role": "sibling",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия",
+              "Алии"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "fig_pair",
+            "relationship_type": "sibling",
+            "subject_person_key": "alia",
+            "subject_role": "sibling",
+            "object_person_key": "erlan",
+            "object_role": "sibling"
+          }
+        ],
+        "relationship_states": {
+          "rel_fig": "figurative"
+        },
+        "required_issue_codes": [
+          "relationship_figurative"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_kk_uncertainty",
+      "title": "Kazakh uncertainty marker remains claim-local",
+      "language": "kk",
+      "construction_tags": [
+        "adversarial",
+        "uncertainty",
+        "kazakh"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_kk_uncertainty",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Шамасы, Алия 1987 жылы туған.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Шамасы, Алия 1987 жылы туған.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_claim",
+            "segment_id": "seg_1",
+            "text": "Шамасы, Алия 1987 жылы туған.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_kk_uncertainty",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "birth",
+            "event_type": "birth",
+            "title": "Алия туған",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": "1987",
+              "precision": "year",
+              "original_expression": "1987 жылы"
+            },
+            "location": null,
+            "description": "Алия 1987 жылы туған",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "uncertain_object_ids": [
+          "event:birth"
+        ],
+        "temporal_kinds": {
+          "birth": "year"
+        },
+        "required_issue_codes": []
+      }
+    },
+    {
+      "case_id": "sem_invalid_calendar_date",
+      "title": "Invalid calendar date is removed without losing event",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "temporal",
+        "invalid_calendar"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_invalid_calendar_date",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Алия родилась 31 февраля 1987 года.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Алия родилась 31 февраля 1987 года.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_claim",
+            "segment_id": "seg_1",
+            "text": "Алия родилась 31 февраля 1987 года.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_invalid_calendar_date",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "birth",
+            "event_type": "birth",
+            "title": "Алия родилась",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": {
+              "value": "1987-02-31",
+              "normalized_value": "1987-02-31",
+              "precision": "day",
+              "kind": "exact_date",
+              "original_expression": "31 февраля 1987 года"
+            },
+            "location": null,
+            "description": "Алия родилась 31 февраля 1987 года",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_claim"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "required_issue_codes": [
+          "temporal_value_invalid"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_negated_sibling",
+      "title": "Negated kinship is not a positive active relationship",
+      "language": "kk",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "negated",
+        "kazakh"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_negated_sibling",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Алия Ерланның әпкесі емес.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Алия Ерланның әпкесі емес.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_negated_sibling",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_negated",
+            "relationship_type": "sibling",
+            "subject_mention_id": "alia",
+            "subject_role": "sibling",
+            "object_mention_id": "erlan",
+            "object_role": "sibling",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан",
+              "Ерланның"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "neg_pair",
+            "relationship_type": "sibling",
+            "subject_person_key": "alia",
+            "subject_role": "sibling",
+            "object_person_key": "erlan",
+            "object_role": "sibling"
+          }
+        ],
+        "relationship_states": {
+          "rel_negated": "negated"
+        },
+        "required_issue_codes": [
+          "relationship_negated"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_ended_spouse",
+      "title": "Divorce marks spouse relation ended rather than current",
+      "language": "kk",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "ended",
+        "kazakh"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_ended_spouse",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Ерлан мен Алия ажырасты.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Ерлан мен Алия ажырасты.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_ended_spouse",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_ended",
+            "relationship_type": "spouse",
+            "subject_mention_id": "erlan",
+            "subject_role": "spouse",
+            "object_mention_id": "alia",
+            "object_role": "spouse",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "ended_pair",
+            "relationship_type": "spouse",
+            "subject_person_key": "erlan",
+            "subject_role": "spouse",
+            "object_person_key": "alia",
+            "object_role": "spouse"
+          }
+        ],
+        "relationship_states": {
+          "rel_ended": "ended"
+        },
+        "required_issue_codes": [
+          "relationship_ended_not_active"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_pair_owned_state",
+      "title": "Historical cue belongs only to its named pair",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "pair_ownership"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_pair_owned_state",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Ерлан — бывший муж Алии. Нурлан — муж Мадины.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Ерлан — бывший муж Алии. Нурлан — муж Мадины.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_pair_owned_state",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "madina",
+            "name": "Мадина",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_former_owned",
+            "relationship_type": "spouse",
+            "subject_mention_id": "erlan",
+            "subject_role": "spouse",
+            "object_mention_id": "alia",
+            "object_role": "spouse",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "relationship_id": "rel_current_owned",
+            "relationship_type": "spouse",
+            "subject_mention_id": "nurlan",
+            "subject_role": "spouse",
+            "object_mention_id": "madina",
+            "object_role": "spouse",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия",
+              "Алии"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "nurlan",
+            "accepted_surfaces": [
+              "Нурлан"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "madina",
+            "accepted_surfaces": [
+              "Мадина",
+              "Мадины"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "former_owned",
+            "relationship_type": "spouse",
+            "subject_person_key": "erlan",
+            "subject_role": "spouse",
+            "object_person_key": "alia",
+            "object_role": "spouse"
+          },
+          {
+            "relationship_key": "current_owned",
+            "relationship_type": "spouse",
+            "subject_person_key": "nurlan",
+            "subject_role": "spouse",
+            "object_person_key": "madina",
+            "object_role": "spouse"
+          }
+        ],
+        "relationship_states": {
+          "rel_former_owned": "former",
+          "rel_current_owned": "current"
+        },
+        "required_issue_codes": [
+          "relationship_former_not_active"
+        ]
+      }
+    },
+    {
+      "case_id": "sem_self_corrected_spouse",
+      "title": "Explicit correction supersedes current spouse wording",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "relationship_state",
+        "self_correction"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "sem_self_corrected_spouse",
+        "duration_seconds": 1.0,
+        "language_hints": [],
+        "full_text": "Ерлан муж Алии... нет, бывший муж Алии.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Ерлан муж Алии... нет, бывший муж Алии.",
+            "chunk_id": "chunk_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "claim-semantics-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "sem_self_corrected_spouse",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "rel_corrected",
+            "relationship_type": "spouse",
+            "subject_mention_id": "erlan",
+            "subject_role": "spouse",
+            "object_mention_id": "alia",
+            "object_role": "spouse",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "erlan",
+            "accepted_surfaces": [
+              "Ерлан"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия",
+              "Алии"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [
+          {
+            "relationship_key": "corrected_pair",
+            "relationship_type": "spouse",
+            "subject_person_key": "erlan",
+            "subject_role": "spouse",
+            "object_person_key": "alia",
+            "object_role": "spouse"
+          }
+        ],
+        "relationship_states": {
+          "rel_corrected": "former"
+        },
+        "required_issue_codes": [
+          "relationship_former_not_active"
+        ]
+      }
+    }
+  ]
+}

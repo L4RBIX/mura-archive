@@ -1,0 +1,56 @@
+{
+  "schema_version": "release-manifest-v1",
+  "release_id": "mura-core-v1.0.0-rc1",
+  "status": "release_candidate",
+  "runtime_compatibility_key": "mura-runtime-v1",
+  "pipeline_versions": {
+    "pipeline": "mura-core-v0.15.0",
+    "domain_schema": "domain-v5-identity-safety",
+    "cleaner_prompt": "cleaner-v3-self-correction-semantics",
+    "extractor_prompt": "extractor-v6-focused-passes",
+    "extractor_repair_prompt": "extractor-repair-v4-focused-pass",
+    "evidence_rules": "claim-evidence-v5-ordered-factual-support+bounded-coreference-v3",
+    "extraction_orchestration": "focused-extraction-v1-three-pass",
+    "narrative_rules": "event-story-grounding-v1",
+    "claim_semantics": "claim-semantics-v1",
+    "temporal_rules": "temporal-normalizer-v1",
+    "relationship_state_rules": "relationship-state-v1",
+    "resolver": "mention-resolver-v3-collision-safe",
+    "archive_schema": "archive-claim-ledger-v1+conflict-decisions-v1+generic-claims-v1",
+    "materializer": "family-materializer-v4-active-state-guard",
+    "evaluator": "core-evaluator-v7-offline-e2e-release",
+    "benchmark_schema": "benchmark-v7-offline-e2e+asr-contract+identity-safety",
+    "asr_model": "gigaam-multilingual-large-ctc@ac7c6db08133f83478451a659f8470ee8ab47a2d",
+    "asr_vad": "silero-vad-6.2.1",
+    "asr_chunker": "silero-smart-v2-exact-overlap",
+    "asr_evaluator": "asr-evaluator-v1-wer-cer-boundary"
+  },
+  "budgets": {
+    "schema_version": "release-budgets-v1",
+    "maximum_pipeline_seconds": 180.0,
+    "maximum_total_trace_seconds": 1080.0,
+    "maximum_input_units": 120000,
+    "maximum_output_units": 30000,
+    "maximum_weighted_cost_units": 240000,
+    "maximum_people_per_recording": 250,
+    "maximum_relationships_per_recording": 500
+  },
+  "replay_protocol": "deterministic-family-replay-v1",
+  "retention_protocol": "operational-retention-v1",
+  "verification": {
+    "public_release_manifest": "benchmarks/release/ml_release_manifest.json",
+    "offline_release_command": "mura-evaluate-ml-release --manifest benchmarks/release/ml_release_manifest.json",
+    "live_release_gates": "benchmarks/e2e_live_release_gates.json",
+    "live_release_command": "mura-evaluate-e2e-live --manifest <approved-manifest> --release-gates benchmarks/e2e_live_release_gates.json",
+    "local_smoke_command": "mura-release-smoke",
+    "postgresql_migration_head": "20260719_0006"
+  },
+  "limitations": [
+    "Offline release gates use frozen external provider outputs and establish only an offline release candidate.",
+    "Production promotion requires a passing live GigaAM plus DeepSeek evaluation on approved RU, KK, and mixed-speech audio.",
+    "Live ASR and LLM provider calls are external and cannot be deterministic replay inputs.",
+    "Rollback changes the desired release and requires deployment or restart of the matching runtime.",
+    "Cost budgets use normalized token units rather than unstable provider currency pricing.",
+    "Operational retention never deletes family archive data, pipeline results, human decisions, or audio paths."
+  ]
+}

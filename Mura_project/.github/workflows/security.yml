@@ -1,0 +1,61 @@
+name: Security
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: secret-scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out complete Git history
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Scan repository and history for secrets
+        uses: trufflesecurity/trufflehog@27b0417c16317ca9a472a9a8092acce143b49c55 # v3.95.9
+        with:
+          extra_args: --no-verification --results=unverified,unknown
+
+  dependency-audit:
+    name: dependency-audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          check-latest: false
+
+      - name: Install dependency auditor
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "pip-audit>=2.9,<3"
+
+      - name: Audit dependencies declared by pyproject.toml
+        run: pip-audit . --strict

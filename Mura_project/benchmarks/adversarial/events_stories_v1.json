@@ -1,0 +1,1374 @@
+{
+  "dataset_id": "events_stories_adversarial_v1",
+  "schema_version": "benchmark-v4",
+  "description": "Synthetic event, description, story factuality, attribution, episode identity, and sensitivity cases. No real family data.",
+  "cases": [
+    {
+      "case_id": "narr_valid_move_story",
+      "title": "Grounded event and story survive",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "event",
+        "story",
+        "positive"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_valid_move_story",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Борис переехал в Астану в 2005 году.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Борис переехал в Астану в 2005 году.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Борис переехал в Астану в 2005 году.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_valid_move_story",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "move_1",
+            "event_type": "move",
+            "title": "Переезд Бориса",
+            "participant_mention_ids": [
+              "boris"
+            ],
+            "date": null,
+            "location": "Астана",
+            "description": "Борис переехал в Астану в 2005 году.",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [
+          {
+            "description_id": "desc_1",
+            "person_mention_id": "boris",
+            "description": "Борис переехал в Астану в 2005 году.",
+            "perspective": "Айжан",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "stories": [
+          {
+            "story_id": "story_1",
+            "title": "История переезда Бориса",
+            "summary": "Борис переехал в Астану в 2005 году.",
+            "person_mention_ids": [
+              "boris"
+            ],
+            "event_ids": [
+              "move_1"
+            ],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ]
+          }
+        ],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "events": [
+          {
+            "event_key": "move",
+            "event_type": "move",
+            "participant_person_keys": [
+              "boris"
+            ],
+            "source_segment_ids": [
+              "seg_1"
+            ]
+          }
+        ],
+        "stories": [
+          {
+            "story_key": "move_story",
+            "person_keys": [
+              "boris"
+            ],
+            "event_keys": [
+              "move"
+            ],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "minimum_sensitivity": "normal"
+          }
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true,
+        "descriptions": [
+          {
+            "description_key": "boris_move_description",
+            "person_key": "boris",
+            "source_segment_ids": [
+              "seg_1"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "case_id": "narr_event_added_motivation",
+      "title": "Event cannot invent motivation",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "event",
+        "factuality"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_event_added_motivation",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Борис переехал в Астану.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Борис переехал в Астану.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Борис переехал в Астану.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_event_added_motivation",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "move_bad",
+            "event_type": "move",
+            "title": "Переезд",
+            "participant_mention_ids": [
+              "boris"
+            ],
+            "date": null,
+            "location": "Астана",
+            "description": "Борис переехал в Астану ради новой работы",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "quarantined_object_ids": [
+          "event:move_bad"
+        ],
+        "required_issue_codes": [
+          "event_statement_unsupported"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_story_role_reversal",
+      "title": "Story cannot reverse actor and recipient",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "story",
+        "factuality",
+        "role_reversal"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_story_role_reversal",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Анна помогла Борису.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Анна помогла Борису.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Анна помогла Борису.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_story_role_reversal",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "anna",
+            "name": "Анна",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [],
+        "descriptions": [],
+        "stories": [
+          {
+            "story_id": "story_bad",
+            "title": "История Анны и Бориса",
+            "summary": "Борис помог Анне",
+            "person_mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "event_ids": [],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ]
+          }
+        ],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "anna",
+            "accepted_surfaces": [
+              "Анна"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "quarantined_object_ids": [
+          "story:story_bad"
+        ],
+        "required_issue_codes": [
+          "story_statement_unsupported"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_sensitive_death_story",
+      "title": "Sensitive story is conservatively classified",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "story",
+        "sensitivity",
+        "death"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_sensitive_death_story",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "После тяжёлой болезни Алия умерла в больнице.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "После тяжёлой болезни Алия умерла в больнице.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "После тяжёлой болезни Алия умерла в больнице.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_sensitive_death_story",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "death_1",
+            "event_type": "death",
+            "title": "Смерть Алии",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": null,
+            "location": null,
+            "description": "После тяжёлой болезни Алия умерла в больнице.",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [
+          {
+            "story_id": "story_sensitive",
+            "title": "История Алии",
+            "summary": "После тяжёлой болезни Алия умерла в больнице.",
+            "person_mention_ids": [
+              "alia"
+            ],
+            "event_ids": [
+              "death_1"
+            ],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ]
+          }
+        ],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "events": [
+          {
+            "event_key": "death",
+            "event_type": "death",
+            "participant_person_keys": [
+              "alia"
+            ],
+            "source_segment_ids": [
+              "seg_1"
+            ]
+          }
+        ],
+        "stories": [
+          {
+            "story_key": "death_story",
+            "person_keys": [
+              "alia"
+            ],
+            "event_keys": [
+              "death"
+            ],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "minimum_sensitivity": "sensitive"
+          }
+        ],
+        "required_issue_codes": [
+          "story_sensitivity_upgraded"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_distinct_episodes_same_people",
+      "title": "Same people in separate episodes remain separate stories",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "story",
+        "episode_identity",
+        "deduplication"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_distinct_episodes_same_people",
+        "duration_seconds": 2.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Анна и Борис переехали в Астану. Анна и Борис открыли школу.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0,
+            "end": 1,
+            "text": "Анна и Борис переехали в Астану.",
+            "chunk_id": "chunk_seg_1"
+          },
+          {
+            "segment_id": "seg_2",
+            "start": 1,
+            "end": 2,
+            "text": "Анна и Борис открыли школу.",
+            "chunk_id": "chunk_seg_2"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Анна и Борис переехали в Астану.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          },
+          {
+            "evidence_id": "ev_2",
+            "segment_id": "seg_2",
+            "text": "Анна и Борис открыли школу.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_distinct_episodes_same_people",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "anna",
+            "name": "Анна",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1",
+              "seg_2"
+            ],
+            "evidence_ids": [
+              "ev_1",
+              "ev_2"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1",
+              "seg_2"
+            ],
+            "evidence_ids": [
+              "ev_1",
+              "ev_2"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [],
+        "descriptions": [],
+        "stories": [
+          {
+            "story_id": "story_move",
+            "title": "История Анны и Бориса",
+            "summary": "Анна и Борис переехали в Астану.",
+            "person_mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "event_ids": [],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ]
+          },
+          {
+            "story_id": "story_school",
+            "title": "История Анны и Бориса",
+            "summary": "Анна и Борис открыли школу.",
+            "person_mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "event_ids": [],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_2"
+            ],
+            "evidence_ids": [
+              "ev_2"
+            ]
+          }
+        ],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "anna",
+            "accepted_surfaces": [
+              "Анна"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "stories": [
+          {
+            "story_key": "move_episode",
+            "person_keys": [
+              "anna",
+              "boris"
+            ],
+            "event_keys": [],
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "minimum_sensitivity": "normal"
+          },
+          {
+            "story_key": "school_episode",
+            "person_keys": [
+              "anna",
+              "boris"
+            ],
+            "event_keys": [],
+            "source_segment_ids": [
+              "seg_2"
+            ],
+            "minimum_sensitivity": "normal"
+          }
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_description_wrong_target",
+      "title": "Description cannot move another person's trait",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "description",
+        "attribution"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_description_wrong_target",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Анна была учителем. Борис работал врачом.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Анна была учителем. Борис работал врачом.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Анна была учителем. Борис работал врачом.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_description_wrong_target",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "anna",
+            "name": "Анна",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [],
+        "descriptions": [
+          {
+            "description_id": "desc_bad",
+            "person_mention_id": "boris",
+            "description": "Анна была учителем",
+            "perspective": "Айжан",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "anna",
+            "accepted_surfaces": [
+              "Анна"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "quarantined_object_ids": [
+          "description:desc_bad"
+        ],
+        "required_issue_codes": [
+          "description_attribution_unsupported"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_story_event_outside_episode",
+      "title": "Story cannot cite event from another episode",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "story",
+        "event_reference",
+        "episode_identity"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_story_event_outside_episode",
+        "duration_seconds": 2.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Алия переехала в Алматы. Алия вышла замуж.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0,
+            "end": 1,
+            "text": "Алия переехала в Алматы.",
+            "chunk_id": "chunk_seg_1"
+          },
+          {
+            "segment_id": "seg_2",
+            "start": 1,
+            "end": 2,
+            "text": "Алия вышла замуж.",
+            "chunk_id": "chunk_seg_2"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Алия переехала в Алматы.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          },
+          {
+            "evidence_id": "ev_2",
+            "segment_id": "seg_2",
+            "text": "Алия вышла замуж.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "alia"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_story_event_outside_episode",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "alia",
+            "name": "Алия",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1",
+              "seg_2"
+            ],
+            "evidence_ids": [
+              "ev_1",
+              "ev_2"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "move_1",
+            "event_type": "move",
+            "title": "Переезд Алии",
+            "participant_mention_ids": [
+              "alia"
+            ],
+            "date": null,
+            "location": "Алматы",
+            "description": "Алия переехала в Алматы.",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [
+          {
+            "story_id": "story_bad_event",
+            "title": "История Алии",
+            "summary": "Алия вышла замуж.",
+            "person_mention_ids": [
+              "alia"
+            ],
+            "event_ids": [
+              "move_1"
+            ],
+            "privacy": "private",
+            "sensitivity": "normal",
+            "sensitivity_reasons": [],
+            "source_segment_ids": [
+              "seg_2"
+            ],
+            "evidence_ids": [
+              "ev_2"
+            ]
+          }
+        ],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "alia",
+            "accepted_surfaces": [
+              "Алия"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "events": [
+          {
+            "event_key": "move",
+            "event_type": "move",
+            "participant_person_keys": [
+              "alia"
+            ],
+            "source_segment_ids": [
+              "seg_1"
+            ]
+          }
+        ],
+        "quarantined_object_ids": [
+          "story:story_bad_event"
+        ],
+        "required_issue_codes": [
+          "object_reference_invalid"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    },
+    {
+      "case_id": "narr_event_wrong_participant",
+      "title": "Event participant follows the event statement",
+      "language": "ru",
+      "construction_tags": [
+        "adversarial",
+        "event",
+        "participant_attribution"
+      ],
+      "speaker_id": "speaker_anon",
+      "speaker_name": "Айжан",
+      "transcript": {
+        "recording_id": "narr_event_wrong_participant",
+        "duration_seconds": 1.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Анна переехала в Алматы. Борис остался дома.",
+        "segments": [
+          {
+            "segment_id": "seg_1",
+            "start": 0.0,
+            "end": 1.0,
+            "text": "Анна переехала в Алматы. Борис остался дома.",
+            "chunk_id": "chunk_seg_1"
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "events-stories-v1",
+        "chunker_version": "fixture-v1",
+        "processing_seconds": 0.0
+      },
+      "raw_extraction": {
+        "provenance_activities": [],
+        "evidence_spans": [
+          {
+            "evidence_id": "ev_1",
+            "segment_id": "seg_1",
+            "text": "Анна переехала в Алматы. Борис остался дома.",
+            "source_layer": "raw_transcript",
+            "start_char": null,
+            "end_char": null,
+            "evidence_class": "A_explicit",
+            "purposes": [
+              "claim"
+            ],
+            "mention_ids": [
+              "anna",
+              "boris"
+            ],
+            "coreference_link_ids": [],
+            "derived_from_evidence_ids": [],
+            "confidence": 1.0
+          }
+        ],
+        "coreference_links": [],
+        "conflict_sets": [],
+        "recording_id": "narr_event_wrong_participant",
+        "speaker_id": "speaker_anon",
+        "speaker_name": "Айжан",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "anna",
+            "name": "Анна",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "boris",
+            "name": "Борис",
+            "aliases": [],
+            "category": "unknown",
+            "relation_to_speaker": null,
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [],
+        "events": [
+          {
+            "event_id": "move_bad_person",
+            "event_type": "move",
+            "title": "Переезд",
+            "participant_mention_ids": [
+              "boris"
+            ],
+            "date": null,
+            "location": "Алматы",
+            "description": "Анна переехала в Алматы",
+            "source_segment_ids": [
+              "seg_1"
+            ],
+            "evidence_ids": [
+              "ev_1"
+            ],
+            "assertion_mode": "explicit",
+            "verification_status": "unreviewed",
+            "confidence": 1.0
+          }
+        ],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold": {
+        "people": [
+          {
+            "person_key": "anna",
+            "accepted_surfaces": [
+              "Анна"
+            ],
+            "category": "unknown"
+          },
+          {
+            "person_key": "boris",
+            "accepted_surfaces": [
+              "Борис"
+            ],
+            "category": "unknown"
+          }
+        ],
+        "relationships": [],
+        "quarantined_object_ids": [
+          "event:move_bad_person"
+        ],
+        "required_issue_codes": [
+          "event_participant_attribution_unsupported"
+        ],
+        "score_events": true,
+        "score_descriptions": true,
+        "score_stories": true
+      }
+    }
+  ]
+}

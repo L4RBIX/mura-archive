@@ -1,0 +1,1073 @@
+{
+  "report_schema_version": "evaluation-report-v4",
+  "manifest_path": "benchmarks/manifest.json",
+  "pipeline_versions": {
+    "pipeline": "mura-core-v0.15.0",
+    "domain_schema": "domain-v5-identity-safety",
+    "cleaner_prompt": "cleaner-v3-self-correction-semantics",
+    "extractor_prompt": "extractor-v6-focused-passes",
+    "extractor_repair_prompt": "extractor-repair-v4-focused-pass",
+    "evidence_rules": "claim-evidence-v5-ordered-factual-support+bounded-coreference-v3",
+    "extraction_orchestration": "focused-extraction-v1-three-pass",
+    "narrative_rules": "event-story-grounding-v1",
+    "claim_semantics": "claim-semantics-v1",
+    "temporal_rules": "temporal-normalizer-v1",
+    "relationship_state_rules": "relationship-state-v1",
+    "resolver": "mention-resolver-v3-collision-safe",
+    "archive_schema": "archive-claim-ledger-v1+conflict-decisions-v1+generic-claims-v1",
+    "materializer": "family-materializer-v4-active-state-guard",
+    "evaluator": "core-evaluator-v7-offline-e2e-release",
+    "benchmark_schema": "benchmark-v7-offline-e2e+asr-contract+identity-safety",
+    "asr_model": "gigaam-multilingual-large-ctc@ac7c6db08133f83478451a659f8470ee8ab47a2d",
+    "asr_vad": "silero-vad-6.2.1",
+    "asr_chunker": "silero-smart-v2-exact-overlap",
+    "asr_evaluator": "asr-evaluator-v1-wer-cer-boundary",
+    "long_form_planner": "long-form-planner-v1",
+    "long_form_window_policy": "long-form-window-policy-v1",
+    "long_form_executor": "long-form-executor-v1-single-pass-partial",
+    "long_form_merge": "long-form-merge-v1",
+    "long_form_registry": "recording-mention-registry-v1-conservative"
+  },
+  "cases": [
+    {
+      "case_id": "kk_speaker_anchored_parent",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "kk",
+      "construction_tags": [
+        "speaker_anchor",
+        "parent_child",
+        "kazakh_possessive"
+      ],
+      "person_mentions": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 3,
+        "denominator": 3,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [
+        "relationship_001"
+      ],
+      "quarantined_relationship_ids": [],
+      "extraction_issue_count": 0,
+      "evidence_closure_relationships": 0,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    },
+    {
+      "case_id": "kk_named_possessor_spouse",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "kk",
+      "construction_tags": [
+        "named_possessor",
+        "spouse",
+        "kazakh_case_suffix"
+      ],
+      "person_mentions": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 3,
+        "denominator": 3,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [
+        "relationship_001"
+      ],
+      "quarantined_relationship_ids": [],
+      "extraction_issue_count": 0,
+      "evidence_closure_relationships": 0,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    },
+    {
+      "case_id": "ru_inflected_speaker_anchor",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "ru",
+      "construction_tags": [
+        "speaker_anchor",
+        "russian_inflection",
+        "parent_child"
+      ],
+      "person_mentions": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 3,
+        "denominator": 3,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [
+        "relationship_001"
+      ],
+      "quarantined_relationship_ids": [],
+      "extraction_issue_count": 0,
+      "evidence_closure_relationships": 0,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    },
+    {
+      "case_id": "ru_ambiguous_third_person",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "ru",
+      "construction_tags": [
+        "third_person",
+        "ambiguous_coreference",
+        "safety"
+      ],
+      "person_mentions": {
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 3,
+        "denominator": 3,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [],
+      "quarantined_relationship_ids": [
+        "relationship_001"
+      ],
+      "extraction_issue_count": 1,
+      "evidence_closure_relationships": 1,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    },
+    {
+      "case_id": "kk_plural_antecedent_children",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "kk",
+      "construction_tags": [
+        "plural_antecedent",
+        "cross_segment",
+        "parent_child"
+      ],
+      "person_mentions": {
+        "true_positive": 3,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 2,
+        "denominator": 2,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 5,
+        "denominator": 5,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [
+        "relationship_001",
+        "relationship_002"
+      ],
+      "quarantined_relationship_ids": [],
+      "extraction_issue_count": 0,
+      "evidence_closure_relationships": 2,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    },
+    {
+      "case_id": "en_explicit_possessive_spouse",
+      "dataset_id": "synthetic_current_main",
+      "split": "validation",
+      "language": "en",
+      "construction_tags": [
+        "english_possessive",
+        "spouse",
+        "explicit"
+      ],
+      "person_mentions": {
+        "true_positive": 2,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationships": {
+        "true_positive": 1,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_relationships": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "quarantined_objects": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "relationship_direction_accuracy": {
+        "numerator": 1,
+        "denominator": 1,
+        "value": 1.0
+      },
+      "provenance_completeness": {
+        "numerator": 3,
+        "denominator": 3,
+        "value": 1.0
+      },
+      "unknown_segment_references": 0,
+      "self_relationships": 0,
+      "accepted_relationship_ids": [
+        "relationship_001"
+      ],
+      "quarantined_relationship_ids": [],
+      "extraction_issue_count": 0,
+      "evidence_closure_relationships": 0,
+      "provenance_violations": 0,
+      "objects_without_evidence": 0,
+      "invalid_evidence_spans": 0,
+      "unsafe_verification_statuses": 0,
+      "unsafe_story_privacy": 0,
+      "unknown_issue_codes": 0,
+      "missing_required_issue_codes": 0,
+      "fatal_contract_failures": 0,
+      "evidence_recovery_counts": {
+        "already_valid": 0,
+        "recovered": 0,
+        "ambiguous": 0,
+        "missing": 0,
+        "wrong_source_layer": 0,
+        "unknown_segment": 0,
+        "invalid_text": 0,
+        "unrecoverable": 0,
+        "repaired_evidence_offsets": 0,
+        "exact_offsets_accepted": 0,
+        "unique_match_repaired": 0,
+        "nearest_match_repaired": 0,
+        "ambiguous_offsets_removed": 0,
+        "missing_text_quarantined": 0,
+        "unknown_segment_quarantined": 0,
+        "non_raw_evidence_skipped": 0
+      },
+      "uncertainty_scope_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "temporal_kind_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "relationship_state_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "events": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "descriptions": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "stories": {
+        "true_positive": 0,
+        "false_positive": 0,
+        "false_negative": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "event_participant_accuracy": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "narrative_factual_support": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "sensitive_story_recall": {
+        "numerator": 0,
+        "denominator": 0,
+        "value": 1.0
+      },
+      "unsupported_event_statements": 0,
+      "unsupported_story_statements": 0,
+      "sensitivity_underclassifications": 0,
+      "duplicate_semantic_events": 0,
+      "duplicate_semantic_stories": 0,
+      "approximate_dates_exactified": 0,
+      "invalid_calendar_dates_accepted": 0,
+      "unresolved_relative_dates_absolutized": 0,
+      "negated_relationship_false_positives": 0,
+      "figurative_relationship_false_positives": 0,
+      "former_relationships_active": 0,
+      "ended_relationships_active": 0
+    }
+  ],
+  "summary": {
+    "case_count": 6,
+    "person_mentions": {
+      "true_positive": 14,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "relationships": {
+      "true_positive": 6,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "quarantined_relationships": {
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "quarantined_objects": {
+      "true_positive": 1,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "relationship_direction_accuracy": {
+      "numerator": 6,
+      "denominator": 6,
+      "value": 1.0
+    },
+    "provenance_completeness": {
+      "numerator": 20,
+      "denominator": 20,
+      "value": 1.0
+    },
+    "unknown_segment_references": 0,
+    "self_relationships": 0,
+    "provenance_violations": 0,
+    "objects_without_evidence": 0,
+    "invalid_evidence_spans": 0,
+    "unsafe_verification_statuses": 0,
+    "unsafe_story_privacy": 0,
+    "unknown_issue_codes": 0,
+    "missing_required_issue_codes": 0,
+    "fatal_contract_failures": 0,
+    "uncertainty_scope_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "temporal_kind_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "relationship_state_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "events": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "descriptions": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "stories": {
+      "true_positive": 0,
+      "false_positive": 0,
+      "false_negative": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "event_participant_accuracy": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "narrative_factual_support": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "sensitive_story_recall": {
+      "numerator": 0,
+      "denominator": 0,
+      "value": 1.0
+    },
+    "unsupported_event_statements": 0,
+    "unsupported_story_statements": 0,
+    "sensitivity_underclassifications": 0,
+    "duplicate_semantic_events": 0,
+    "duplicate_semantic_stories": 0,
+    "approximate_dates_exactified": 0,
+    "invalid_calendar_dates_accepted": 0,
+    "unresolved_relative_dates_absolutized": 0,
+    "negated_relationship_false_positives": 0,
+    "figurative_relationship_false_positives": 0,
+    "former_relationships_active": 0,
+    "ended_relationships_active": 0
+  }
+}

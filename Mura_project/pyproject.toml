@@ -1,0 +1,150 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mura-project"
+version = "1.0.0rc1"
+description = "Voice-first family memory archive for Kazakh and Russian stories"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [{name = "Mura team"}]
+dependencies = [
+  "alembic>=1.16,<2",
+  "fastapi>=0.116,<1",
+  "psycopg[binary]>=3.2,<4",
+  "python-multipart>=0.0.20,<1",
+  "pydantic>=2.11,<3",
+  "pydantic-settings>=2.10,<3",
+  # Standards-compliant JWT/JWKS verification. Pinned exactly: this is the
+  # authentication trust boundary, so the version is not a floating range.
+  "PyJWT[crypto]==2.13.0",
+  "requests>=2.32,<3",
+  "sqlalchemy>=2.0.42,<3",
+  "uvicorn[standard]>=0.35,<1",
+]
+
+[project.scripts]
+mura-evaluate-core = "mura.evaluation.cli:main"
+mura-evaluate-identity = "mura.evaluation.identity_cli:main"
+mura-evaluate-asr = "mura.evaluation.asr_cli:main"
+mura-evaluate-asr-live = "mura.evaluation.asr_live_cli:main"
+mura-evaluate-e2e = "mura.evaluation.e2e_cli:main"
+mura-evaluate-e2e-live = "mura.evaluation.e2e_live_cli:main"
+mura-evaluate-ml-release = "mura.evaluation.ml_release_cli:main"
+mura-release-smoke = "mura.smoke:main"
+mura-worker = "apps.worker.main:main"
+
+[project.optional-dependencies]
+kaggle = [
+  "torch==2.10.*",
+  "torchaudio==2.10.*",
+  "transformers==5.*",
+  "huggingface-hub>=1.3,<2",
+  "hydra-core>=1.3,<2",
+  "omegaconf>=2.3,<3",
+  "sentencepiece==0.2.2",
+  "soundfile>=0.13,<1",
+  "silero-vad==6.2.1",
+  "pyannote.audio==4.0.*",
+  "torchcodec==0.10.*",
+]
+dev = [
+  "bandit[toml]>=1.8,<2",
+  "httpx>=0.28,<1",
+  "mypy>=1.17,<2",
+  "pip-audit>=2.9,<3",
+  "pytest>=8.4,<9",
+  "pytest-cov>=6.2,<7",
+  # Pinned exactly: formatter output is version-sensitive, so a range makes
+  # `ruff format --check` non-reproducible between local and CI over time.
+  "ruff==0.16.3",
+  "types-requests>=2.32,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mura", "apps", "services"]
+
+[tool.pytest.ini_options]
+pythonpath = [".", "src"]
+testpaths = ["tests"]
+addopts = "-q --strict-config --strict-markers"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+# Ruff's formatter reaches into Python code blocks inside Markdown from 0.16.
+# Documentation prose is not part of the Python formatting baseline, so keep the
+# formatter scoped to source files instead of reformatting docs.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "RUF"]
+
+# Depends(...) in a default is the documented FastAPI idiom, not a mutable-default bug.
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Header", "fastapi.File", "fastapi.Form"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mura"]
+
+[tool.ruff.lint.per-file-ignores]
+# Russian and Kazakh fixture prose. Cyrillic look-alikes are the point.
+"scripts/seed_dev_family.py" = ["RUF001"]
+"tests/test_archive_read_models.py" = ["RUF001"]
+"src/mura/_relationship_grounding_impl.py" = ["RUF001"]
+"src/mura/coreference.py" = ["B009", "RUF001"]
+"src/mura/coreference_units.py" = ["RUF001"]
+"src/mura/coreference_language.py" = ["RUF001"]
+"src/mura/deepseek/anchor_prompts.py" = ["I001"]
+"src/mura/deepseek/anchors.py" = ["RUF001"]
+"src/mura/deepseek/prompts.py" = ["RUF001"]
+"src/mura/entity_resolver.py" = ["RUF001"]
+"src/mura/explicit_pair_grounding.py" = ["RUF001"]
+"src/mura/explicit_sibling_grounding.py" = ["RUF001"]
+"src/mura/linguistics/english.py" = ["RUF001"]
+"src/mura/linguistics/kazakh.py" = ["RUF001"]
+"src/mura/linguistics/kazakh_kinship.py" = ["RUF001"]
+"src/mura/linguistics/multilingual.py" = ["RUF001"]
+"src/mura/linguistics/russian.py" = ["RUF001"]
+"src/mura/relationship_evidence.py" = ["RUF001"]
+"src/mura/relationship_grounding.py" = ["RUF001"]
+"src/mura/claim_semantics.py" = ["RUF001"]
+"src/mura/factual_support.py" = ["RUF001"]
+"tests/test_anchor_constrained_extraction.py" = ["RUF001"]
+"tests/test_bounded_coreference.py" = ["RUF001"]
+"tests/test_bounded_coreference_links_guards.py" = ["RUF001"]
+"tests/test_bounded_coreference_links_positive.py" = ["RUF001"]
+"tests/test_bounded_coreference_telemetry.py" = ["RUF001"]
+"tests/test_coreference_language_boundaries.py" = ["RUF001"]
+"tests/test_entity_resolution_v2.py" = ["RUF001"]
+"tests/test_identity_safety_v3.py" = ["RUF001"]
+"tests/test_extraction_safety_hardening.py" = ["RUF001"]
+"tests/test_kazakh_linguistics.py" = ["RUF001"]
+"tests/test_kazakh_public_kinship_api.py" = ["RUF001"]
+"tests/test_multilingual_coreference_guards.py" = ["RUF001"]
+"tests/test_multilingual_linguistic_integration.py" = ["RUF001"]
+"tests/test_multilingual_routing.py" = ["RUF001"]
+"tests/test_multilingual_signal_specificity.py" = ["RUF001"]
+"tests/test_plural_coreference_pair_grounding.py" = ["RUF001"]
+"tests/test_relationship_explicit_pair_grounding.py" = ["RUF001"]
+"tests/test_relationship_grounding_completion.py" = ["RUF001"]
+"tests/test_ru_kk_relationship_grounding.py" = ["RUF001"]
+"tests/test_russian_linguistics.py" = ["RUF001"]
+"tests/test_claim_semantics_hardening.py" = ["RUF001"]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+ignore_missing_imports = true
+no_implicit_optional = true
+strict_equality = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
+exclude = ["notebooks/"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]

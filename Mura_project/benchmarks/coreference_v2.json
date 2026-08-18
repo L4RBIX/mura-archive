@@ -1,0 +1,990 @@
+{
+  "schema_version": "coreference-benchmark-v2",
+  "dataset_id": "coreference_release_v2",
+  "description": "Bounded RU/KK/mixed coreference with quote, same-name, case-form and context-window traps.",
+  "cases": [
+    {
+      "case_id": "kk_unique",
+      "title": "Kazakh singular possessive resolves unique antecedent",
+      "construction_tags": [
+        "adversarial",
+        "kk",
+        "singular"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_kk_unique",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "kk"
+        ],
+        "full_text": "Ерлан инженер. Оның ұлы Нұрлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан инженер."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Оның ұлы Нұрлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_kk_unique",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нұрлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Оның",
+          "status": "resolved",
+          "antecedent_mention_ids": [
+            "erlan"
+          ],
+          "candidate_mention_ids": [
+            "erlan"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "ru_ambiguous",
+      "title": "Russian possessive with two candidates stays ambiguous",
+      "construction_tags": [
+        "adversarial",
+        "ru",
+        "ambiguity"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_ru_ambiguous",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Ерлан встретил Болата. Его сын Нурлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан встретил Болата."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Его сын Нурлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_ru_ambiguous",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "bolat",
+            "name": "Болат",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Его",
+          "status": "ambiguous",
+          "antecedent_mention_ids": [],
+          "candidate_mention_ids": [
+            "erlan",
+            "bolat"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "kk_plural_pair",
+      "title": "Kazakh plural resolves only explicit pair",
+      "construction_tags": [
+        "adversarial",
+        "kk",
+        "plural_pair"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_kk_plural_pair",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "kk"
+        ],
+        "full_text": "Ерлан мен Динара үйленді. Олардың ұлы Нұрлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан мен Динара үйленді."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Олардың ұлы Нұрлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_kk_plural_pair",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "dinara",
+            "name": "Динара",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нұрлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "relationship_id": "r2",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "dinara",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Олардың",
+          "status": "resolved",
+          "antecedent_mention_ids": [
+            "erlan",
+            "dinara"
+          ],
+          "candidate_mention_ids": [
+            "erlan",
+            "dinara"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "mixed_kinship",
+      "title": "Mixed Kazakh anaphor and English kinship remain bounded",
+      "construction_tags": [
+        "adversarial",
+        "mixed"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_mixed_kinship",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "mixed"
+        ],
+        "full_text": "Ерлан engineer. Оның son Nurlan.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан engineer."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Оның son Nurlan."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_mixed_kinship",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "mixed"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Nurlan",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Оның",
+          "status": "resolved",
+          "antecedent_mention_ids": [
+            "erlan"
+          ],
+          "candidate_mention_ids": [
+            "erlan"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "quote_boundary",
+      "title": "Quoted pronouns cannot authorize narrator relationship",
+      "construction_tags": [
+        "adversarial",
+        "quote_boundary"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_quote_boundary",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Ерлан инженер. Она сказала: «Его сын Нурлан».",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан инженер."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Она сказала: «Его сын Нурлан»."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_quote_boundary",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [],
+      "forbidden_resolved_anaphors": [
+        "Она",
+        "Его"
+      ]
+    },
+    {
+      "case_id": "adversative_switch",
+      "title": "Adversative clause does not use nearest-name guess",
+      "construction_tags": [
+        "adversarial",
+        "subject_switch"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_adversative_switch",
+        "duration_seconds": 10.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Ерлан встретил Болата, но его сын Нурлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан встретил Болата, но его сын Нурлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_adversative_switch",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "bolat",
+            "name": "Болат",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_001",
+          "anaphor_text": "его",
+          "status": "ambiguous",
+          "antecedent_mention_ids": [],
+          "candidate_mention_ids": [
+            "erlan",
+            "bolat"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "kk_case_form",
+      "title": "Kazakh case form resolves unique antecedent",
+      "construction_tags": [
+        "adversarial",
+        "kk",
+        "case_form"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_kk_case_form",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "kk"
+        ],
+        "full_text": "Ерлан ауылда тұрды. Онымен бірге ұлы Нұрлан тұрды.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан ауылда тұрды."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Онымен бірге ұлы Нұрлан тұрды."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_kk_case_form",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "kk"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нұрлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Онымен",
+          "status": "resolved",
+          "antecedent_mention_ids": [
+            "erlan"
+          ],
+          "candidate_mention_ids": [
+            "erlan"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "ru_compound",
+      "title": "Russian compound case form resolves unique antecedent",
+      "construction_tags": [
+        "adversarial",
+        "ru",
+        "compound"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_ru_compound",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Алия учитель. С ней дочь Мадина.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Алия учитель."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "С ней дочь Мадина."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_ru_compound",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "aliya",
+            "name": "Алия",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "madina",
+            "name": "Мадина",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "aliya",
+            "subject_role": "parent",
+            "object_mention_id": "madina",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "С ней",
+          "status": "resolved",
+          "antecedent_mention_ids": [
+            "aliya"
+          ],
+          "candidate_mention_ids": [
+            "aliya"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "same_name_mentions",
+      "title": "Same-name mention candidates remain ambiguous",
+      "construction_tags": [
+        "adversarial",
+        "same_name"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_same_name_mentions",
+        "duration_seconds": 20.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Ерлан приехал. Его сын Нурлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан приехал."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Его сын Нурлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_same_name_mentions",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan_old",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "erlan_young",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan_old",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_002"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [
+        {
+          "anaphor_segment_id": "seg_002",
+          "anaphor_text": "Его",
+          "status": "ambiguous",
+          "antecedent_mention_ids": [],
+          "candidate_mention_ids": [
+            "erlan_old",
+            "erlan_young"
+          ]
+        }
+      ],
+      "forbidden_resolved_anaphors": []
+    },
+    {
+      "case_id": "outside_window",
+      "title": "Antecedent outside one preceding unit is not resolved",
+      "construction_tags": [
+        "adversarial",
+        "context_window"
+      ],
+      "speaker_id": "speaker",
+      "speaker_name": "Күләш",
+      "transcript": {
+        "recording_id": "rec_outside_window",
+        "duration_seconds": 30.0,
+        "language_hints": [
+          "ru"
+        ],
+        "full_text": "Ерлан инженер. Сегодня шёл дождь. Его сын Нурлан.",
+        "segments": [
+          {
+            "segment_id": "seg_001",
+            "start": 0.0,
+            "end": 10.0,
+            "text": "Ерлан инженер."
+          },
+          {
+            "segment_id": "seg_002",
+            "start": 10.0,
+            "end": 20.0,
+            "text": "Сегодня шёл дождь."
+          },
+          {
+            "segment_id": "seg_003",
+            "start": 20.0,
+            "end": 30.0,
+            "text": "Его сын Нурлан."
+          }
+        ],
+        "asr_model": "benchmark-fixture",
+        "asr_revision": "identity-v2",
+        "chunker_version": "fixture-v1"
+      },
+      "raw_extraction": {
+        "recording_id": "rec_outside_window",
+        "speaker_id": "speaker",
+        "speaker_name": "Күләш",
+        "languages": [
+          "ru"
+        ],
+        "people_mentions": [
+          {
+            "mention_id": "erlan",
+            "name": "Ерлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_001"
+            ],
+            "confidence": 1.0
+          },
+          {
+            "mention_id": "nurlan",
+            "name": "Нурлан",
+            "category": "family_member",
+            "source_segment_ids": [
+              "seg_003"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "relationship_claims": [
+          {
+            "relationship_id": "r1",
+            "relationship_type": "parent_child",
+            "subject_mention_id": "erlan",
+            "subject_role": "parent",
+            "object_mention_id": "nurlan",
+            "object_role": "child",
+            "source_segment_ids": [
+              "seg_003"
+            ],
+            "confidence": 1.0
+          }
+        ],
+        "events": [],
+        "descriptions": [],
+        "stories": [],
+        "unresolved_questions": []
+      },
+      "gold_links": [],
+      "forbidden_resolved_anaphors": [
+        "Его"
+      ]
+    }
+  ]
+}

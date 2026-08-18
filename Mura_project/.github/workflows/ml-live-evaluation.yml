@@ -1,0 +1,83 @@
+name: ML Live End-to-End Evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      manifest_path:
+        description: Approved local E2E audio manifest path on the self-hosted runner
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ml-live-evaluation-${{ github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  evaluate:
+    name: evaluate-live-ml-pipeline
+    runs-on: [self-hosted, linux, x64, gpu]
+    timeout-minutes: 180
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+      DEEPSEEK_BASE_URL: ${{ vars.DEEPSEEK_BASE_URL }}
+      DEEPSEEK_MODEL: ${{ vars.DEEPSEEK_MODEL }}
+      DEEPSEEK_FALLBACK_MODEL: ${{ vars.DEEPSEEK_FALLBACK_MODEL }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          check-latest: false
+
+      - name: Install pinned ML environment
+        run: python -m pip install --disable-pip-version-check -q -e ".[dev,kaggle]"
+
+      - name: Validate workflow security policy
+        run: python scripts/ci/check_workflow_policy.py
+
+      - name: Reconfirm offline release candidate on this commit
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          mkdir -p artifacts
+          mura-evaluate-ml-release \
+            --manifest benchmarks/release/ml_release_manifest.json \
+            --json-output artifacts/ml-release-report.json \
+            --markdown-output artifacts/ml-release-report.md
+
+      - name: Run live end-to-end evaluation
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          test -n "${DEEPSEEK_API_KEY}"
+          mura-evaluate-e2e-live \
+            --manifest "${{ inputs.manifest_path }}" \
+            --release-gates benchmarks/e2e_live_release_gates.json \
+            --json-output artifacts/e2e-live-report.json \
+            --markdown-output artifacts/e2e-live-report.md \
+            --device cuda:0 \
+            --max-audio-seconds 1800
+
+      - name: Upload sanitized evaluation reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: ml-live-evaluation-${{ github.run_id }}
+          path: |
+            artifacts/ml-release-report.json
+            artifacts/ml-release-report.md
+            artifacts/e2e-live-report.json
+            artifacts/e2e-live-report.md
+          if-no-files-found: warn
+          retention-days: 30

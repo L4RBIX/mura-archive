@@ -1,0 +1,276 @@
+{
+  "schema_version": "entity-resolution-benchmark-v1",
+  "dataset_id": "entity_resolution_release_v1",
+  "description": "Cross-recording identity cases with explicit false-merge and review-routing traps.",
+  "cases": [
+    {
+      "case_id": "established_alias_unique",
+      "title": "Verified alias resolves uniquely inside one family",
+      "family_id": "family_a",
+      "construction_tags": ["verified_alias", "cross_recording", "auto_resolve"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_ereke",
+          "name": "Ереке",
+          "category": "family_member",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan",
+            "canonical_name": "Ерлан",
+            "aliases": ["Ереке"],
+            "category": "family_member"
+          },
+          "verified_aliases": ["Ереке"],
+          "source_recording_ids": ["recording_001"]
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_ereke", "status": "resolved", "person_id": "person_erlan"}
+      ]
+    },
+    {
+      "case_id": "exact_name_only_review",
+      "title": "Exact canonical name alone does not authorize a merge",
+      "family_id": "family_a",
+      "construction_tags": ["exact_name", "false_merge_trap", "review"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_erlan",
+          "name": "Ерлан",
+          "category": "family_member",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan",
+            "canonical_name": "Ерлан",
+            "category": "family_member"
+          }
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_erlan", "status": "needs_review"}
+      ]
+    },
+    {
+      "case_id": "relation_and_generation_corroborate",
+      "title": "Relation and speaker-relative generation corroborate a unique name",
+      "family_id": "family_a",
+      "construction_tags": ["generation", "relation_to_speaker", "auto_resolve"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_erlan_son",
+          "name": "Ерлан",
+          "category": "family_member",
+          "relation_to_speaker": "son",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan_son",
+            "canonical_name": "Ерлан",
+            "category": "family_member",
+            "relation_to_speaker": "son"
+          },
+          "generation_relative_to_speaker": 1,
+          "source_recording_ids": ["recording_001"]
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_erlan_son", "status": "resolved", "person_id": "person_erlan_son"}
+      ]
+    },
+    {
+      "case_id": "generation_conflict_review",
+      "title": "A speaker-relative generation conflict blocks an exact-name merge",
+      "family_id": "family_a",
+      "construction_tags": ["generation_conflict", "false_merge_trap", "review"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_nurlan",
+          "name": "Нұрлан",
+          "category": "family_member",
+          "relation_to_speaker": "son",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_nurlan_parent",
+            "canonical_name": "Нұрлан",
+            "category": "family_member",
+            "relation_to_speaker": "father"
+          },
+          "generation_relative_to_speaker": -1
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_nurlan", "status": "needs_review"}
+      ]
+    },
+    {
+      "case_id": "graph_neighbour_corroborates",
+      "title": "A verified alias neighbour corroborates the spouse identity",
+      "family_id": "family_a",
+      "construction_tags": ["graph_neighbour", "spouse", "verified_alias", "auto_resolve"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_erlan",
+          "name": "Ерлан",
+          "category": "family_member",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        },
+        {
+          "mention_id": "mention_dina",
+          "name": "Дина",
+          "category": "family_member",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "relationship_claims": [
+        {
+          "relationship_id": "relationship_spouse",
+          "relationship_type": "spouse",
+          "subject_mention_id": "mention_erlan",
+          "subject_role": "spouse",
+          "object_mention_id": "mention_dina",
+          "object_role": "spouse",
+          "source_segment_ids": ["seg_001"],
+          "evidence_ids": ["evidence_spouse"],
+          "evidence_class": "A_explicit",
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan",
+            "canonical_name": "Ерлан",
+            "category": "family_member"
+          },
+          "spouse_person_ids": ["person_dinara"]
+        },
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_dinara",
+            "canonical_name": "Динара",
+            "aliases": ["Дина"],
+            "category": "family_member"
+          },
+          "verified_aliases": ["Дина"],
+          "spouse_person_ids": ["person_erlan"]
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_erlan", "status": "resolved", "person_id": "person_erlan"},
+        {"mention_id": "mention_dina", "status": "resolved", "person_id": "person_dinara"}
+      ]
+    },
+    {
+      "case_id": "duplicate_same_name_review",
+      "title": "Two archive people with the same name remain ambiguous",
+      "family_id": "family_a",
+      "construction_tags": ["same_name", "multiple_candidates", "review"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_erlan_unknown",
+          "name": "Ерлан",
+          "category": "family_member",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan_older",
+            "canonical_name": "Ерлан",
+            "category": "family_member"
+          },
+          "generation_relative_to_speaker": 0
+        },
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_erlan_younger",
+            "canonical_name": "Ерлан",
+            "category": "family_member"
+          },
+          "generation_relative_to_speaker": 1
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_erlan_unknown", "status": "needs_review"}
+      ]
+    },
+    {
+      "case_id": "non_family_new_person",
+      "title": "A new friend remains a non-family person instead of joining the tree",
+      "family_id": "family_a",
+      "construction_tags": ["non_family", "new_person"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_aset",
+          "name": "Асет",
+          "category": "friend",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [],
+      "gold": [
+        {"mention_id": "mention_aset", "status": "new_person"}
+      ]
+    },
+    {
+      "case_id": "family_vs_friend_conflict",
+      "title": "Family and non-family category conflict blocks an exact-name merge",
+      "family_id": "family_a",
+      "construction_tags": ["category_conflict", "non_family", "review"],
+      "people_mentions": [
+        {
+          "mention_id": "mention_samat_friend",
+          "name": "Самат",
+          "category": "friend",
+          "source_segment_ids": ["seg_001"],
+          "confidence": 1.0
+        }
+      ],
+      "profiles": [
+        {
+          "family_id": "family_a",
+          "person": {
+            "person_id": "person_samat_relative",
+            "canonical_name": "Самат",
+            "category": "family_member"
+          }
+        }
+      ],
+      "gold": [
+        {"mention_id": "mention_samat_friend", "status": "needs_review"}
+      ]
+    }
+  ]
+}

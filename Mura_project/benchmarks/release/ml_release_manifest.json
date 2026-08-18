@@ -1,0 +1,12 @@
+{
+  "schema_version": "ml-release-manifest-v1",
+  "core_manifest": "benchmarks/release_manifest.json",
+  "core_release_gates": "benchmarks/release_gates.json",
+  "coreference_dataset": "benchmarks/coreference_v2.json",
+  "entity_resolution_dataset": "benchmarks/entity_resolution_v2.json",
+  "identity_release_gates": "benchmarks/identity_release_gates.json",
+  "asr_dataset": "benchmarks/asr_contract_v1.json",
+  "asr_release_gates": "benchmarks/asr_release_gates.json",
+  "e2e_dataset": "benchmarks/e2e_pipeline_v1.json",
+  "e2e_release_gates": "benchmarks/e2e_release_gates.json"
+}

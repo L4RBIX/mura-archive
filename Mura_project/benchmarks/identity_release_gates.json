@@ -1,0 +1,17 @@
+{
+  "schema_version": "identity-release-gates-v1",
+  "minimum_coreference_case_count": 10,
+  "minimum_entity_case_count": 14,
+  "minimum_coreference_status_accuracy": 1.0,
+  "minimum_coreference_antecedent_accuracy": 1.0,
+  "minimum_ambiguous_routing_accuracy": 1.0,
+  "minimum_entity_status_accuracy": 1.0,
+  "minimum_entity_identity_accuracy": 1.0,
+  "minimum_entity_review_routing_accuracy": 1.0,
+  "maximum_unsupported_resolved_coreference": 0,
+  "maximum_cross_quote_resolutions": 0,
+  "maximum_forbidden_resolved_anaphors": 0,
+  "maximum_entity_false_merges": 0,
+  "maximum_entity_false_splits": 0,
+  "maximum_cross_family_merges": 0
+}

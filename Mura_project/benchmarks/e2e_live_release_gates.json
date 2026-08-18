@@ -1,0 +1,25 @@
+{
+  "schema_version": "e2e-live-release-gates-v1",
+  "minimum_case_count": 12,
+  "minimum_language_case_count": {
+    "ru": 4,
+    "kk": 4,
+    "mixed": 4
+  },
+  "maximum_word_error_rate": 0.3,
+  "maximum_character_error_rate": 0.22,
+  "minimum_person_f1": 0.9,
+  "minimum_relationship_precision": 0.98,
+  "minimum_relationship_recall": 0.85,
+  "minimum_provenance_completeness": 1.0,
+  "maximum_unsafe_verification_statuses": 0,
+  "maximum_unsafe_story_privacy": 0,
+  "maximum_fatal_contract_failures": 0,
+  "maximum_model_calls_per_case": 6,
+  "maximum_pipeline_seconds_per_case": 180.0,
+  "require_source_commit_sha": true,
+  "maximum_missing_provider_model_cases": 0,
+  "maximum_pipeline_version_mismatches": 0,
+  "maximum_case_id_mismatches": 0,
+  "maximum_asr_seconds_per_case": 1800.0
+}
