@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useCallback, useState, useRef } from "react";
 import { AppHeader } from "@/components/layout/app-header";
 import { Lastochka } from "@/components/mascot/lastochka";
 import { submitRecording } from "@/lib/mura/core-api";
@@ -16,10 +16,12 @@ import {
 } from "@/lib/mura/recording-availability";
 import { useMuraSession } from "@/lib/mura/session-provider";
 import { useMicrophoneState } from "@/hooks/use-microphone-state";
-import { currentSpeakerName, currentSpeakerPersonId } from "@/lib/mura/scope";
+import { fetchArchivePeople, type ArchivePerson } from "@/lib/mura/archive-api";
+import { useArchiveResource } from "@/lib/mura/use-archive";
 import { MascotStage } from "@/components/mascot/mascot-stage";
 import { LiveTranscript } from "@/components/record/live-transcript";
 import { RecordButton } from "@/components/record/record-button";
+import { RecordCompanion, type Speaker } from "@/components/record/record-companion";
 import { RecordControls } from "@/components/record/record-controls";
 import { Waveform } from "@/components/record/waveform";
 import { useLiveTranscript } from "@/hooks/use-live-transcript";
@@ -93,6 +95,15 @@ export function RecordView() {
   const processing = processingAvailability(capabilities, capabilitiesResolved);
   const notice = processingNotice(processing);
   const maySubmit = canSubmitRecording(processing);
+  // Who is speaking. Nothing is assumed: until the user says, the recording
+  // cannot be submitted, because the alternative was labelling every memory in
+  // every family with one hardcoded name.
+  const [speaker, setSpeaker] = useState<Speaker | null>(null);
+  const loadPeople = useCallback(
+    (familyId: string, signal: AbortSignal) => fetchArchivePeople(familyId, signal),
+    [],
+  );
+  const people = useArchiveResource<ArchivePerson[]>(loadPeople);
   const [audioLanguage] = useState(DEFAULT_AUDIO_LANGUAGE);
   const [outputLanguage] = useState(DEFAULT_OUTPUT_LANGUAGE);
   const { status, seconds, level, error: recorderError, start, pause, resume, restart, finish: finishAudio } = useRecorder();
@@ -118,6 +129,7 @@ export function RecordView() {
     // React has not re-rendered between them. A ref is set synchronously, so
     // the second tap sees the guard and no second job is created.
     if (seconds <= 0 || uploading || submitting.current) return;
+    if (!speaker) return;
     // The family is captured here, once, and every later step of this workflow
     // uses this value. Switching the global selection mid-upload must not
     // redirect an in-flight recording into a different archive.
@@ -147,8 +159,11 @@ export function RecordView() {
         {
           audio,
           filename: `mura-recording.${extension}`,
-          speakerName: currentSpeakerName(),
-          speakerPersonId: currentSpeakerPersonId(),
+          // The name the user gave, and a canonical id only when they picked
+          // somebody the archive already knows. A typed name carries no id:
+          // the browser must never manufacture an archive identity.
+          speakerName: speaker.name,
+          speakerPersonId: speaker.personId,
           audioLanguage,
           outputLanguage,
         },
@@ -235,10 +250,18 @@ export function RecordView() {
             exit={{ opacity: 0, scale: 0.985 }}
             transition={{ duration: 0.3, ease: EASE }}
           >
-            {/* `min-h-full` keeps the column optically centred on a tall
-                screen while still allowing a 667px one to scroll rather than
-                clip the record button. */}
-            <div className="mx-auto flex min-h-full w-full max-w-focus flex-col items-center justify-center gap-5 px-6 pb-8 text-center sm:px-8">
+            {/*
+              One task, two halves, from `lg`.
+
+              This was a 520px column centred in whatever window it got, so on a
+              laptop several hundred pixels sat empty on either side of it while
+              the two things that actually help — knowing who is speaking, and
+              having a question to ask them — did not exist anywhere. The left
+              half is unchanged and still the whole screen on a phone; the right
+              half is the companion, which stacks underneath below `lg`.
+            */}
+            <div className="mx-auto grid min-h-full w-full max-w-focus grid-cols-1 items-center gap-10 px-page pb-8 lg:max-w-wide lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
+            <div className="flex w-full flex-col items-center justify-center gap-5 text-center">
               {/* 312px put the swallow, a two-line heading and a two-line hint
                   above the microphone, which landed the one control on this
                   screen at y=568 of an 844px phone — and off a 667px one
@@ -257,27 +280,62 @@ export function RecordView() {
                   ))}
                 </p>
               </div>
-              {capture.available && maySubmit ? (
-                <RecordButton onClick={startRecording} size={112} label={t("startRecording")} />
+              {/*
+                Degradation is a status, not a footnote. «Сервис анализа сейчас
+                недоступен» was `text-meta text-muted` under the button — the
+                faintest text on the screen — while it is the one thing that
+                changes what happens to the recording. It sits above the control
+                now, in the warning colour from the palette.
+              */}
+              {capture.available && maySubmit && notice === "queued_later" && (
+                <p
+                  role="status"
+                  className="w-full max-w-measure rounded-surface bg-warning-surface px-4 py-2.5 text-meta leading-relaxed text-warning"
+                >
+                  {t("processingDelayedNotice")}
+                </p>
+              )}
+
+              {capture.available && maySubmit && speaker ? (
+                <RecordButton
+                  onClick={startRecording}
+                  size={112}
+                  label={t("startRecording")}
+                />
+              ) : capture.available && maySubmit ? (
+                // Not a dead button: the one missing thing is named, and it is
+                // one tap away in the panel beside this.
+                <p className="max-w-measure text-meta leading-relaxed text-muted">
+                  {t("recordWhoRequired")}
+                </p>
               ) : (
                 // Never a silently disabled button: say which condition failed
                 // and, where the user can act, what to do about it.
-                <p className="max-w-measure text-meta leading-relaxed text-muted">
+                <p
+                  role="status"
+                  className="w-full max-w-measure rounded-surface bg-warning-surface px-4 py-2.5 text-meta leading-relaxed text-warning"
+                >
                   {capture.available
                     ? t(processing === "unconfigured" ? "processingUnconfigured" : "coreUnavailable")
                     : t(BLOCKER_MESSAGE[capture.reason])}
                 </p>
               )}
-              {capture.available && maySubmit && notice === "queued_later" && (
-                <p className="max-w-measure text-meta leading-relaxed text-muted">
-                  {t("processingDelayedNotice")}
-                </p>
-              )}
               {(recorderError || uploadError) && (
-                <p className="max-w-measure text-meta leading-relaxed text-danger">
+                <p
+                  role="alert"
+                  className="w-full max-w-measure rounded-surface bg-danger-surface px-4 py-2.5 text-meta leading-relaxed text-danger"
+                >
                   {recorderError ? t("microphoneError") : t("uploadError")}
                 </p>
               )}
+            </div>
+
+            <RecordCompanion
+              people={people.data ?? []}
+              speaker={speaker}
+              onSpeakerChange={setSpeaker}
+              familyName={family?.name ?? null}
+            />
             </div>
           </motion.div>
         ) : (

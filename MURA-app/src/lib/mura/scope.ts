@@ -13,16 +13,16 @@
  * through entity resolution, and the browser must never manufacture one.
  */
 
-/**
- * Demo narrator display name.
+/*
+ * The demo narrator is gone.
  *
- * Presentational only, and pointedly not an identity: there is no person id
- * here. It supplies a label for the recording until the product asks the user
- * who is speaking, and it must never become a canonical id.
+ * `TRANSITIONAL_DEMO_NARRATOR` supplied the constant name «Айсұлу» as the
+ * speaker of every recording, in every family — so an archive could hold a
+ * memory told by someone's grandfather and label it with a stranger's name, in
+ * permanent server data. Its own comment said it stood in "until the product
+ * asks the user who is speaking". The record screen asks now, so the stand-in
+ * has been removed rather than left where a future caller could reach it.
  */
-export const TRANSITIONAL_DEMO_NARRATOR = {
-  name: "Айсұлу",
-} as const;
 
 /**
  * The canonical archive person for the narrator, when one is genuinely known.
@@ -35,8 +35,4 @@ export const TRANSITIONAL_DEMO_NARRATOR = {
  */
 export function currentSpeakerPersonId(): string | null {
   return null;
-}
-
-export function currentSpeakerName(): string {
-  return TRANSITIONAL_DEMO_NARRATOR.name;
 }
