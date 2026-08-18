@@ -8,9 +8,14 @@ import { AuthStrip } from "@/components/family/auth-strip";
 import { ArchiveDoorways } from "@/components/home/archive-doorways";
 import { RecordButton } from "@/components/record/record-button";
 import { PageContainer } from "@/components/shell/page-container";
-import { StoryLink } from "@/components/story/story-link";
+import { StoryLink, storyLinkLabels } from "@/components/story/story-link";
 import { useMuraI18n } from "@/lib/i18n";
-import { fetchArchiveOverview, type ArchiveOverview } from "@/lib/mura/archive-api";
+import {
+  fetchArchiveOverview,
+  fetchArchivePeople,
+  type ArchiveOverview,
+  type ArchivePerson,
+} from "@/lib/mura/archive-api";
 import { useMuraSession } from "@/lib/mura/session-provider";
 import { useArchiveResource } from "@/lib/mura/use-archive";
 
@@ -37,6 +42,11 @@ const item = {
  * this product exists for, so it is the only heavy element on the page; the
  * ways further in are a quiet list beside it.
  */
+interface HomeBundle {
+  archive: ArchiveOverview;
+  peopleById: Map<string, ArchivePerson>;
+}
+
 export function HomeView() {
   const { greetingForHour, t, locale } = useMuraI18n();
   // Set after mount so the prerendered greeting never mismatches the client.
@@ -44,11 +54,21 @@ export function HomeView() {
   useEffect(() => setGreeting(greetingForHour(new Date().getHours())), [greetingForHour, locale]);
 
   const load = useCallback(
-    (familyId: string, signal: AbortSignal) => fetchArchiveOverview(familyId, signal),
+    async (familyId: string, signal: AbortSignal): Promise<HomeBundle> => {
+      const [archive, people] = await Promise.all([
+        fetchArchiveOverview(familyId, signal),
+        fetchArchivePeople(familyId, signal),
+      ]);
+      return {
+        archive,
+        peopleById: new Map(people.map((person) => [person.person_id, person])),
+      };
+    },
     [],
   );
-  const overview = useArchiveResource<ArchiveOverview>(load);
-  const data = overview.data;
+  const overview = useArchiveResource<HomeBundle>(load);
+  const data = overview.data?.archive;
+  const labels = storyLinkLabels(t);
   const { family } = useMuraSession();
   const familyName = family.selectedFamily?.name ?? null;
   const stories = data?.recent_stories ?? [];
@@ -142,7 +162,8 @@ export function HomeView() {
                   key={story.story_id}
                   story={story}
                   locale={locale}
-                  untitled={t("storyUntitled")}
+                  labels={labels}
+                  peopleById={overview.data?.peopleById}
                 />
               ))}
               {overview.status === "ready" && stories.length === 0 && (

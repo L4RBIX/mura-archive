@@ -5,12 +5,20 @@ import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
 import { AppHeader } from "@/components/layout/app-header";
 import { PageContainer } from "@/components/shell/page-container";
-import { StoryLink } from "@/components/story/story-link";
+import { StoryLink, storyLinkLabels } from "@/components/story/story-link";
 import { Button } from "@/components/ui/button";
 import { useMuraI18n } from "@/lib/i18n";
 import Link from "next/link";
-import { fetchArchiveStories, type ArchiveStoryPage } from "@/lib/mura/archive-api";
+import {
+  fetchArchivePeople,
+  fetchArchiveStories,
+  type ArchivePerson,
+  type ArchiveStoryPage,
+} from "@/lib/mura/archive-api";
 import { useArchiveResource } from "@/lib/mura/use-archive";
+
+/** One page of memories. Core clamps this server-side too. */
+const PAGE_SIZE = 30;
 
 /**
  * Every memory in the family archive, newest first.
@@ -22,14 +30,32 @@ import { useArchiveResource } from "@/lib/mura/use-archive";
  * The first page only. A family archive is meant to grow for years, so the
  * endpoint pages and this asks for a bounded slice.
  */
+interface StoriesBundle {
+  page: ArchiveStoryPage;
+  /** Canonical people, so a card can name who is in a memory by id. */
+  peopleById: Map<string, ArchivePerson>;
+}
+
 function StoriesContent() {
   const { t, locale } = useMuraI18n();
   const load = useCallback(
-    (familyId: string, signal: AbortSignal) =>
-      fetchArchiveStories(familyId, { limit: 30, signal }),
+    async (familyId: string, signal: AbortSignal): Promise<StoriesBundle> => {
+      // Both at once: the list cannot render its people chips without the
+      // people, so staggering them would only add a waterfall.
+      const [page, people] = await Promise.all([
+        fetchArchiveStories(familyId, { limit: PAGE_SIZE, signal }),
+        fetchArchivePeople(familyId, signal),
+      ]);
+      return {
+        page,
+        peopleById: new Map(people.map((person) => [person.person_id, person])),
+      };
+    },
     [],
   );
-  const stories = useArchiveResource<ArchiveStoryPage>(load);
+  const stories = useArchiveResource<StoriesBundle>(load);
+  const labels = storyLinkLabels(t);
+  const page = stories.data?.page;
 
   return (
     <div className="pb-16">
@@ -38,7 +64,7 @@ function StoriesContent() {
       <ArchiveState
         resource={stories}
         loadingLabel={t("storiesLoading")}
-        isEmpty={(stories.data?.items.length ?? 0) === 0}
+        isEmpty={(page?.items.length ?? 0) === 0}
         empty={
           <PageContainer>
             <div className="mx-auto max-w-[46ch] py-14 text-center">
@@ -57,12 +83,25 @@ function StoriesContent() {
       >
         <PageContainer>
           <ul className="space-y-2.5 pt-1">
-            {stories.data?.items.map((story) => (
+            {page?.items.map((story) => (
               <li key={story.story_id}>
-                <StoryLink story={story} locale={locale} untitled={t("storyUntitled")} />
+                <StoryLink
+                  story={story}
+                  locale={locale}
+                  labels={labels}
+                  peopleById={stories.data?.peopleById}
+                />
               </li>
             ))}
           </ul>
+          {/* The list was silently cut at 30 with no way to tell. Saying how
+              much of the archive is on screen is the honest minimum until
+              step 3 makes the rest reachable. */}
+          {page && page.page.total > page.items.length && (
+            <p className="pt-4 text-meta text-muted">
+              {t("storiesShownOf", { shown: page.items.length, total: page.page.total })}
+            </p>
+          )}
         </PageContainer>
       </ArchiveState>
     </div>

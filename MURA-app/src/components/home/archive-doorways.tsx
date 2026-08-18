@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, HelpCircle, Trees } from "lucide-react";
+import { ChevronRight, HelpCircle, Scale, Trees } from "lucide-react";
 import Link from "next/link";
 import { useMuraI18n, type TranslationKey } from "@/lib/i18n";
 import { pluralForm } from "@/lib/plural";
@@ -43,6 +43,24 @@ export function ArchiveDoorways({ overview }: { overview: ArchiveOverview }) {
           // The count is the detail. Repeating the title underneath it, as
           // «Нужно уточнить: 2» did, says nothing the row has not said.
           detail={count(overview.review_count, "reviewCount")}
+        />
+      )}
+      {/*
+        Preserved conflicts are one of the things that make this an archive
+        rather than a transcription service — the product keeps two versions of
+        a memory instead of overwriting one — and `open_conflict_count` was
+        arriving from Core with nothing in the interface reading it.
+
+        Shown only when there is genuinely something to look at, like the review
+        row above: a permanent «0 расхождений» would turn a doorway into a
+        statistic, and Home is not a dashboard.
+      */}
+      {overview.open_conflict_count > 0 && (
+        <Doorway
+          href="/review"
+          icon={Scale}
+          title={t("homeOpenConflicts")}
+          detail={count(overview.open_conflict_count, "conflictCount")}
         />
       )}
     </nav>

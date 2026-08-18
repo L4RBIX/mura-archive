@@ -85,6 +85,20 @@ const ui = {
     storyNotFound: "Это воспоминание не найдено в вашем архиве.",
     storyLoading: "Открываем воспоминание…",
     storyUntitled: "Без названия",
+    // Relative dates only where they genuinely read better than a date.
+    storyToday: "сегодня",
+    storyYesterday: "вчера",
+    storyThisWeek: "на этой неделе",
+    // «и ещё 2» after the first three names on a memory card.
+    storyMorePeople: "и ещё {count}",
+    // Home: the archive found two versions of the same fact and kept both.
+    // Worded as something the family said, not as a data-integrity problem.
+    homeOpenConflicts: "В рассказах есть разные версии",
+    conflictCountOne: "расхождение",
+    conflictCountFew: "расхождения",
+    conflictCountMany: "расхождений",
+    // «Показано 30 из 128» — the list was silently cut at 30 before.
+    storiesShownOf: "Показано {shown} из {total}",
     // Not «Рассказал(а)»: a bracketed suffix is a developer working around
     // grammatical gender in front of the reader, in the middle of what is
     // meant to be a memoir. «Со слов» is genderless, natural, and archival —
@@ -349,6 +363,15 @@ const ui = {
     storyNotFound: "Бұл естелік мұрағатыңыздан табылмады.",
     storyLoading: "Естелік ашылып жатыр…",
     storyUntitled: "Атауы жоқ",
+    storyToday: "бүгін",
+    storyYesterday: "кеше",
+    storyThisWeek: "осы аптада",
+    storyMorePeople: "тағы {count}",
+    homeOpenConflicts: "Әңгімелерде әртүрлі нұсқалар бар",
+    conflictCountOne: "алшақтық",
+    conflictCountFew: "алшақтық",
+    conflictCountMany: "алшақтық",
+    storiesShownOf: "{total} ішінен {shown} көрсетілді",
     storyToldBy: "{name} айтқан",
     storyAudioUnavailable: "Аудиожазба қолжетімсіз.",
     storySourceTitle: "Дереккөз",

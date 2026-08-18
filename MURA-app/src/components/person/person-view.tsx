@@ -7,7 +7,7 @@ import { ArchiveState } from "@/components/archive/archive-state";
 import { FamilyGate } from "@/components/family/family-gate";
 import { AppHeader } from "@/components/layout/app-header";
 import { PageContainer } from "@/components/shell/page-container";
-import { StoryLink } from "@/components/story/story-link";
+import { StoryLink, storyLinkLabels } from "@/components/story/story-link";
 import { PersonAvatar } from "@/components/ui/person-avatar";
 import { useMuraI18n } from "@/lib/i18n";
 import {
@@ -92,6 +92,12 @@ function PersonContent({ personId }: { personId: string }) {
     [bundle.data],
   );
 
+  const labels = storyLinkLabels(t);
+  // Already loaded for the relationship chips; reused rather than refetched.
+  const peopleById = useMemo(
+    () => new Map((bundle.data?.people ?? []).map((p) => [p.person_id, p])),
+    [bundle.data],
+  );
   const person = relations.personById(personId);
   const places = bundle.data?.profile?.locations ?? [];
   const stories = (bundle.data?.stories ?? []).filter((story) =>
@@ -199,7 +205,12 @@ function PersonContent({ personId }: { personId: string }) {
                   <ul className="space-y-3">
                     {stories.map((story) => (
                       <li key={story.story_id}>
-                        <StoryLink story={story} locale={locale} untitled={t("storyUntitled")} />
+                        <StoryLink
+                          story={story}
+                          locale={locale}
+                          labels={labels}
+                          peopleById={peopleById}
+                        />
                       </li>
                     ))}
                   </ul>
