@@ -9,7 +9,6 @@ import { AppHeader } from "@/components/layout/app-header";
 import { drawableFrom } from "@/components/tree/layout";
 import { TreeCanvas } from "@/components/tree/tree-canvas";
 import { Button } from "@/components/ui/button";
-import { PersonAvatar } from "@/components/ui/person-avatar";
 import { useMuraI18n } from "@/lib/i18n";
 import {
   fetchArchivePeople,
@@ -52,9 +51,12 @@ function notDrawnFrom(relations: FamilyRelations, centerId: string): ArchivePers
  * and two on screen there was no indication the others existed, let alone a
  * way to reach them — the canvas quietly under-reported the family.
  *
- * The strip below names exactly those people and says why they are not drawn.
- * It is the alternative to the two worse options: pretending the archive is
- * smaller than it is, or inventing edges to join the islands up.
+ * They are drawn now, as their own islands on the same canvas, with only the
+ * relationships the archive genuinely recorded between their members. No line
+ * is ever drawn *between* islands: that would assert a connection exists and is
+ * merely unconfirmed, which is precisely the invention `family_graph_edges`
+ * exists to prevent. What sits below the canvas is why they are separate and
+ * what the user can do about it.
  */
 function TreeContent() {
   const { t } = useMuraI18n();
@@ -113,29 +115,24 @@ function TreeContent() {
               />
             </div>
 
+            {/*
+              The strip that used to list "people not shown" is gone: they are
+              drawn on the canvas now, as their own islands. What remains is why
+              they are separate and what the user can do about it — an
+              unconnected island is a question for the archive to answer from a
+              recording, not a defect to apologise for.
+            */}
             {others.length > 0 && (
-              <div className="shrink-0 border-t border-ink/[0.06] px-5 pt-3 sm:px-6 lg:px-8">
-                <p className="text-caption font-semibold uppercase tracking-[0.16em] text-muted">
-                  {t("treeOtherPeople")}
+              <div className="shrink-0 border-t border-ink/[0.06] px-page pt-3">
+                <p className="max-w-measure text-meta leading-relaxed text-muted">
+                  {t("treeIslandsHint")}{" "}
+                  <Link
+                    href="/record"
+                    className="font-medium text-ink underline underline-offset-4 focus-ring"
+                  >
+                    {t("recordMemory")}
+                  </Link>
                 </p>
-                <ul className="mt-2 flex flex-wrap gap-2">
-                  {others.map((person) => (
-                    <li key={person.person_id}>
-                      <Link
-                        href={`/tree?center=${encodeURIComponent(person.person_id)}`}
-                        scroll={false}
-                        className="flex items-center gap-2 rounded-full bg-raised py-1.5 pl-1.5 pr-3.5 text-meta font-medium focus-ring"
-                      >
-                        <PersonAvatar
-                          personId={person.person_id}
-                          displayName={person.display_name}
-                          size={24}
-                        />
-                        {person.display_name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
               </div>
             )}
 

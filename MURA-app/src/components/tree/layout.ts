@@ -247,6 +247,32 @@ export function computeFamilyGraph(
 }
 
 /**
+ * The rectangle the drawn cards occupy, in world units.
+ *
+ * Card coordinates are centres, so the box is grown by half a card on each side
+ * — otherwise "fit to content" would clip exactly half of the outermost person
+ * on every edge.
+ */
+export function graphBounds(nodes: readonly FamilyGraphNode[]): {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+} {
+  if (nodes.length === 0) {
+    return { minX: 0, minY: 0, maxX: 0, maxY: 0 };
+  }
+  const xs = nodes.map((node) => node.x);
+  const ys = nodes.map((node) => node.y);
+  return {
+    minX: Math.min(...xs) - CARD_WIDTH / 2,
+    maxX: Math.max(...xs) + CARD_WIDTH / 2,
+    minY: Math.min(...ys) - CARD_HEIGHT / 2,
+    maxY: Math.max(...ys) + CARD_HEIGHT / 2,
+  };
+}
+
+/**
  * Everyone `computeFamilyGraph` is capable of placing around `centerId`, with
  * every branch expanded.
  *
@@ -283,6 +309,145 @@ export function drawableFrom(
   }
 
   return drawable;
+}
+
+/**
+ * The archive's connected components, by canonical id.
+ *
+ * Extraction builds relationships per recording, so a young archive is
+ * genuinely several small islands rather than one family. Walking the recorded
+ * edges is the only way to know which island someone is on — nothing here
+ * guesses that two islands are really one.
+ */
+export function connectedComponents(relations: FamilyRelations): string[][] {
+  const { parentsOf, childrenOf, siblingsOf, spouseOf, people } = relations;
+  const seen = new Set<string>();
+  const components: string[][] = [];
+
+  for (const person of people) {
+    if (seen.has(person.person_id)) continue;
+    const component: string[] = [];
+    const queue = [person.person_id];
+    seen.add(person.person_id);
+
+    while (queue.length > 0) {
+      const current = queue.shift() as string;
+      component.push(current);
+      const spouse = spouseOf(current);
+      const neighbours = [
+        ...parentsOf(current),
+        ...childrenOf(current),
+        ...siblingsOf(current),
+        ...(spouse ? [spouse] : []),
+      ];
+      for (const id of neighbours) {
+        if (seen.has(id)) continue;
+        seen.add(id);
+        queue.push(id);
+      }
+    }
+    components.push(component);
+  }
+
+  return components;
+}
+
+/** A group of people drawn apart from the branch in the centre. */
+export interface FamilyIsland {
+  /** Canonical ids, in a stable order. */
+  members: string[];
+  nodes: FamilyGraphNode[];
+  edges: FamilyGraphEdge[];
+  /** Where its caption goes. */
+  label: { x: number; y: number };
+  /**
+   * Whether these people are connected to the person in the centre by recorded
+   * relationships, just too far away for a person-centric canvas to draw.
+   *
+   * This distinction is not cosmetic. Болат is Марат's child and Марат is drawn
+   * beside Айсұлу, so with Айсұлу centred Болат is undrawable but genuinely
+   * *related* — captioning him «отдельная ветвь» would assert that the archive
+   * knows of no connection, which is false. Only a person in a different
+   * connected component is genuinely unconnected.
+   */
+  connectedToCentre: boolean;
+}
+
+/**
+ * Everyone who is in the archive but not on the branch currently drawn.
+ *
+ * They used to be a text strip under the canvas saying they were "not shown",
+ * which is honest but reads as a broken tree: the family screen quietly
+ * under-reported the family and offered no way to see its actual shape.
+ *
+ * Each island is laid out as its own small row below the main branch, with the
+ * edges the archive genuinely recorded between its members.
+ *
+ * **No edge is drawn between islands.** The brief suggested a dashed
+ * "connection not yet confirmed" line, but that would assert that a connection
+ * exists and is merely unverified — which is a family fact the archive has not
+ * recorded, and exactly the invention `family_graph_edges` exists to prevent.
+ * Separation is shown by distance and a caption, never by a speculative line.
+ */
+export function computeIslands(
+  relations: FamilyRelations,
+  centerId: string,
+  below: number,
+): FamilyIsland[] {
+  const drawable = drawableFrom(relations, centerId);
+  const islands: FamilyIsland[] = [];
+
+  let y = below + ROW * 1.5;
+  for (const component of connectedComponents(relations)) {
+    const members = component.filter((id) => !drawable.has(id)).sort();
+    if (members.length === 0) continue;
+    const connectedToCentre = component.includes(centerId);
+
+    const nodes: FamilyGraphNode[] = members.map((id, index) => ({
+      id,
+      x: (index - (members.length - 1) / 2) * COLUMN_WIDTH,
+      y,
+      role: "sibling",
+    }));
+
+    // Only edges the archive actually holds, and only where both ends are in
+    // this row. A relationship to somebody not drawn here is not drawn at all.
+    const placed = new Map(nodes.map((node) => [node.id, node]));
+    const edges: FamilyGraphEdge[] = [];
+    for (const node of nodes) {
+      const spouse = relations.spouseOf(node.id);
+      if (spouse && placed.has(spouse) && node.id < spouse) {
+        const other = placed.get(spouse) as FamilyGraphNode;
+        edges.push({
+          id: `island-marriage-${node.id}-${spouse}`,
+          kind: "marriage",
+          d: `M ${rightEdge(node.x)} ${node.y} L ${leftEdge(other.x)} ${other.y}`,
+          delay: 0.2,
+        });
+      }
+      for (const child of relations.childrenOf(node.id)) {
+        const other = placed.get(child);
+        if (!other) continue;
+        edges.push(
+          lineageEdge(
+            { id: node.id, x: node.x, y: node.y },
+            { id: child, x: other.x, y: other.y },
+          ),
+        );
+      }
+    }
+
+    islands.push({
+      members,
+      nodes,
+      edges,
+      label: { x: nodes[0].x - CARD_WIDTH / 2, y: y - CARD_HEIGHT / 2 - 28 },
+      connectedToCentre,
+    });
+    y += ROW * 2.2;
+  }
+
+  return islands;
 }
 
 /** Stagger delay based on distance from the center, so the tree grows outward. */

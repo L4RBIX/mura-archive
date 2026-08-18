@@ -3,11 +3,72 @@
 import { animate, useMotionValue } from "framer-motion";
 import { useCallback, useMemo, useRef } from "react";
 
-const MIN_SCALE = 0.55;
+/**
+ * 0.55 was chosen for a phone showing a handful of cards. Measured against a
+ * synthetic 40-person family, the graph is roughly 1300x5400 world units, which
+ * needs about 0.16 to fit a laptop canvas — at 0.55 a large family simply could
+ * not be seen whole, and the only way to find anyone was to pan blind.
+ *
+ * 0.15 is the floor. Cards are unreadable there, deliberately: that zoom is for
+ * seeing the shape of a family and choosing where to go, not for reading names.
+ */
+const MIN_SCALE = 0.15;
 const MAX_SCALE = 1.5;
 const SPRING = { type: "spring" as const, stiffness: 190, damping: 28 };
 
 const clampScale = (s: number) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, s));
+
+/** Bounds of the drawn graph in world units. */
+export interface GraphBounds {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+/**
+ * The transform that frames `bounds` inside a viewport.
+ *
+ * Pure, and separate from the hook, because it is the one piece of arithmetic
+ * here that is worth pinning: it decides whether a family is visible at all.
+ * Verifying it through the component would mean driving framer's frame loop,
+ * which is exactly the part a test cannot rely on.
+ */
+export function computeFit(
+  bounds: GraphBounds,
+  viewport: { width: number; height: number },
+  options: { padding?: number; insetRight?: number } = {},
+): { x: number; y: number; scale: number } {
+  const padding = options.padding ?? 64;
+  const insetRight = options.insetRight ?? 0;
+
+  const available = {
+    width: Math.max(1, viewport.width - insetRight - padding * 2),
+    height: Math.max(1, viewport.height - padding * 2),
+  };
+  const content = {
+    width: Math.max(1, bounds.maxX - bounds.minX),
+    height: Math.max(1, bounds.maxY - bounds.minY),
+  };
+
+  // Never zoom *in* past 1 to fill the canvas: a lone person blown up to 150%
+  // looks like a bug, not like a family tree.
+  const scale = clampScale(
+    Math.min(1, available.width / content.width, available.height / content.height),
+  );
+
+  const centreX = (bounds.minX + bounds.maxX) / 2;
+  const centreY = (bounds.minY + bounds.maxY) / 2;
+  return {
+    x: (viewport.width - insetRight) / 2 - centreX * scale,
+    y: viewport.height / 2 - centreY * scale,
+    scale,
+  };
+}
 
 /**
  * A minimal hand-rolled pan/zoom canvas: one-finger drag to pan, two-finger
@@ -92,16 +153,71 @@ export function usePanZoom() {
     [scale, zoomAt],
   );
 
+  /** Move a motion value, instantly when the user asked for less motion. */
+  const glide = useCallback((value: ReturnType<typeof useMotionValue<number>>, to: number) => {
+    if (prefersReducedMotion()) value.set(to);
+    else animate(value, to, SPRING);
+  }, []);
+
   /** Glide the given world-space point to the center of the viewport. */
   const recenter = useCallback(
     (worldX = 0, worldY = 0, targetScale = 1) => {
       const rect = containerRef.current?.getBoundingClientRect();
       if (!rect) return;
-      animate(x, rect.width / 2 - worldX * targetScale, SPRING);
-      animate(y, rect.height / 2 - worldY * targetScale, SPRING);
-      animate(scale, targetScale, SPRING);
+      glide(x, rect.width / 2 - worldX * targetScale);
+      glide(y, rect.height / 2 - worldY * targetScale);
+      glide(scale, targetScale);
     },
-    [scale, x, y],
+    [glide, scale, x, y],
+  );
+
+  /**
+   * Frame the whole graph.
+   *
+   * The canvas only ever had `recenter(0, 0, 1)`, which puts the centre person
+   * at the middle of the viewport at 100% and ignores everyone else — so a
+   * two-person family filled about 5% of a laptop canvas, and a large one ran
+   * off every edge with no way to see its shape.
+   *
+   * `inset` reserves space that is part of the canvas but covered by something
+   * else, which is how the desktop person panel avoids making the graph jump.
+   */
+  const fitToContent = useCallback(
+    (
+      bounds: GraphBounds,
+      options: { padding?: number; inset?: { right?: number } } = {},
+    ) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const next = computeFit(
+        bounds,
+        { width: rect.width, height: rect.height },
+        { padding: options.padding, insetRight: options.inset?.right },
+      );
+      glide(x, next.x);
+      glide(y, next.y);
+      glide(scale, next.scale);
+    },
+    [glide, scale, x, y],
+  );
+
+  /** Zoom about the middle of the canvas — what the +/- buttons and keys use. */
+  const zoomBy = useCallback(
+    (factor: number) => {
+      const rect = containerRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, scale.get() * factor);
+    },
+    [scale, zoomAt],
+  );
+
+  /** Pan by a screen-space delta — what the arrow keys use. */
+  const panBy = useCallback(
+    (dx: number, dy: number) => {
+      x.set(x.get() + dx);
+      y.set(y.get() + dy);
+    },
+    [x, y],
   );
 
   const handlers = useMemo(
@@ -109,5 +225,5 @@ export function usePanZoom() {
     [onPointerDown, onPointerMove, onPointerUp, onWheel],
   );
 
-  return { containerRef, x, y, scale, recenter, handlers };
+  return { containerRef, x, y, scale, recenter, fitToContent, zoomBy, panBy, handlers };
 }

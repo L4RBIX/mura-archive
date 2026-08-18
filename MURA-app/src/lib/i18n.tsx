@@ -159,6 +159,20 @@ const ui = {
     // to this person. Saying they are unconnected would be a family fact the
     // archive never asserted.
     treeOtherPeople: "Не показаны рядом с этим человеком",
+    treeCanvasLabel: "Семейное древо, интерактивная схема",
+    treeKeyboardHelp:
+      "Стрелки — перемещение, плюс и минус — масштаб, ноль — показать целиком. Tab — переход между людьми, Enter — открыть.",
+    treeZoomIn: "Приблизить",
+    treeZoomOut: "Отдалить",
+    treeFit: "Показать целиком",
+    closePanel: "Закрыть",
+    // Islands are separate because no recording has connected them yet — not
+    // because the connection is doubted.
+    treeIslandLabel: "Пока отдельная ветвь",
+    // Connected, just not drawable around this particular person.
+    treeFurtherLabel: "Дальше по этой ветви",
+    treeIslandsHint:
+      "Эти люди пока не связаны с остальными — в записях об этом ещё не рассказали.",
     archiveError: "Не удалось загрузить семейный архив.",
     archiveRetry: "Попробовать снова",
     archiveForbidden: "У вас нет доступа к этому разделу.",
@@ -425,6 +439,17 @@ const ui = {
     treeEmptyBody: "Әңгіме жазғаныңызда MURA ондағы адамдар мен байланыстарды тауып, осында көрсетеді.",
     treeLoading: "Шежіре ашылып жатыр…",
     treeOtherPeople: "Бұл адамның қасында көрсетілмеген",
+    treeCanvasLabel: "Отбасы шежіресі, интерактивті сызба",
+    treeKeyboardHelp:
+      "Бағыттауыш пернелер — жылжыту, плюс пен минус — масштаб, нөл — толық көрсету. Tab — адамдар арасында өту, Enter — ашу.",
+    treeZoomIn: "Жақындату",
+    treeZoomOut: "Алыстату",
+    treeFit: "Толық көрсету",
+    closePanel: "Жабу",
+    treeIslandLabel: "Әзірге бөлек тармақ",
+    treeFurtherLabel: "Осы тармақтың әрі қарайы",
+    treeIslandsHint:
+      "Бұл адамдар әзірге басқалармен байланыспаған — жазбаларда ол туралы әлі айтылмаған.",
     archiveError: "Отбасылық мұрағатты жүктеу мүмкін болмады.",
     archiveRetry: "Қайта көру",
     archiveForbidden: "Бұл бөлімге қолжетімділік жоқ.",
