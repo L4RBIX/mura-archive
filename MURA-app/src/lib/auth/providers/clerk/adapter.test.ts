@@ -295,6 +295,15 @@ describe("configuration", () => {
     expect(readClerkConfig({ NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk" }).ok).toBe(false);
   });
 
+  it("treats example placeholders as unconfigured instead of crashing Clerk", () => {
+    expect(
+      readClerkConfig({
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "pk_test_replace-me",
+        CLERK_SECRET_KEY: "sk_test_replace-me",
+      }).ok,
+    ).toBe(false);
+  });
+
   it("names what is missing without echoing any value", () => {
     const result = readClerkConfig({ CLERK_SECRET_KEY: "sk_test_secret_value" });
 

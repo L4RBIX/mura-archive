@@ -87,7 +87,11 @@ describe("the fixture family is gone", () => {
     // object, so a screen could reach an invented relative through what looked
     // like a translation hook.
     expect(importsFixtures(source)).toBe(false);
-    expect(source).not.toMatch(/getPerson|storiesForPerson|narrator/);
+    // The deleted fixture accessors, matched as identifiers rather than as
+    // substrings. `i18n.tsx` is now a three-language dictionary, and a bare
+    // /narrator/ also forbids the English word in a translated sentence —
+    // which says nothing about whether fixture data has crept back in.
+    expect(source).not.toMatch(/\b(getPerson|storiesForPerson|narrator)\s*[(:=]/);
   });
 });
 

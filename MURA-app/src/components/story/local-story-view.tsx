@@ -79,7 +79,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
         animate={{ opacity: 1, y: 0 }}
         className={`mx-auto w-full ${READING_WIDTH} px-5 pt-2 sm:px-6 lg:px-8`}
       >
-        <p className="text-caption font-semibold uppercase tracking-[0.18em] text-muted">
+        <p className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
           {recordedAt}
         </p>
         <h1 className="mt-2 text-display font-bold leading-[1.1] tracking-[-0.03em]">
@@ -100,8 +100,8 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
         {/* «Кратко» — the pipeline's retelling. While the analysis is still
             running this stays a status line rather than showing the raw
             transcript as if it were a finished result. */}
-        <section className="mt-10 rounded-panel bg-clay/55 p-5">
-          <h2 className="text-caption font-semibold uppercase tracking-[0.18em] text-ink/60">
+        <section className="mt-10 rounded-panel bg-peach/55 p-5">
+          <h2 className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
             {t("aiSummary")}
           </h2>
           {memory.summary ? (
@@ -122,7 +122,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
 
         {memory.people.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-caption font-semibold uppercase tracking-[0.18em] text-ink/60">
+            <h2 className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
               {t("inThisMemory")}
             </h2>
             <ul className="mt-4 space-y-2.5">
@@ -164,7 +164,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
 
         {Boolean(memory.events?.length || memory.places?.length) && (
           <section className="mt-12">
-            <h2 className="text-caption font-semibold uppercase tracking-[0.18em] text-ink/60">
+            <h2 className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
               {t("eventsAndPlaces")}
             </h2>
             <ul className="mt-4 space-y-2.5">
@@ -200,7 +200,7 @@ export function LocalStoryView({ memoryId }: { memoryId: string }) {
         )}
 
         <section className="mt-12">
-          <h2 className="text-caption font-semibold uppercase tracking-[0.18em] text-ink/60">
+          <h2 className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
             {t("transcript")}
           </h2>
           <div className="mt-4">

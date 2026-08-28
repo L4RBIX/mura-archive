@@ -2,6 +2,7 @@
 
 import { animate, useMotionValue } from "framer-motion";
 import { useCallback, useMemo, useRef } from "react";
+import { createPointerGesture } from "@/hooks/pointer-gesture";
 
 /**
  * 0.55 was chosen for a phone showing a handful of cards. Measured against a
@@ -82,9 +83,13 @@ export function usePanZoom() {
   const y = useMotionValue(0);
   const scale = useMotionValue(1);
 
-  const pointers = useRef(new Map<number, { x: number; y: number }>());
-  const panOrigin = useRef<{ x: number; y: number } | null>(null);
-  const pinchOrigin = useRef<number | null>(null);
+  /*
+   * All gesture state lives in one machine rather than three refs, because the
+   * bug it replaces was a disagreement between those refs: a release the canvas
+   * never saw left the pointer set populated and the pan origin set, so hover
+   * panned the graph. See `pointer-gesture.ts`.
+   */
+  const gesture = useRef(createPointerGesture());
 
   const zoomAt = useCallback(
     (clientX: number, clientY: number, nextScale: number) => {
@@ -105,43 +110,69 @@ export function usePanZoom() {
   );
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
-    (e.target as Element).setPointerCapture?.(e.pointerId);
-    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
-    if (pointers.current.size === 1) {
-      panOrigin.current = { x: e.clientX, y: e.clientY };
-    } else if (pointers.current.size === 2) {
-      const [a, b] = Array.from(pointers.current.values());
-      pinchOrigin.current = Math.hypot(a.x - b.x, a.y - b.y);
-    }
+    /*
+     * Deliberately no `setPointerCapture` here.
+     *
+     * The old code captured on `e.target` — whatever sat deepest under the
+     * pointer, usually a person card. That is wrong twice over. The card can
+     * unmount mid-gesture (opening a person re-lays the tree) and a captured
+     * element that leaves the DOM never delivers its `pointerup`, which is half
+     * of how the canvas came to latch onto the cursor.
+     *
+     * Capturing on press at all is the other half: capture retargets the
+     * `click` a tap produces, so the card the user actually tapped may never
+     * receive it and the person never opens. Capture is taken in `move`, once
+     * the gesture has proved it is a drag — a tap therefore never involves
+     * capture, and a drag gets the out-of-bounds tracking it needs.
+     */
+    gesture.current.down(e);
   }, []);
 
   const onPointerMove = useCallback(
     (e: React.PointerEvent) => {
-      if (!pointers.current.has(e.pointerId)) return;
-      pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      const move = gesture.current.move(e);
+      if (!move) return;
 
-      if (pointers.current.size === 2) {
-        const [a, b] = Array.from(pointers.current.values());
-        const dist = Math.hypot(a.x - b.x, a.y - b.y);
-        if (pinchOrigin.current) {
-          const factor = dist / pinchOrigin.current;
-          zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, scale.get() * factor);
-        }
-        pinchOrigin.current = dist;
-      } else if (pointers.current.size === 1 && panOrigin.current) {
-        x.set(x.get() + (e.clientX - panOrigin.current.x));
-        y.set(y.get() + (e.clientY - panOrigin.current.y));
-        panOrigin.current = { x: e.clientX, y: e.clientY };
+      // Past the threshold this is a drag, so follow the pointer even when it
+      // leaves the canvas. Without this a pan dies at the window edge.
+      if (gesture.current.dragged && !e.currentTarget.hasPointerCapture?.(e.pointerId)) {
+        e.currentTarget.setPointerCapture?.(e.pointerId);
       }
+
+      if (move.kind === "pinch") {
+        zoomAt(move.centerX, move.centerY, scale.get() * move.factor);
+        return;
+      }
+      x.set(x.get() + move.dx);
+      y.set(y.get() + move.dy);
     },
     [scale, x, y, zoomAt],
   );
 
   const onPointerUp = useCallback((e: React.PointerEvent) => {
-    pointers.current.delete(e.pointerId);
-    pinchOrigin.current = null;
-    const remaining = Array.from(pointers.current.values())[0];
-    panOrigin.current = remaining ?? null;
+    gesture.current.up(e.pointerId);
+  }, []);
+
+  /**
+   * Capture was taken away — the element left the DOM, or the browser handed
+   * the pointer to a system gesture. Either way the drag is over, and treating
+   * it as still running is precisely the latch this hook had.
+   */
+  const onLostPointerCapture = useCallback(() => {
+    gesture.current.clear();
+  }, []);
+
+  /**
+   * Swallow the click that ends a drag.
+   *
+   * Panning that starts on a person card still fires `click` on release, which
+   * would open whoever the drag happened to begin on. Run in the capture phase
+   * so the card's own handler never sees it.
+   */
+  const onClickCapture = useCallback((e: React.MouseEvent) => {
+    if (!gesture.current.dragged) return;
+    e.stopPropagation();
+    e.preventDefault();
   }, []);
 
   const onWheel = useCallback(
@@ -221,8 +252,16 @@ export function usePanZoom() {
   );
 
   const handlers = useMemo(
-    () => ({ onPointerDown, onPointerMove, onPointerUp, onPointerCancel: onPointerUp, onWheel }),
-    [onPointerDown, onPointerMove, onPointerUp, onWheel],
+    () => ({
+      onPointerDown,
+      onPointerMove,
+      onPointerUp,
+      onPointerCancel: onPointerUp,
+      onLostPointerCapture,
+      onClickCapture,
+      onWheel,
+    }),
+    [onPointerDown, onPointerMove, onPointerUp, onLostPointerCapture, onClickCapture, onWheel],
   );
 
   return { containerRef, x, y, scale, recenter, fitToContent, zoomBy, panBy, handlers };

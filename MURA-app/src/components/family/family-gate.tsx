@@ -47,7 +47,7 @@ function Notice({
 function Booting() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-4 px-8">
-      <div className="size-12 animate-pulse rounded-full bg-clay/60" />
+      <div className="size-12 animate-pulse rounded-full bg-peach/60" />
       <div className="h-3 w-40 animate-pulse rounded-full bg-raised" />
     </div>
   );
@@ -72,7 +72,7 @@ export function AuthActions({ className }: { className?: string }) {
           label, and just under the touch-target floor. */}
       <Link
         href={`/sign-in${query}`}
-        className="flex h-11 items-center rounded-full bg-clay px-5 text-meta font-semibold focus-ring"
+        className="flex h-11 items-center rounded-full bg-peach px-5 text-meta font-semibold focus-ring"
       >
         {t("signIn")}
       </Link>
@@ -92,7 +92,15 @@ export function AuthActions({ className }: { className?: string }) {
  * Only `name` is sent because that is the only field Core accepts; the owner is
  * the authenticated principal and the body cannot name one.
  */
-function CreateFamily() {
+/**
+ * The whole of family creation, exported so first run can host it too.
+ *
+ * It used to exist only behind `FamilyGate`, which wraps `/record`, `/tree` and
+ * `/person`. A user who signed up and landed on `/home` — which is where the
+ * sign-up redirect sends them — therefore had no way to create a family at all
+ * without first walking into a gated screen and being stopped by it.
+ */
+export function CreateFamily({ standalone = true }: { standalone?: boolean } = {}) {
   const { t } = useMuraI18n();
   const { createFamily } = useMuraSession();
   const [name, setName] = useState("");
@@ -115,7 +123,11 @@ function CreateFamily() {
   };
 
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-form flex-col items-center justify-center px-6 sm:px-8">
+    <div
+      className={`mx-auto flex w-full max-w-form flex-col items-center justify-center ${
+        standalone ? "min-h-dvh px-6 sm:px-8" : "py-4"
+      }`}
+    >
       {/* First run is an emotional moment, not a form to dispatch. The swallow
           and the breathing room are the difference between "create a
           workspace" and "start your family archive". */}
@@ -137,12 +149,12 @@ function CreateFamily() {
             placeholder={t("familyNamePlaceholder")}
             maxLength={256}
             autoComplete="off"
-            className="h-12 rounded-surface bg-raised px-4 text-body outline-none"
+            className="h-12 rounded-surface bg-raised px-4 text-body outline-none focus-ring"
           />
           <button
             type="submit"
             disabled={busy || name.trim().length === 0}
-            className="h-12 rounded-surface bg-clay text-body font-semibold shadow-soft disabled:opacity-50"
+            className="h-12 rounded-surface bg-peach text-body font-semibold shadow-soft disabled:opacity-50 focus-ring"
           >
             {busy ? t("creatingFamily") : t("createFamily")}
           </button>

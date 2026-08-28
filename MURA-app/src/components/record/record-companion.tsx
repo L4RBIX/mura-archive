@@ -22,8 +22,9 @@
 
 import { useState } from "react";
 import { PersonAvatar } from "@/components/ui/person-avatar";
-import { useMuraI18n, type TranslationKey } from "@/lib/i18n";
+import { useMuraI18n } from "@/lib/i18n";
 import type { ArchivePerson } from "@/lib/mura/archive-api";
+import { promptsForRole, useNarratorRole } from "@/lib/mura/narrator-role";
 
 /** Who the recording is of. `personId` only when the archive already knows them. */
 export interface Speaker {
@@ -31,16 +32,18 @@ export interface Speaker {
   personId: string | null;
 }
 
-const PROMPT_KEYS: TranslationKey[] = [
-  "promptChildhoodHome",
-  "promptFirstMemory",
-  "promptParents",
-  "promptMeeting",
-  "promptHardYears",
-  "promptHoliday",
-  "promptFood",
-  "promptAdvice",
-];
+/**
+ * Three at a time, not eight.
+ *
+ * The panel listed every prompt it had, which turned the companion into a wall
+ * of eight cards beside the microphone — the list dominated the screen whose
+ * subject is a person about to speak. Three is a choice; eight is a menu to
+ * read, at the moment somebody is trying to stop reading and start talking.
+ */
+const VISIBLE_PROMPTS = 3;
+
+/** People shown before the list asks to be expanded. */
+const VISIBLE_PEOPLE = 6;
 
 export function RecordCompanion({
   people,
@@ -54,14 +57,24 @@ export function RecordCompanion({
   familyName: string | null;
 }) {
   const { t } = useMuraI18n();
+  const { role } = useNarratorRole();
   const [typed, setTyped] = useState("");
+  const [allPeople, setAllPeople] = useState(false);
+  /** Which window of the prompt list is on screen. «Ещё идеи» advances it. */
+  const [promptPage, setPromptPage] = useState(0);
+
+  const ordered = promptsForRole(role);
+  const start = (promptPage * VISIBLE_PROMPTS) % ordered.length;
+  const prompts = [...ordered, ...ordered].slice(start, start + VISIBLE_PROMPTS);
+
+  const shownPeople = allPeople ? people : people.slice(0, VISIBLE_PEOPLE);
 
   return (
     <div className="flex w-full flex-col gap-8 text-left">
       {/* Focus mode keeps the rail off this screen, which also removed every
           hint of which archive a recording is about to be written into. */}
       {familyName && (
-        <p className="text-caption font-semibold uppercase tracking-[0.16em] text-muted">
+        <p className="text-meta font-semibold tracking-[-0.005em] text-ink/70">
           {familyName}
         </p>
       )}
@@ -72,7 +85,7 @@ export function RecordCompanion({
 
         {people.length > 0 && (
           <ul className="mt-3 flex flex-wrap gap-2">
-            {people.map((person) => {
+            {shownPeople.map((person) => {
               const active = speaker?.personId === person.person_id;
               return (
                 <li key={person.person_id}>
@@ -86,7 +99,7 @@ export function RecordCompanion({
                           : { name: person.display_name, personId: person.person_id },
                       )
                     }
-                    className={`flex items-center gap-2 rounded-full py-1.5 pl-1.5 pr-3.5 text-meta font-medium transition-colors focus-ring ${
+                    className={`flex min-h-11 items-center gap-2 rounded-full py-1.5 pl-1.5 pr-4 text-meta font-medium transition-colors focus-ring ${
                       active ? "bg-ink text-raised" : "bg-raised text-ink hover:bg-sand"
                     }`}
                   >
@@ -100,6 +113,17 @@ export function RecordCompanion({
                 </li>
               );
             })}
+            {!allPeople && people.length > VISIBLE_PEOPLE && (
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setAllPeople(true)}
+                  className="flex min-h-11 items-center rounded-full px-3 text-meta font-medium text-ink/65 underline decoration-ink/25 underline-offset-4 hover:text-ink focus-ring"
+                >
+                  {t("recordShowAllPeople")}
+                </button>
+              </li>
+            )}
           </ul>
         )}
 
@@ -128,16 +152,23 @@ export function RecordCompanion({
         <p className="mt-1 text-meta leading-relaxed text-muted">
           {t("recordPromptsHint")}
         </p>
-        <ul className="mt-3 space-y-2">
-          {PROMPT_KEYS.map((key) => (
-            <li
-              key={key}
-              className="rounded-surface bg-raised/70 px-3.5 py-2.5 text-body leading-snug text-ink/80"
-            >
+        {/* Rules, not cards: three consecutive suggestions are a list, and a
+            box around each was three more containers on a screen that wants
+            fewer things to look at. */}
+        <ul className="mt-3 divide-y divide-ink/[0.08] border-y border-ink/[0.08]">
+          {prompts.map((key) => (
+            <li key={key} className="py-3 text-body leading-snug text-ink/80">
               {t(key)}
             </li>
           ))}
         </ul>
+        <button
+          type="button"
+          onClick={() => setPromptPage((page) => page + 1)}
+          className="mt-3 flex min-h-11 items-center text-meta font-medium text-ink/65 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink focus-ring"
+        >
+          {t("recordMoreIdeas")}
+        </button>
       </section>
     </div>
   );

@@ -10,12 +10,20 @@
  * Kazakh does not inflate the noun after a numeral at all, so its three keys
  * carry the same word and this returns whichever; keeping the same call shape
  * for both languages avoids a per-locale branch at every call site.
+ *
+ * English has two forms, not three. It reuses `many` as its plural bucket
+ * rather than gaining a fourth name, so the three dictionary keys stay the
+ * same shape in every language and no call site has to know how many forms the
+ * current locale actually distinguishes.
  */
 
 export type PluralForm = "one" | "few" | "many";
 
 export function pluralForm(count: number, locale: string): PluralForm {
   if (locale === "kk") return "one";
+  // Note this is `=== 1`, not "ends in 1": English says "21 people", and 0
+  // takes the plural ("0 people"), unlike the Russian rule below.
+  if (locale === "en") return Math.abs(count) === 1 ? "one" : "many";
 
   const absolute = Math.abs(Math.trunc(count));
   const lastTwo = absolute % 100;

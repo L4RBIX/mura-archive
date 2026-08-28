@@ -3,7 +3,11 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { AppShell } from "@/components/shell/app-shell";
 import { MuraI18nProvider } from "@/lib/i18n";
 import { isClerkConfigured } from "@/lib/auth/providers/clerk/config";
-import { MuraSessionProvider } from "@/lib/mura/session-provider";
+import { isDevAuthAllowed } from "@/lib/auth/providers/dev/config";
+import {
+  MuraSessionProvider,
+  type AuthProviderKind,
+} from "@/lib/mura/session-provider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,12 +23,28 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-function Shell({ children }: Readonly<{ children: React.ReactNode }>) {
+/**
+ * Which provider is in force, decided once, on the server.
+ *
+ * The development issuer is chosen only by its own gate, never because Clerk is
+ * missing: an unconfigured deployment must keep reporting itself unconfigured
+ * rather than quietly acquiring an issuer that mints identities on request.
+ */
+function authProvider(): AuthProviderKind {
+  if (isDevAuthAllowed()) return "dev";
+  if (isClerkConfigured()) return "clerk";
+  return "none";
+}
+
+function Shell({
+  children,
+  provider,
+}: Readonly<{ children: React.ReactNode; provider: AuthProviderKind }>) {
   return (
     <MuraI18nProvider>
       {/* Session wraps everything, so no screen can render family data before
           the app knows who is signed in and which family they chose. */}
-      <MuraSessionProvider>
+      <MuraSessionProvider provider={provider}>
         <div
           aria-hidden
           className="grain pointer-events-none fixed inset-0 z-50 opacity-[0.05] mix-blend-multiply"
@@ -45,10 +65,11 @@ export default function RootLayout({
   // unconfigured deployment still renders, and the proxy reports
   // `auth_provider_unconfigured`, so the UI says so plainly rather than
   // crashing on a missing environment variable.
-  const shell = <Shell>{children}</Shell>;
+  const provider = authProvider();
+  const shell = <Shell provider={provider}>{children}</Shell>;
   return (
     <html lang="ru">
-      <body>{isClerkConfigured() ? (
+      <body>{provider === "clerk" ? (
           // Canonical location of both flows. Clerk renders the
           // "Нет аккаунта? Создать аккаунт" cross-link only when it knows
           // where the other flow lives; without this it silently hides it.

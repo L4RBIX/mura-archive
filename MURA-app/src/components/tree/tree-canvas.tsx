@@ -189,7 +189,7 @@ export function TreeCanvas({
           {islands.map((island, index) => (
             <div
               key={`${centerId}:island-${index}`}
-              className="pointer-events-none absolute whitespace-nowrap text-caption font-semibold uppercase tracking-[0.16em] text-muted"
+              className="pointer-events-none absolute whitespace-nowrap text-meta font-semibold tracking-[-0.005em] text-ink/70"
               style={{ left: island.label.x, top: island.label.y }}
             >
               {t(island.connectedToCentre ? "treeFurtherLabel" : "treeIslandLabel")}

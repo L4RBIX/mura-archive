@@ -63,14 +63,28 @@ const POSES: Record<MascotState, Pose> = {
 
 const POSE_SPRING = { type: "spring", stiffness: 62, damping: 18, mass: 1.1 } as const;
 
-function Layer({ src, priority }: { src: string; priority?: boolean }) {
+/**
+ * One part of the swallow.
+ *
+ * Every layer loads with `priority`, not just the base and the head.
+ *
+ * The eight parts are one illustration: a bird drawn without its beak or its
+ * eye does not read as a slightly incomplete bird, it reads as a broken image.
+ * Marking only two of them meant the other six raced, and whichever lost became
+ * the Largest Contentful Paint — Next reported exactly that for `part-mouth`
+ * and `part-throat`, which is the browser saying the visible bird finished late.
+ *
+ * The whole set is 200 KB and appears above the fold on the screen the product
+ * is built around, so there is nothing here worth deferring.
+ */
+function Layer({ src }: { src: string }) {
   return (
     <Image
       src={src}
       alt=""
       width={640}
       height={640}
-      priority={priority}
+      priority
       unoptimized
       draggable={false}
       className="pointer-events-none absolute inset-0 h-full w-full select-none"
@@ -233,7 +247,7 @@ function LastochkaImpl({ state, size = 260, className }: LastochkaProps) {
           animate={{ rotate: pose.bodyRotate, y: pose.bodyY * k }}
           transition={POSE_SPRING}
         >
-          <Layer src="/mascot/part-base.png" priority />
+          <Layer src="/mascot/part-base.png" />
 
           <motion.div
             className="absolute inset-0"
@@ -281,7 +295,7 @@ function LastochkaImpl({ state, size = 260, className }: LastochkaProps) {
                   <Layer src="/mascot/part-beak-lower.png" />
                 </motion.div>
 
-                <Layer src="/mascot/part-head.png" priority />
+                <Layer src="/mascot/part-head.png" />
 
                 <motion.div
                   className="absolute inset-0"

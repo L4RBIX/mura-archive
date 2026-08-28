@@ -16,7 +16,7 @@ export function MemoryCard({ story }: { story: Story }) {
       <div className="flex items-center justify-between gap-4">
         <div className="min-w-0">
           {story.isNew && (
-            <span className="mb-1.5 inline-block rounded-full bg-clay px-2.5 py-0.5 text-caption font-semibold">
+            <span className="mb-1.5 inline-block rounded-full bg-peach px-2.5 py-0.5 text-caption font-semibold">
               {t("new")}
             </span>
           )}

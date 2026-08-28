@@ -43,7 +43,7 @@ const item = {
 
 function SectionLabel({ children }: { children: ReactNode }) {
   return (
-    <h2 className="mb-3 text-caption font-semibold uppercase tracking-[0.18em] text-muted">
+    <h2 className="mb-3 text-meta font-semibold tracking-[-0.005em] text-ink/70">
       {children}
     </h2>
   );

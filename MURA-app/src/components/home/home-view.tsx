@@ -4,49 +4,63 @@ import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { DemoBadge } from "@/components/demo/demo-notice";
 import { AuthStrip } from "@/components/family/auth-strip";
-import { ArchiveDoorways } from "@/components/home/archive-doorways";
-import { RecordButton } from "@/components/record/record-button";
+import { NextMemory } from "@/components/home/next-memory";
+import { PeopleStrip } from "@/components/home/people-strip";
+import { RecordHero } from "@/components/home/record-hero";
+import { FirstRunFlow } from "@/components/onboarding/first-run-flow";
 import { useArchiveSearch } from "@/components/search/search-provider";
 import { PageContainer } from "@/components/shell/page-container";
 import { StoryLink, storyLinkLabels } from "@/components/story/story-link";
 import { useMuraI18n } from "@/lib/i18n";
 import {
-  fetchArchiveOverview,
   fetchArchivePeople,
-  type ArchiveOverview,
+  fetchArchiveRelationships,
   type ArchivePerson,
+  type ArchiveRelationship,
 } from "@/lib/mura/archive-api";
+import { buildFamilyRelations } from "@/lib/mura/family-graph";
+import { generationCount } from "@/lib/mura/generations";
 import { useMuraSession } from "@/lib/mura/session-provider";
 import { useArchiveResource } from "@/lib/mura/use-archive";
+import { useArchiveOverviewResource } from "@/lib/mura/use-archive-overview";
 
 const container = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.07, delayChildren: 0.04 } },
+  visible: { transition: { staggerChildren: 0.055, delayChildren: 0.02 } },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 14 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.23, 1, 0.32, 1] as const } },
+  hidden: { opacity: 0, y: 12 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.23, 1, 0.32, 1] as const } },
 };
 
 /**
- * The emotional centre of the product, not a dashboard.
+ * Home.
  *
- * Two things were wrong once real data arrived. «Недавние записи» listed local
- * drafts while a doorway beside it counted archive stories, so the page could
- * say «Здесь пока пусто» directly above «2 рассказов» — one screen
- * contradicting itself. It reads the archive now, and the contradiction went
- * away along with a whole competing section.
+ * ## What was wrong
  *
- * And four identical cards left nothing dominant. Recording is the one thing
- * this product exists for, so it is the only heavy element on the page; the
- * ways further in are a quiet list beside it.
+ * A greeting, a black circle floating in beige, and ten identical cards in a
+ * grid — on a page whose largest words, «Воспоминания сегодня», told the user
+ * nothing they did not already know. Two thirds of a 1440px window was empty,
+ * the right rail held two links, and nothing anywhere said how much this
+ * family had actually built.
+ *
+ * ## The shape now
+ *
+ * A masthead, then a filled hero that asks a question and states the archive's
+ * own size, then an editorial list of memories with a rail beside it. Three
+ * levels of emphasis instead of one flat plane, and the only card-shaped
+ * things left are the two small blocks in the rail, where containment
+ * genuinely means something.
+ *
+ * The memories are entries separated by rules rather than a card grid, and the
+ * most recent is set larger: a family archive is a collection that grows, and
+ * it should read like one rather than like a table.
  */
-interface HomeBundle {
-  archive: ArchiveOverview;
-  peopleById: Map<string, ArchivePerson>;
+interface PeopleBundle {
+  people: ArchivePerson[];
+  relationships: ArchiveRelationship[];
 }
 
 export function HomeView() {
@@ -55,154 +69,144 @@ export function HomeView() {
   const [greeting, setGreeting] = useState(() => greetingForHour(13));
   useEffect(() => setGreeting(greetingForHour(new Date().getHours())), [greetingForHour, locale]);
 
-  const load = useCallback(
-    async (familyId: string, signal: AbortSignal): Promise<HomeBundle> => {
-      const [archive, people] = await Promise.all([
-        fetchArchiveOverview(familyId, signal),
+  // The summary is read once for the whole shell; Home reads the same object
+  // the rail does rather than issuing a second identical request.
+  const overview = useArchiveOverviewResource();
+  const data = overview?.status === "ready" ? overview.data : null;
+
+  const loadPeople = useCallback(
+    async (familyId: string, signal: AbortSignal): Promise<PeopleBundle> => {
+      const [people, relationships] = await Promise.all([
         fetchArchivePeople(familyId, signal),
+        fetchArchiveRelationships(familyId, signal),
       ]);
-      return {
-        archive,
-        peopleById: new Map(people.map((person) => [person.person_id, person])),
-      };
+      return { people, relationships };
     },
     [],
   );
-  const overview = useArchiveResource<HomeBundle>(load);
-  const data = overview.data?.archive;
+  const bundle = useArchiveResource<PeopleBundle>(loadPeople);
+  const people = bundle.data?.people ?? [];
+  const relationships = bundle.data?.relationships ?? [];
+
   const labels = storyLinkLabels(t);
-  const { family } = useMuraSession();
+  const { family, auth } = useMuraSession();
   const search = useArchiveSearch();
   const familyName = family.selectedFamily?.name ?? null;
+  const displayName = auth.status === "authenticated" ? auth.user.displayName : null;
   const stories = data?.recent_stories ?? [];
-  // Signed out there is no archive to summarise, and there is no longer a
-  // demonstration one to stand in for it. A section heading with nothing
-  // under it is worse than no section.
-  const hasArchive = overview.status !== "idle";
+  const peopleById = new Map(people.map((person) => [person.person_id, person]));
+
+  const hasNoFamily = auth.status === "authenticated" && family.status === "no_families";
+  const archiveIsReady = overview?.status === "ready" && Boolean(data);
+  const isFirstRun = hasNoFamily || (archiveIsReady && data !== null && data.story_count === 0);
+  const signedIn = auth.status === "authenticated";
+
+  // Generations are derived from the graph, never estimated. Until the people
+  // and edges have arrived it is simply absent rather than shown as zero.
+  const snapshot = data
+    ? {
+        people: data.people_count,
+        stories: data.story_count,
+        generations:
+          people.length > 0
+            ? generationCount(buildFamilyRelations(people, relationships))
+            : 0,
+      }
+    : null;
 
   return (
-    <PageContainer width="wide" className="pb-16 pt-screen">
+    <PageContainer width="wide" className="pb-20 pt-screen">
       <motion.div variants={container} initial="hidden" animate="visible">
-        {/* Home writes its own header rather than using AppHeader, so the
-            search trigger has to be placed here too — otherwise the one screen
-            everybody lands on would be the only one where search was reachable
-            by keyboard shortcut alone. */}
-        <motion.header variants={item} className="flex items-start justify-between gap-4">
+        {/*
+          The masthead. The greeting is the small line and the family's own
+          words are the large one — the previous order set «Воспоминания
+          сегодня» at display size, which is a section label, not a title.
+        */}
+        <motion.header variants={item} className="flex items-start justify-between gap-6">
           <div className="min-w-0">
-          <p className="text-meta text-muted">
-            {greeting}
-            {/* Below `lg` there is no rail, so nothing on the screen said whose
-                archive this is — the one question Home has to answer before
-                «what should I do next?». Stated here rather than added as a
-                second element, and hidden at `lg` where the rail already
-                answers it. */}
-            {familyName && (
-              <span className="lg:hidden">
-                {" · "}
-                <span className="font-medium text-ink/75">{familyName}</span>
-              </span>
-            )}
-          </p>
-          <h1 className="mt-1 text-title font-bold leading-[1.08] tracking-[-0.03em] sm:text-display">
-            {t("todaysMemories")}
-          </h1>
+            <p className="text-meta text-muted">
+              {greeting}
+              {displayName ? `, ${displayName}` : ""}
+              {familyName && (
+                <span className="lg:hidden">
+                  {" · "}
+                  <span className="font-medium text-ink/75">{familyName}</span>
+                </span>
+              )}
+            </p>
+            <h1 className="mt-2 max-w-[16ch] text-balance text-title font-bold leading-[1.05] tracking-[-0.035em]">
+              {t("homeFamilyStories")}
+            </h1>
           </div>
+
           {search && (
             <button
               type="button"
               onClick={search.open}
               aria-keyshortcuts="Control+K Meta+K"
               aria-label={t("searchOpen")}
-              className="mt-1 flex size-11 shrink-0 items-center justify-center rounded-full text-ink/70 transition-colors hover:bg-sand hover:text-ink focus-ring"
+              className="mt-1 flex size-11 shrink-0 items-center justify-center rounded-full border border-ink/[0.1] text-ink/70 transition-colors hover:bg-raised hover:text-ink focus-ring"
             >
               <Search aria-hidden className="size-5" strokeWidth={1.8} />
             </button>
           )}
         </motion.header>
 
-        <motion.div variants={item} className="mt-6">
-          <AuthStrip />
-        </motion.div>
-
-        {/*
-          One page grid, not a band stacked on a row.
-
-          The record button and the doorways used to sit in a flex row of their
-          own above a full-width memories list. Because that row only needed
-          ~640px, it left a ~460px hole to the right of it at 1440 while the
-          list underneath ran the full 1100 — two different widths on one page,
-          which reads as a layout fault rather than a composition.
-
-          Now everything the user reads sits in column one, so the record button
-          and the memories share an edge, and the archive doorways occupy
-          column two for the whole height of the page instead of a corner of it.
-          Source order is record → doorways → memories, which is also the right
-          order stacked on a phone; `col/row-start` puts them back into two
-          columns from `lg` without moving anything in the DOM.
-        */}
-        <div className="mt-8 grid gap-x-12 gap-y-10 lg:grid-cols-[minmax(0,1fr)_300px] 2xl:gap-x-16 2xl:grid-cols-[minmax(0,1fr)_340px]">
-          <motion.div
-            variants={item}
-            className="flex justify-center sm:justify-start lg:col-start-1 lg:row-start-1"
-          >
-            <RecordButton
-              href="/record"
-              label={t("recordMemory")}
-              sublabel={t("pressAndSpeak")}
-            />
+        {!signedIn && (
+          <motion.div variants={item} className="mt-8">
+            <AuthStrip />
           </motion.div>
+        )}
 
-          <motion.aside
-            variants={item}
-            className="min-w-0 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start"
-          >
-            {data && <ArchiveDoorways overview={data} />}
-            <Link
-              href="/ask"
-              className="mt-3 flex items-center gap-2.5 py-2 text-meta focus-ring"
-            >
-              <span className="font-medium text-ink/70">{t("askCardTitle")}</span>
-              <DemoBadge />
-            </Link>
-          </motion.aside>
+        {isFirstRun ? (
+          <motion.div variants={item} className="mt-9">
+            <FirstRunFlow />
+          </motion.div>
+        ) : (
+          signedIn && (
+            <>
+              <motion.div variants={item} className="mt-9">
+                <RecordHero snapshot={snapshot} />
+              </motion.div>
 
-          {hasArchive && (
-          <motion.section
-            variants={item}
-            className="min-w-0 lg:col-start-1 lg:row-start-2"
-          >
-            <h2 className="text-caption font-semibold uppercase tracking-[0.16em] text-muted">
-              {t("recentRecordings")}
-            </h2>
-            {/* Two columns only once column one is genuinely wide enough —
-                which, beside a 300px aside, is `xl` and not `lg`. */}
-            <div className="mt-3 grid gap-2.5 xl:grid-cols-2">
-              {stories.map((story) => (
-                <StoryLink
-                  key={story.story_id}
-                  story={story}
-                  locale={locale}
-                  labels={labels}
-                  peopleById={overview.data?.peopleById}
-                />
-              ))}
-              {overview.status === "ready" && stories.length === 0 && (
-                // One sentence. An empty archive does not need a heading, a
-                // paragraph and a card of its own to say so.
-                <p className="text-body leading-relaxed text-muted">{t("homeEmptyBody")}</p>
-              )}
-            </div>
-            {stories.length > 0 && (
-              <Link
-                href="/stories"
-                className="mt-4 inline-block text-meta font-medium text-ink/70 underline underline-offset-4 focus-ring"
-              >
-                {t("homeOpenStories")}
-              </Link>
-            )}
-          </motion.section>
-          )}
-        </div>
+              <div className="mt-14 grid gap-x-14 gap-y-12 lg:grid-cols-[minmax(0,1fr)_300px] 2xl:gap-x-20 2xl:grid-cols-[minmax(0,1fr)_340px]">
+                <motion.section variants={item} className="min-w-0" aria-labelledby="home-recent">
+                  <div className="flex items-baseline justify-between gap-4 border-b border-ink/[0.14] pb-3">
+                    <h2 id="home-recent" className="text-section font-semibold tracking-[-0.02em]">
+                      {t("homeRecent")}
+                    </h2>
+                    {stories.length > 0 && (
+                      <Link
+                        href="/stories"
+                        className="-mr-2 flex min-h-11 shrink-0 items-center rounded-control px-2 text-meta font-medium text-ink/65 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink focus-ring"
+                      >
+                        {t("homeOpenStories")}
+                      </Link>
+                    )}
+                  </div>
+
+                  <div className="divide-y divide-ink/[0.08]">
+                    {stories.map((story, index) => (
+                      <StoryLink
+                        key={story.story_id}
+                        story={story}
+                        locale={locale}
+                        labels={labels}
+                        variant={index === 0 ? "lead" : "entry"}
+                        peopleById={peopleById}
+                      />
+                    ))}
+                  </div>
+                </motion.section>
+
+                <motion.aside variants={item} className="min-w-0 space-y-10 lg:self-start">
+                  {people.length > 0 && <PeopleStrip people={people} />}
+                  {people.length > 0 && <NextMemory people={people} />}
+                </motion.aside>
+              </div>
+            </>
+          )
+        )}
       </motion.div>
     </PageContainer>
   );

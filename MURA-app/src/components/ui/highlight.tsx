@@ -12,7 +12,7 @@ interface HighlightProps {
  * The pastel highlighter mark — Mura’s signature. Names in transcripts, the
  * live sentence while recording, and key phrases all wear it.
  */
-export function Highlight({ tone = "clay", className, children }: HighlightProps) {
+export function Highlight({ tone = "peach", className, children }: HighlightProps) {
   return (
     <mark
       className={cn(

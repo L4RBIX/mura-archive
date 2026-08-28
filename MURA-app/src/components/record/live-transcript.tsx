@@ -60,7 +60,7 @@ function Word({
   const className = cn(
     wordClass,
     wordTint,
-    highlight && toneBg.clay,
+    highlight && toneBg.peach,
     // The negative inline-start margin cancels the lead-in padding, so the
     // highlighted line still aligns with the paragraphs above it.
     highlight && first && "rounded-s-[0.3em] ps-[0.14em] -ms-[0.14em]",

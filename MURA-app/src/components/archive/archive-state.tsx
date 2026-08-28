@@ -41,7 +41,7 @@ export function ArchiveState<T>({
         role="status"
         aria-live="polite"
       >
-        <div className="size-10 animate-pulse rounded-full bg-clay/60" />
+        <div className="size-10 animate-pulse rounded-full bg-peach/60" />
         {loadingLabel && <p className="text-meta text-muted">{loadingLabel}</p>}
       </div>
     );

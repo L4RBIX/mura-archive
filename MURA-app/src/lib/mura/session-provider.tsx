@@ -31,7 +31,12 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useClerkSession } from "@/lib/auth/providers/clerk/use-clerk-session";
+import {
+  UNCONFIGURED_CLERK_SESSION,
+  useClerkSession,
+  type ClerkSessionState,
+} from "@/lib/auth/providers/clerk/use-clerk-session";
+import { useDevSession } from "@/lib/auth/providers/dev/use-dev-session";
 import { sessionFromFailure, type AuthSession } from "@/lib/auth/session";
 import {
   CoreRequestError,
@@ -66,6 +71,8 @@ export type SessionPhase =
   | "error";
 
 interface MuraSession {
+  /** Which identity provider is behind this session. Decided on the server. */
+  provider: AuthProviderKind;
   auth: AuthSession;
   family: FamilySession;
   /** Product capabilities, or null until they resolve. Never blocks capture. */
@@ -104,9 +111,75 @@ function phaseOf(
   return "ready";
 }
 
-export function MuraSessionProvider({ children }: { children: ReactNode }) {
+/**
+ * Which identity provider the app is running behind.
+ *
+ * Resolved on the server and passed down, so the client never re-derives it and
+ * the two can never disagree. `none` is a real, nameable state — a deployment
+ * with no provider configured — and is not the same as signed out.
+ */
+export type AuthProviderKind = "clerk" | "dev" | "none";
+
+export function MuraSessionProvider({
+  children,
+  provider = "none",
+}: {
+  children: ReactNode;
+  /** Same decision the root layout makes when it wraps `<ClerkProvider>`. */
+  provider?: AuthProviderKind;
+}) {
+  // Each branch is a distinct component rather than a conditional hook call:
+  // `useClerkSession` must not run outside `<ClerkProvider>`, and `useDevSession`
+  // must not run when there is no dev issuer to ask.
+  if (provider === "clerk") {
+    return <MuraSessionWithClerk>{children}</MuraSessionWithClerk>;
+  }
+  if (provider === "dev") {
+    return <MuraSessionWithDevIssuer>{children}</MuraSessionWithDevIssuer>;
+  }
+  return (
+    <MuraSessionInner
+      clerk={UNCONFIGURED_CLERK_SESSION}
+      providerConfigured={false}
+      provider="none"
+    >
+      {children}
+    </MuraSessionInner>
+  );
+}
+
+function MuraSessionWithDevIssuer({ children }: { children: ReactNode }) {
+  const session = useDevSession();
+  return (
+    <MuraSessionInner clerk={session} providerConfigured provider="dev">
+      {children}
+    </MuraSessionInner>
+  );
+}
+
+function MuraSessionWithClerk({ children }: { children: ReactNode }) {
   const clerk = useClerkSession();
-  const [auth, setAuth] = useState<AuthSession>({ status: "loading" });
+  return (
+    <MuraSessionInner clerk={clerk} providerConfigured provider="clerk">
+      {children}
+    </MuraSessionInner>
+  );
+}
+
+function MuraSessionInner({
+  children,
+  clerk,
+  providerConfigured,
+  provider,
+}: {
+  children: ReactNode;
+  clerk: ClerkSessionState;
+  providerConfigured: boolean;
+  provider: AuthProviderKind;
+}) {
+  const [auth, setAuth] = useState<AuthSession>(
+    providerConfigured ? { status: "loading" } : { status: "provider_unconfigured" },
+  );
   const [family, setFamily] = useState<FamilySession>(INITIAL_FAMILY_SESSION);
   const [capabilities, setCapabilities] = useState<Capabilities | null>(null);
   const [capabilitiesResolved, setCapabilitiesResolved] = useState(false);
@@ -132,6 +205,14 @@ export function MuraSessionProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
+    if (!providerConfigured) {
+      setAuth({ status: "provider_unconfigured" });
+      setFamily(INITIAL_FAMILY_SESSION);
+      setCapabilities(null);
+      setCapabilitiesResolved(false);
+      return;
+    }
+
     // Nothing may be concluded until the provider has hydrated; concluding
     // early is what produced the "Войдите" flash on every load.
     if (!clerk.ready) return;
@@ -211,7 +292,7 @@ export function MuraSessionProvider({ children }: { children: ReactNode }) {
     })();
 
     return () => controller.abort();
-  }, [clerk.ready, clerk.signedIn, clerk.sessionKey, applyFamilies]);
+  }, [providerConfigured, clerk.ready, clerk.signedIn, clerk.sessionKey, applyFamilies]);
 
   const selectFamily = useCallback((familyId: string) => {
     setFamily((currentSession) => {
@@ -242,6 +323,7 @@ export function MuraSessionProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<MuraSession>(
     () => ({
+      provider,
       auth,
       family,
       capabilities,
@@ -252,6 +334,7 @@ export function MuraSessionProvider({ children }: { children: ReactNode }) {
       refreshFamilies,
     }),
     [
+      provider,
       auth,
       family,
       capabilities,

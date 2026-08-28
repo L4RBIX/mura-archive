@@ -66,7 +66,7 @@ export function DemoNotice({
       role="note"
       className={
         className ??
-        "mx-6 mb-4 flex items-start gap-2.5 rounded-surface bg-clay/45 px-4 py-3 text-left"
+        "mx-6 mb-4 flex items-start gap-2.5 rounded-surface bg-peach/45 px-4 py-3 text-left"
       }
     >
       <DemoBadge />

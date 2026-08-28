@@ -75,7 +75,7 @@ function ReviewContent() {
                         page titled «Нужно уточнить», says nothing three other
                         things have not already said. */}
                     {isConflict && (
-                      <p className="mb-1 text-caption font-semibold uppercase tracking-[0.14em] text-muted">
+                      <p className="mb-1 text-meta font-semibold tracking-[-0.005em] text-ink/70">
                         {t("reviewConflict")}
                       </p>
                     )}

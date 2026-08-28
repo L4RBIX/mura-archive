@@ -36,3 +36,22 @@ describe("Kazakh", () => {
     }
   });
 });
+
+describe("English plural agreement", () => {
+  it("uses the singular only for exactly one", () => {
+    expect(pluralForm(1, "en")).toBe("one");
+  });
+
+  it("uses the plural for zero", () => {
+    // Unlike the Russian rule, English says "0 people", not "0 person".
+    expect(pluralForm(0, "en")).toBe("many");
+  });
+
+  it("uses the plural for every other count, including those ending in 1", () => {
+    // "21 people", not "21 person" — the Russian last-digit rule would get
+    // this wrong, which is why English is not routed through it.
+    for (const count of [2, 5, 11, 21, 101, 1001]) {
+      expect(pluralForm(count, "en")).toBe("many");
+    }
+  });
+});

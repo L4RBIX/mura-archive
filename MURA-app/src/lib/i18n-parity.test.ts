@@ -1,10 +1,11 @@
 /**
- * Russian and Kazakh are equal, and this is what keeps them that way.
+ * Every interface language is equal, and this is what keeps them that way.
  *
- * Kazakh is the language that gets left for later. It is easy to add a string to
- * `ru`, ship it, and not notice that `kk` fell back to a missing key — the type
- * system does not catch it, because `TranslationKey` is derived from `ru` alone,
- * so `kk` may be a subset and still compile.
+ * Kazakh is the language that gets left for later, and English is now the one
+ * that gets added to first. It is easy to add a string to `ru`, ship it, and not
+ * notice the others fell back to a missing key — the type system does not catch
+ * it, because `TranslationKey` is derived from `ru` alone, so any other
+ * dictionary may be a subset and still compile.
  *
  * Read from source rather than by importing the module: `i18n.tsx` is a client
  * component with React imports, and the question here is only "do the two
@@ -22,7 +23,7 @@ const SOURCE = readFileSync(join(process.cwd(), "src/lib/i18n.tsx"), "utf8");
  * the next dictionary. Comments are stripped so a commented-out key is not
  * counted as present.
  */
-function dictionaryKeys(locale: "ru" | "kk"): string[] {
+function dictionaryKeys(locale: Locale): string[] {
   const start = SOURCE.indexOf(`\n  ${locale}: {`);
   expect(start, `dictionary ${locale} not found`).toBeGreaterThan(-1);
 
@@ -40,44 +41,92 @@ function dictionaryKeys(locale: "ru" | "kk"): string[] {
   );
 }
 
-const ru = dictionaryKeys("ru");
-const kk = dictionaryKeys("kk");
+type Locale = "ru" | "kk" | "en";
 
-describe("every string exists in both languages", () => {
-  it("reads a plausible number of keys from each dictionary", () => {
+/** Russian is the reference: `TranslationKey` is derived from it. */
+const REFERENCE: Locale = "ru";
+const LOCALES: readonly Locale[] = ["ru", "kk", "en"];
+
+/** Key to value for one dictionary, so locales can be compared to each other. */
+function dictionaryValues(locale: Locale): Map<string, string> {
+  const start = SOURCE.indexOf(`\n  ${locale}: {`);
+  const rest = SOURCE.slice(start + 1);
+  const end = rest.indexOf("\n  },");
+  const body = rest
+    .slice(0, end === -1 ? undefined : end)
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/^\s*\/\/.*$/gm, "")
+    // A value wrapped onto its own line is still one value.
+    .replace(/:\s*\n\s+"/g, ': "');
+
+  return new Map(
+    [...body.matchAll(/^\s{4}([A-Za-z][A-Za-z0-9_]*):\s*"([^"]*)"/gm)].map((m) => [m[1], m[2]]),
+  );
+}
+
+const byLocale = new Map<Locale, string[]>(
+  LOCALES.map((locale) => [locale, dictionaryKeys(locale)]),
+);
+// Russian is the reference every other dictionary is compared against.
+const ru = byLocale.get(REFERENCE) as string[];
+
+describe("every string exists in every language", () => {
+  it.each(LOCALES)("reads a plausible number of keys from %s", (locale) => {
     // Guards the parser itself: a regex that silently matched nothing would
     // make every assertion below pass for the wrong reason.
-    expect(ru.length).toBeGreaterThan(150);
-    expect(kk.length).toBeGreaterThan(150);
+    expect(byLocale.get(locale)?.length ?? 0).toBeGreaterThan(150);
   });
 
-  it("has no Russian key missing from Kazakh", () => {
-    const missing = ru.filter((key) => !kk.includes(key));
-    expect(missing).toEqual([]);
+  it.each(LOCALES.filter((locale) => locale !== REFERENCE))(
+    "has no Russian key missing from %s",
+    (locale) => {
+      const keys = byLocale.get(locale) as string[];
+      expect(ru.filter((key) => !keys.includes(key))).toEqual([]);
+    },
+  );
+
+  it.each(LOCALES.filter((locale) => locale !== REFERENCE))(
+    "has no %s key missing from Russian",
+    (locale) => {
+      const keys = byLocale.get(locale) as string[];
+      expect(keys.filter((key) => !ru.includes(key))).toEqual([]);
+    },
+  );
+
+  it.each(LOCALES)("defines each key once in %s", (locale) => {
+    const keys = byLocale.get(locale) as string[];
+    expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it("has no Kazakh key missing from Russian", () => {
-    const missing = kk.filter((key) => !ru.includes(key));
-    expect(missing).toEqual([]);
-  });
+  it.each(LOCALES.filter((locale) => locale !== REFERENCE))(
+    "leaves no %s value as an untranslated copy of the Russian",
+    (locale) => {
+      // A key present but untranslated is worse than a missing one: it looks
+      // done. Some values are legitimately shared — a name, a bare number, an
+      // interval like «26 July 2026 · Astana» — so a handful of matches is
+      // expected and only a wholesale copy is a failure.
+      const reference = dictionaryValues(REFERENCE);
+      const values = dictionaryValues(locale);
 
-  it("defines each key once per dictionary", () => {
-    expect(new Set(ru).size).toBe(ru.length);
-    expect(new Set(kk).size).toBe(kk.length);
-  });
+      const shared = [...values.entries()].filter(
+        ([key, value]) => value.length > 3 && reference.get(key) === value,
+      );
 
-  it("leaves no Kazakh value as a copy of the Russian placeholder", () => {
-    // A key present but untranslated is worse than a missing one: it looks done.
-    // Latin-only values (RU/KK toggles, "MURA") are legitimately shared.
-    const cyrillic = /[Ѐ-ӿ]/;
-    const ruValues = new Map(
-      [...SOURCE.matchAll(/^\s{4}([A-Za-z][A-Za-z0-9_]*):\s*"([^"]*)"/gm)].map((m) => [
-        m[1],
-        m[2],
-      ]),
-    );
-    expect(ruValues.size).toBeGreaterThan(0);
-    // Only a sanity check that the dictionaries are not literally identical.
-    expect(cyrillic.test([...ruValues.values()].join(""))).toBe(true);
+      expect(shared.length / values.size).toBeLessThan(0.05);
+    },
+  );
+
+  it("writes each language in a script that language uses", () => {
+    const cyrillic = /[\u0400-\u04FF]/;
+    const joined = (locale: Locale) => [...dictionaryValues(locale).values()].join(" ");
+
+    expect(cyrillic.test(joined("ru"))).toBe(true);
+    expect(cyrillic.test(joined("kk"))).toBe(true);
+    // Kazakh-specific letters, which Russian does not use — proof the Kazakh
+    // dictionary is Kazakh and not Russian pasted into a second slot.
+    expect(/[әғқңөұүһі]/.test(joined("kk"))).toBe(true);
+    // English is Latin throughout; a stray Cyrillic string here is a value that
+    // was never translated.
+    expect(cyrillic.test(joined("en"))).toBe(false);
   });
 });

@@ -25,6 +25,17 @@ export interface ClerkSessionState {
   sessionKey: string | null;
 }
 
+/** Used when Clerk is not wired up. Must not call `useAuth`. */
+export const UNCONFIGURED_CLERK_SESSION: ClerkSessionState = {
+  ready: true,
+  signedIn: false,
+  sessionKey: null,
+};
+
+/**
+ * Reads Clerk's own session. Call only under `<ClerkProvider>`.
+ * The session provider mounts a sibling path when Clerk is unconfigured.
+ */
 export function useClerkSession(): ClerkSessionState {
   const { isLoaded, isSignedIn, sessionId } = useAuth();
   return {

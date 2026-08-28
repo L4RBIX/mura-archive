@@ -45,3 +45,6 @@ next-env.d.ts
 # Local QA harness (never committed)
 public/__qa.html
 .qa/
+
+# Local development issuer key (never committed)
+/.dev-auth/

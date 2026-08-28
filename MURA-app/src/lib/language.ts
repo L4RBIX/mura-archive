@@ -1,4 +1,12 @@
-export type UiLanguage = "ru" | "kk";
+/**
+ * The language of the interface, and only that.
+ *
+ * Deliberately a different type from every language below it. Changing this
+ * must never change what MURA listens for, what it transcribes, or what
+ * language a summary comes back in — a Russian interface reading a Kazakh
+ * archive is a normal thing for this product, not a contradiction to resolve.
+ */
+export type UiLanguage = "ru" | "kk" | "en";
 export type AudioLanguage = "auto" | "ru" | "kk" | "mixed";
 export type DetectedLanguage = "ru" | "kk" | "mixed" | "unknown";
 export type OutputLanguage = "same_as_transcript" | "ru" | "kk";
@@ -168,7 +176,7 @@ export function detectTranscriptLanguage(transcript: string): DetectedLanguage {
 }
 
 export function isUiLanguage(value: unknown): value is UiLanguage {
-  return value === "ru" || value === "kk";
+  return value === "ru" || value === "kk" || value === "en";
 }
 
 export function isAudioLanguage(value: unknown): value is AudioLanguage {

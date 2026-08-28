@@ -47,12 +47,23 @@ export type ClerkConfigResult =
  * only to decide whether the provider is configured -- neither value is
  * returned, logged, or attached to any error.
  */
+function isUnsetOrPlaceholder(value: string | undefined): boolean {
+  if (!value || !value.trim()) return true;
+  // `.env.example` used to ship `pk_test_replace-me`. Clerk treats that as a
+  // real key, mounts the provider, then throws "Publishable key not valid".
+  return /replace-me|changeme|your-/i.test(value);
+}
+
 export function readClerkConfig(
   env: Record<string, string | undefined> = process.env,
 ): ClerkConfigResult {
   const missing: string[] = [];
-  if (!env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) missing.push("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY");
-  if (!env.CLERK_SECRET_KEY) missing.push("CLERK_SECRET_KEY");
+  if (isUnsetOrPlaceholder(env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)) {
+    missing.push("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY");
+  }
+  if (isUnsetOrPlaceholder(env.CLERK_SECRET_KEY)) {
+    missing.push("CLERK_SECRET_KEY");
+  }
   if (missing.length > 0) return { ok: false, missing };
   return {
     ok: true,

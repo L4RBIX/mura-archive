@@ -14,6 +14,8 @@
  */
 
 import { readClerkSession } from "@/lib/auth/providers/clerk/adapter";
+import { readDevSession } from "@/lib/auth/providers/dev/adapter";
+import { isDevAuthAllowed } from "@/lib/auth/providers/dev/config";
 
 export type ServerAuthSession =
   | { status: "authenticated"; accessToken: string }
@@ -32,5 +34,16 @@ export type ServerAuthSession =
  */
 export async function readServerAuthSession(request: Request): Promise<ServerAuthSession> {
   void request;
+  /*
+   * Two providers, one seam.
+   *
+   * The development issuer is selected only by its own three-condition gate
+   * (`MURA_DEV_AUTH=true`, not a production build, not a deployment), never
+   * because Clerk is missing. That distinction is the whole point: an
+   * operational gap must stay an operational gap. If Clerk is unconfigured the
+   * app says so, exactly as it did before — it does not quietly fall through to
+   * an issuer that mints identities on request.
+   */
+  if (isDevAuthAllowed()) return readDevSession();
   return readClerkSession();
 }

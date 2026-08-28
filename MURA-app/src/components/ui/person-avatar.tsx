@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
  * their name while their relatives had a disc. The tone here is decoration and
  * carries no meaning, so two that actually read beats three where one vanishes.
  */
-const TONES: AccentTone[] = ["clay", "periwinkle"];
+const TONES: AccentTone[] = ["peach", "periwinkle"];
 
 function toneFor(personId: string): AccentTone {
   let hash = 0;

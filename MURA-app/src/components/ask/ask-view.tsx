@@ -112,7 +112,7 @@ export function AskView() {
           is the one impression MURA must never give. Real, evidence-grounded
           Ask is a later capability. */}
       <PageContainer>
-        <DemoNotice surface="ask" className="mt-1 flex items-start gap-2.5 rounded-surface bg-clay/45 px-4 py-3 text-left" />
+        <DemoNotice surface="ask" className="mt-1 flex items-start gap-2.5 rounded-surface bg-peach/45 px-4 py-3 text-left" />
       </PageContainer>
 
       <div className="mx-auto flex w-full max-w-form flex-1 flex-col items-center px-5 pb-[max(env(safe-area-inset-bottom),24px)] sm:px-6">

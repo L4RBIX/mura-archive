@@ -1,4 +1,4 @@
-export type AccentTone = "clay" | "periwinkle" | "sand";
+export type AccentTone = "peach" | "periwinkle" | "sand";
 
 export interface Person {
   id: string;

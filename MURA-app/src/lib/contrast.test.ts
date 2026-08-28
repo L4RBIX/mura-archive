@@ -112,13 +112,13 @@ describe("the ink alphas the product actually uses", () => {
 
 describe("the numbers written in globals.css are the real ones", () => {
   it("muted is the value the comment claims, to one decimal", () => {
-    expect(contrast(token("muted"), PAPER())).toBeCloseTo(4.68, 1);
-    expect(contrast(token("muted"), RAISED())).toBeCloseTo(5.1, 1);
+    expect(contrast(token("muted"), PAPER())).toBeCloseTo(5.11, 1);
+    expect(contrast(token("muted"), RAISED())).toBeCloseTo(5.58, 1);
   });
 
   it("the state colours match their documented ratios", () => {
-    expect(contrast(token("danger"), PAPER())).toBeCloseTo(6.64, 1);
-    expect(contrast(token("warning"), PAPER())).toBeCloseTo(5.55, 1);
-    expect(contrast(token("success"), PAPER())).toBeCloseTo(5.24, 1);
+    expect(contrast(token("danger"), PAPER())).toBeCloseTo(7.04, 1);
+    expect(contrast(token("warning"), PAPER())).toBeCloseTo(5.89, 1);
+    expect(contrast(token("success"), PAPER())).toBeCloseTo(5.55, 1);
   });
 });

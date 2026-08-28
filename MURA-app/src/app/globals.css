@@ -1,41 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #eee8df;
-  --color-raised: #f5f2eb;
-  --color-ink: #0b0b0b;
   /*
-   * Secondary text. Was #8a857d, which measures 3.01:1 on paper — below the
-   * 4.5:1 floor for normal text, and this token carries almost every date,
-   * byline, detail line and section eyebrow in the product. "Premium" had
-   * quietly become "hard to read", which is the wrong trade for an archive
-   * whose readers are often grandparents.
+   * ## The palette
    *
-   * #6b665e measures 4.68:1 on paper and 5.10:1 on raised, and is still
-   * unmistakably secondary next to ink (16.2:1).
+   * The previous one had a single failure that produced every complaint about
+   * the product looking unfinished: page #eee8df, surfaces #f5f2eb and the
+   * navigation rail all sat within four points of luminance of each other, so
+   * nothing separated from anything. "Warm" had become "one flat field of
+   * beige", and no amount of spacing fixes a palette with no tonal distance in
+   * it.
+   *
+   * Three moves:
+   *
+   *   1. The page moves toward ivory and the raised surface toward white, so a
+   *      card is visibly a card before a border or shadow is applied.
+   *   2. Ink gets a cool undertone (from the reference's #040415) and gains a
+   *      deeper step used for *filled* surfaces. A near-black block on warm
+   *      ivory is the strongest contrast this world allows, and it is what
+   *      carries emphasis now — not a bigger card.
+   *   3. The two accents stay exactly where the brief pinned them and are used
+   *      only for interaction and identity, never as decoration.
    */
-  --color-muted: #6b665e;
-  --color-clay: #e8d4c2;
-  --color-periwinkle: #d6d9ee;
-  --color-sand: #ece9e2;
+  --color-ink: #14141c;        /* body copy, headings */
+  --color-ink-deep: #0a0a12;   /* filled surfaces and the largest type */
+  --color-paper: #f2efe7;      /* the page */
+  --color-raised: #fbf9f5;     /* cards, rails, anything that lifts */
+  --color-sand: #e7e1d5;       /* inactive chips, tonal fills, dividers with weight */
 
   /*
-   * State colours.
+   * Secondary text. Measured on both surfaces the product uses, because this
+   * token carries almost every date, byline and detail line, and the readers
+   * of a family archive are often grandparents.
    *
-   * `record-view` reached past the palette for a raw Tailwind `text-red-700`,
-   * which is the one saturated colour in an otherwise earth-toned product — and
-   * it was the *only* way the interface could say "this failed", so degradation
-   * notices had nowhere to go and ended up as grey caption text.
-   *
-   * Measured against both surfaces the product actually uses, so a warning is
-   * legible whether it sits on the page or inside a card:
-   *   danger  #8f2f21 — 6.64:1 on paper, 7.24:1 on raised
-   *   warning #7a5410 — 5.55:1 on paper, 6.05:1 on raised
-   *   success #2f6b3f — 5.24:1 on paper, 5.71:1 on raised
-   * The two surface tints carry their own text at 6.14:1 and 5.32:1.
-   *
-   * Deliberately desaturated: an archive of family memory should be able to
-   * report a problem without looking like an error console.
+   *   5.11:1 on paper, 5.58:1 on raised — comfortably past the 4.5:1 floor,
+   *   and still unmistakably secondary next to ink (15.9:1).
+   */
+  --color-muted: #6a6459;
+
+  /* Identity. Interaction and people, never decoration. */
+  --color-peach: #e6d2c4;
+  --color-peach-deep: #cfa98c;
+  --color-periwinkle: #c0c8e3;
+  --color-periwinkle-deep: #93a0cd;
+  --color-sage: #bcc7b8;
+
+  /*
+   * State colours, deliberately desaturated: an archive of family memory
+   * should be able to report a problem without looking like an error console.
    */
   --color-danger: #8f2f21;
   --color-danger-surface: #f2dcd6;
@@ -43,18 +55,6 @@
   --color-warning-surface: #f0e3c8;
   --color-success: #2f6b3f;
 
-  /*
-   * Content widths.
-   *
-   * These were decided per component, so the product had three different
-   * answers to "how wide is a page" — 560px in settings, 720px from the
-   * container, 1100px on home — and no way to tell which was intended. Named
-   * here, they become a choice a screen makes from a list rather than a number
-   * it invents.
-   *
-   * `reading` is in `ch` because the constraint is characters per line, not
-   * pixels, so it survives a change to the type scale.
-   */
   --container-reading: 70ch;   /* long-form prose; ~63 Cyrillic chars at 18px */
   --container-form: 560px;     /* settings, auth, single-column forms */
   --container-default: 720px;  /* lists and cards */
@@ -68,35 +68,36 @@
     sans-serif;
 
   /*
-   * Type scale.
+   * ## Type scale
    *
-   * The app had grown 23 distinct pixel sizes, including 10.5, 11.5, 12.5 and
-   * 13.5 — differences nobody chose and nobody can see, which is how a screen
-   * ends up with four kinds of "small grey text" and no hierarchy. These seven
-   * steps are what the product actually needs.
+   * The old scale topped out at 28px for a page title and 1.75rem for the
+   * "emotional" step, which is a caption-sized product. Nothing read as
+   * confident because nothing was allowed to be large.
    *
-   * `body` is 16px on purpose. The most common size in the app was 13px, which
-   * is a size for captions, not for the text people read.
+   * Body is 17px, not 16: a memoir is read, not scanned, and the extra point
+   * is worth more here than the density it costs.
    */
-  --text-caption: 0.75rem;      /* 12 — uppercase eyebrows, never prose */
-  --text-meta: 0.875rem;        /* 14 — dates, counts, secondary lines */
-  --text-body: 1rem;            /* 16 — default reading and UI text */
-  --text-item: 1.0625rem;       /* 17 — card and list-item headings */
-  --text-reading: 1.125rem;     /* 18 — long-form story prose, and only that */
-  --text-section: 1.25rem;      /* 20 — section headings */
-  --text-title: 1.75rem;        /* 28 — page titles */
-  --text-display: clamp(1.9rem, 4.5vw, 2.5rem); /* emotional headings only */
+  --text-caption: 0.8125rem;    /* 13 — datelines, counts, never prose */
+  --text-meta: 0.9375rem;       /* 15 — bylines, secondary lines */
+  --text-body: 1.0625rem;       /* 17 — default reading and UI text */
+  --text-item: 1.1875rem;       /* 19 — card and list-item headings */
+  --text-reading: 1.1875rem;    /* 19 — long-form story prose */
+  --text-section: 1.5rem;       /* 24 — section headings */
+  --text-title: clamp(2rem, 3.4vw, 2.75rem);      /* 32-44 — page titles */
+  --text-display: clamp(2.75rem, 5.6vw, 4.5rem);  /* 44-72 — hero only */
 
-  /*
-   * Radius. Was 11 values between 8 and 32; a 22 next to a 24 reads as a
-   * mistake rather than a decision. Three, plus `full` for pills and avatars.
-   */
   --radius-control: 0.75rem;    /* 12 — inputs, small buttons */
   --radius-surface: 1rem;       /* 16 — list items, cards */
   --radius-panel: 1.5rem;       /* 24 — large panels, sheets */
 
-  --shadow-soft: 0 1px 2px rgb(11 11 11 / 0.03), 0 6px 20px rgb(11 11 11 / 0.05);
-  --shadow-card: 0 1px 2px rgb(11 11 11 / 0.04), 0 12px 32px rgb(11 11 11 / 0.07);
+  /*
+   * Elevation. Each carries an offset and a soft blur — a zero-offset halo is
+   * decoration, not depth. Tinted with the ink hue rather than pure black so a
+   * shadow on warm paper does not read as grey.
+   */
+  --shadow-soft: 0 1px 2px rgb(20 20 28 / 0.04), 0 4px 14px rgb(20 20 28 / 0.05);
+  --shadow-card: 0 2px 4px rgb(20 20 28 / 0.05), 0 12px 30px rgb(20 20 28 / 0.08);
+  --shadow-lift: 0 4px 8px rgb(20 20 28 / 0.06), 0 22px 48px rgb(20 20 28 / 0.12);
 
   --ease-swift: cubic-bezier(0.23, 1, 0.32, 1);
 
@@ -147,7 +148,7 @@
   }
 
   ::selection {
-    background-color: var(--color-clay);
+    background-color: var(--color-peach);
   }
 }
 

@@ -62,7 +62,7 @@ export function RecordControls({
           <Pause className="size-[22px] fill-current" strokeWidth={0} />
         </ControlTile>
       )}
-      <ControlTile label={t("finish")} className="bg-clay" onClick={onFinish}>
+      <ControlTile label={t("finish")} className="bg-peach" onClick={onFinish}>
         <Check className="size-[22px]" strokeWidth={1.8} />
       </ControlTile>
     </div>

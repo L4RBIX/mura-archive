@@ -67,7 +67,7 @@ function StoryContent({ storyId }: { storyId: string }) {
           >
             <motion.p
               variants={item}
-              className="text-caption font-semibold uppercase tracking-[0.2em] text-muted"
+              className="text-meta font-semibold tracking-[-0.005em] text-ink/70"
             >
               {new Date(data.recorded_at).toLocaleDateString(dateLocale)}
             </motion.p>
@@ -170,7 +170,7 @@ function StoryContent({ storyId }: { storyId: string }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-3 text-caption font-semibold uppercase tracking-[0.18em] text-muted">
+    <h2 className="mb-3 text-meta font-semibold tracking-[-0.005em] text-ink/70">
       {children}
     </h2>
   );

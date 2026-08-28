@@ -28,12 +28,12 @@ const NODES: Node[] = [
   // Elder generation: one root, largest, charcoal — the anchor of the family.
   { id: "elder", x: 34, y: 15.5, r: 7, fill: "var(--color-ink)", gen: 0 },
   // Middle generation.
-  { id: "parent-l", x: 19.5, y: 35, r: 5.6, fill: "var(--color-clay)", gen: 1 },
+  { id: "parent-l", x: 19.5, y: 35, r: 5.6, fill: "var(--color-peach)", gen: 1 },
   { id: "parent-r", x: 48.5, y: 35, r: 5.6, fill: "var(--color-periwinkle)", gen: 1 },
   // Youngest generation, unevenly distributed.
   { id: "child-a", x: 11.5, y: 54.5, r: 4.4, fill: "var(--color-periwinkle)", gen: 2 },
-  { id: "child-b", x: 27, y: 54.5, r: 4.4, fill: "var(--color-clay)", gen: 2 },
-  { id: "child-c", x: 51, y: 54.5, r: 4.4, fill: "var(--color-clay)", gen: 2 },
+  { id: "child-b", x: 27, y: 54.5, r: 4.4, fill: "var(--color-peach)", gen: 2 },
+  { id: "child-c", x: 51, y: 54.5, r: 4.4, fill: "var(--color-peach)", gen: 2 },
 ];
 
 const byId = (id: string) => NODES.find((node) => node.id === id)!;

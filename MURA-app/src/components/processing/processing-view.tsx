@@ -40,7 +40,7 @@ function NameChip({ name, delay }: { name: string; delay: number }) {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{ delay, type: "spring", stiffness: 300, damping: 22 }}
     >
-      <span className="flex size-7 items-center justify-center rounded-full bg-clay text-caption font-bold">
+      <span className="flex size-7 items-center justify-center rounded-full bg-peach text-caption font-bold">
         {initials}
       </span>
       <span className="text-meta font-semibold">{name}</span>
@@ -297,7 +297,7 @@ export function ProcessingView() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <span className="size-2.5 shrink-0 animate-pulse rounded-full bg-clay" />
+          <span className="size-2.5 shrink-0 animate-pulse rounded-full bg-peach" />
           <span className="truncate text-meta font-semibold">
             {memory?.title ?? t("newMemory")}
           </span>
@@ -348,7 +348,7 @@ export function ProcessingView() {
               <button
                 type="button"
                 onClick={() => router.push("/record?mode=transcript")}
-                className="rounded-full bg-clay px-4 py-2 text-meta font-semibold"
+                className="rounded-full bg-peach px-4 py-2 text-meta font-semibold"
               >
                 {t("openTranscriptFallback")}
               </button>
@@ -372,7 +372,7 @@ export function ProcessingView() {
           <button
             type="button"
             onClick={restartRecording}
-            className="mt-4 rounded-full bg-clay px-5 py-2.5 text-meta font-semibold shadow-soft"
+            className="mt-4 rounded-full bg-peach px-5 py-2.5 text-meta font-semibold shadow-soft"
           >
             {t("restart")}
           </button>

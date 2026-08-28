@@ -60,7 +60,6 @@ export function PersonCard({
       <button
         type="button"
         onClick={() => onOpen(person.person_id)}
-        onPointerUp={(e) => e.stopPropagation()}
         className={cn(
           "flex size-full flex-col justify-between rounded-panel px-4 py-3.5 text-left shadow-soft transition-transform duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.96] focus-ring",
           isCenter ? "bg-ink text-raised" : "bg-raised text-ink",
@@ -72,7 +71,7 @@ export function PersonCard({
             {memoryCount > 0 && (
               <span
                 aria-hidden
-                className="absolute -right-0.5 -top-0.5 size-[9px] animate-glow rounded-full bg-clay"
+                className="absolute -right-0.5 -top-0.5 size-[9px] animate-glow rounded-full bg-peach"
               />
             )}
           </span>
@@ -146,11 +145,10 @@ function ExpandTab({
         e.stopPropagation();
         onClick();
       }}
-      onPointerUp={(e) => e.stopPropagation()}
       className={cn(
         "absolute top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full shadow-soft transition-[transform,background-color] duration-200 active:scale-90",
         side === "left" ? "-left-4" : "-right-4",
-        expanded ? "bg-clay text-ink" : "bg-paper text-ink/70",
+        expanded ? "bg-peach text-ink" : "bg-paper text-ink/70",
       )}
     >
       <Icon className="size-4" strokeWidth={2.25} />
