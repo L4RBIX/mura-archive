@@ -125,12 +125,33 @@ describe("token handling", () => {
   it("keeps server-session resolution in one module", () => {
     const readers = offenders("readServerAuthSession");
 
+    // A short, deliberate list. Every entry holds a real access token in
+    // memory, so adding one has to be a decision rather than an accident.
+    //
+    // `api/auth/session` is here because the session cookie is httpOnly and the
+    // client cannot otherwise tell whether it is signed in. It returns only
+    // `signedIn` and an opaque account key — never the token — which the next
+    // test enforces.
     expect(readers.sort()).toEqual(
       [
+        join("src", "app", "api", "auth", "session", "route.ts"),
         join("src", "app", "api", "mura", "[...path]", "proxy.ts"),
         join("src", "lib", "auth", "server-session.ts"),
       ].sort(),
     );
+  });
+
+  it("never serialises an access token into a response body", () => {
+    // The session endpoint exists to answer "am I signed in", and the whole
+    // point of the httpOnly cookie is defeated if it hands the token back.
+    const source = readFileSync(
+      join(SOURCE_ROOT, "app", "api", "auth", "session", "route.ts"),
+      "utf8",
+    );
+
+    expect(source).not.toMatch(/accessToken\s*[,}]/);
+    expect(source).not.toMatch(/token:\s*session\.accessToken/);
+    expect(source).toMatch(/signedIn/);
   });
 });
 

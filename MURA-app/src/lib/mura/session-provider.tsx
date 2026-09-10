@@ -37,6 +37,7 @@ import {
   type ClerkSessionState,
 } from "@/lib/auth/providers/clerk/use-clerk-session";
 import { useDevSession } from "@/lib/auth/providers/dev/use-dev-session";
+import { useSupabaseSession } from "@/lib/auth/providers/supabase/use-supabase-session";
 import { sessionFromFailure, type AuthSession } from "@/lib/auth/session";
 import {
   CoreRequestError,
@@ -118,7 +119,7 @@ function phaseOf(
  * the two can never disagree. `none` is a real, nameable state — a deployment
  * with no provider configured — and is not the same as signed out.
  */
-export type AuthProviderKind = "clerk" | "dev" | "none";
+export type AuthProviderKind = "clerk" | "dev" | "supabase" | "none";
 
 export function MuraSessionProvider({
   children,
@@ -137,12 +138,24 @@ export function MuraSessionProvider({
   if (provider === "dev") {
     return <MuraSessionWithDevIssuer>{children}</MuraSessionWithDevIssuer>;
   }
+  if (provider === "supabase") {
+    return <MuraSessionWithSupabase>{children}</MuraSessionWithSupabase>;
+  }
   return (
     <MuraSessionInner
       clerk={UNCONFIGURED_CLERK_SESSION}
       providerConfigured={false}
       provider="none"
     >
+      {children}
+    </MuraSessionInner>
+  );
+}
+
+function MuraSessionWithSupabase({ children }: { children: ReactNode }) {
+  const session = useSupabaseSession();
+  return (
+    <MuraSessionInner clerk={session} providerConfigured provider="supabase">
       {children}
     </MuraSessionInner>
   );

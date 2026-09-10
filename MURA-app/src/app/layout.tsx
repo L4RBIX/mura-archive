@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { AppShell } from "@/components/shell/app-shell";
 import { MuraI18nProvider } from "@/lib/i18n";
 import { isClerkConfigured } from "@/lib/auth/providers/clerk/config";
+import { isSupabaseAuthConfigured } from "@/lib/auth/providers/supabase/config";
 import { isDevAuthAllowed } from "@/lib/auth/providers/dev/config";
 import {
   MuraSessionProvider,
@@ -32,6 +33,10 @@ export const viewport: Viewport = {
  */
 function authProvider(): AuthProviderKind {
   if (isDevAuthAllowed()) return "dev";
+  // Same order as `server-session.ts`. If this disagreed with the seam the
+  // client would report a provider the proxy does not use, and a signed-in
+  // user would keep being told sign-in is not connected.
+  if (isSupabaseAuthConfigured()) return "supabase";
   if (isClerkConfigured()) return "clerk";
   return "none";
 }
