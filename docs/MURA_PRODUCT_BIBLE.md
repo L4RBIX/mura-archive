@@ -189,8 +189,24 @@ revisions, no branches.
 ## 9. Auth & security
 
 **Authentication `[V]`** — provider-neutral OIDC behind `src/mura/identity/auth.py`.
-PyJWT appears only there. Verification enforces: **RS256 only** (HS\* and `none`
-rejected by config validation), `require: [exp, iss, aud, sub]`, signature, expiry,
+PyJWT appears only there. The deployed identity provider is **Supabase Auth** with
+Google as the sign-in method; Clerk and the local development issuer remain behind
+the same seam, and neither provider ever stands in for another's missing
+configuration.
+
+Supabase signs user tokens with **ES256**, not RS256. That is a configuration
+change (`AUTH_ALLOWED_ALGORITHMS=ES256`), not a weakening: the invariant forbids
+*symmetric* verification, because mixing symmetric and public-key verification is
+how key-confusion attacks happen. ES256 is public-key and carries the same trust
+property as RS256. HS\* and `none` are still rejected.
+
+The frontend integration deliberately does not use Supabase's SDK, which keeps the
+session in `localStorage`. Tokens live in an `httpOnly` cookie, the PKCE exchange
+runs server-side, and the browser never holds a credential. `/api/auth/session`
+tells the client only whether a session exists and an opaque key that changes with
+the account; a trust-boundary test fails if a token ever appears in that response.
+
+Verification enforces: `require: [exp, iss, aud, sub]`, signature, expiry,
 nbf, issuer, audience, 30s default skew, JWKS URL from **server configuration only**
 (a token can never steer key fetching → no SSRF). Failures are deliberately uniform
 so an attacker cannot distinguish unknown-key from bad-signature.
@@ -298,11 +314,46 @@ filesystem path.
 
 ## 11. ASR & DeepSeek status
 
-**ASR — current `[V]`** — default provider is **Kaggle** (`ASR_PROVIDER=kaggle`): a
-tunnelled GPU worker that registers itself in `worker_registrations`. This is
-acknowledged transitional debt.
+**ASR — current `[V]`** — the deployed provider is **Whisper**
+(`ASR_PROVIDER=whisper`), reached over an OpenAI-compatible transcription API.
+`build_asr_client` in `src/mura/asr/factory.py` is the single place that decides
+this; nothing else reads `asr_provider`.
 
-**ASR — PR-04, on branch `feat/replicate-gigaam-asr`, NOT promoted `[V]`** —
+Two rules are enforced in code, and both come from what MURA records:
+
+* only `/audio/transcriptions` is ever called, never `/audio/translations` — a
+  translated transcript destroys the record the archive exists to keep;
+* the `language` parameter is never sent. Recordings switch between Kazakh and
+  Russian inside one sentence, so pinning the decoder mangles the other language.
+  The interface language never reaches the recogniser: what someone set the UI to
+  says nothing about what they spoke.
+
+Whisper reports one language per request, which cannot describe «Менің әжем
+Алматыда тұрды, потом мы поехали к ней летом». `mura.asr.language` therefore reads
+the produced text and reports every language present, from the nine graphemes that
+exist in Kazakh Cyrillic but not Russian plus closed-class function words from
+both. Each recording stores `detected_language`, `transcript_languages` and
+`mixed_language`. Markers that are also ordinary Russian words are deliberately
+excluded: «да», «те» and «та» once made unambiguous Russian report as
+code-switched, and claiming a language that was never spoken is the one thing
+language reporting must not do.
+
+Clients declare `requires_registered_worker`. A tunnelled GPU worker must announce
+itself in `worker_registrations`; a hosted recogniser is addressed directly, and
+deferring its jobs to wait for a row that will never be written would park every
+recording forever. The flag defaults to true, so an undeclared client takes the
+conservative path.
+
+**ASR — Kaggle `[V]`** — still selectable (`ASR_PROVIDER=kaggle`): a tunnelled GPU
+worker that registers itself. Acknowledged transitional debt, no longer the default.
+
+**ASR — Replicate/GigaAM, PR-04, NOT promoted and no longer the active plan `[V]`** —
+superseded in production by Whisper, which shipped because GigaAM has no hosted
+API and running it needs a GPU deployment nobody had provisioned. The branch
+remains valid work and the factory seam it introduced is what Whisper now uses.
+The original description follows.
+
+
 `ASRClient` protocol, `ReplicateASRClient`, `KaggleASRClient`, a single `build_asr_client`
 factory, strict `GigaAMPrediction` output validation, prediction polling, and worker
 integration. Target model is **GigaAM Multilingual** (MIT), chosen because Russian and
@@ -584,20 +635,53 @@ unverified focus/contrast behaviour.
 
 Visual polish is **not** production-ready. All of the following must hold:
 
-- [ ] Cloud/object audio storage (not local disk)
+- [ ] Cloud/object audio storage (not local disk) — **the binding constraint.**
+      Because audio sits on a local disk, the API and worker must share one
+      container: split across two services they get two filesystems, and a
+      Railway volume mounts to only one. This is why horizontal scaling is
+      currently impossible.
 - [ ] Backups **and tested restore**
-- [ ] Worker supervision and deployment
+- [x] Worker deployed — supervision is still missing: the worker runs beside the
+      API and nothing restarts it if it exits on its own.
 - [ ] Monitoring, error tracking, rate limiting
 - [ ] Account deletion, family deletion, export, retention
 - [ ] Provider cost controls
-- [ ] Production PostgreSQL and production Clerk instance
-- [ ] Replicate deployment validated live on RU/KK audio
-- [ ] Security regression suite running against **PostgreSQL**, not SQLite
+- [x] Production PostgreSQL (Supabase) and a production identity provider
+      (Supabase Auth with Google)
+- [ ] ASR validated live on real RU/KK audio — Whisper is deployed and the
+      pipeline runs end to end, but it has only been exercised on synthesised
+      speech. Quality on real Kazakh is **unmeasured**.
+- [x] Security regression suite running against **PostgreSQL**, not SQLite —
+      1032 tests, 0 skipped, with `TEST_POSTGRES_URL` set
 - [ ] Load testing
-- [ ] Real Tree/Person/Story/Ask or honest "not ready" states
+- [ ] Real Tree/Person/Story/Ask or honest "not ready" states — `/ask` is still
+      the one demonstration surface and must keep saying so
 - [ ] Intentional mobile / tablet / desktop layouts
 
 Do not describe MURA as production-ready while these are open.
+
+## 17b. Deployment `[V-RUNTIME]`
+
+MURA is deployed and publicly reachable.
+
+| | |
+| --- | --- |
+| App | https://mura-rho.vercel.app — Vercel, project root `MURA-app` |
+| Core API + worker | https://mura-api-production.up.railway.app — Railway, one container |
+| PostgreSQL + Auth | Supabase, region eu-central-1 |
+
+Core reaches PostgreSQL through Supabase's **session pooler**
+(`aws-0-eu-central-1...:5432`). The direct `db.<ref>.supabase.co` host is IPv6-only
+and unreachable from Railway.
+
+The API and the worker ship as one image and differ only in entrypoint, so they
+cannot drift apart between deploys. Migrations run at container start; Alembic
+owns the schema and the worker never creates tables.
+
+Verified against the live deployment: a Supabase token authenticates to Core and
+mints an internal user; a second account receives `404` on the first account's
+family, indistinguishable from a family that does not exist; and a recording
+uploads, transcribes, extracts a person and materialises a story.
 
 ## 18. Non-goals & forbidden shortcuts
 
