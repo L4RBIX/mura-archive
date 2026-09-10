@@ -4,6 +4,8 @@ import { AuthFrame } from "@/components/auth/auth-frame";
 import { DevSignInPanel } from "@/components/auth/dev-auth-panel";
 import { isClerkConfigured } from "@/lib/auth/providers/clerk/config";
 import { isDevAuthAllowed } from "@/lib/auth/providers/dev/config";
+import { isSupabaseAuthConfigured } from "@/lib/auth/providers/supabase/config";
+import { SupabaseSignIn } from "@/components/auth/supabase-sign-in";
 import { safeRedirectPath } from "@/lib/auth/redirect";
 
 export const metadata: Metadata = { title: "Создать аккаунт" };
@@ -29,6 +31,15 @@ export default async function Page({
     return (
       <AuthFrame>
         <DevSignInPanel redirectTo={destination} />
+      </AuthFrame>
+    );
+  }
+  // Mirrors the provider order in `server-session.ts`: the page must not
+  // offer a sign-in that resolves to a different provider than the proxy.
+  if (isSupabaseAuthConfigured()) {
+    return (
+      <AuthFrame>
+        <SupabaseSignIn redirectTo={destination} />
       </AuthFrame>
     );
   }
