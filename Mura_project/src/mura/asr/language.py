@@ -38,13 +38,22 @@ RUSSIAN_MARKERS = frozenset(
     }
 )
 
-#: The Kazakh equivalents, including the postpositions and question clitics
-#: that attach to almost every spoken clause.
+#: The Kazakh equivalents.
+#:
+#: Every entry here must be a word that is *not* also ordinary Russian, or the
+#: reading fabricates a language that was never spoken. The Kazakh clitics
+#: «да», «де», «та», «те» are deliberately absent for exactly that reason: they
+#: are also everyday Russian words, and including them reported «Да, мы поехали
+#: к ней летом» — unambiguous Russian — as code-switched.
+#:
+#: Losing them costs almost nothing. A Kazakh clause carrying one of those
+#: particles is essentially always carrying Kazakh graphemes or another marker
+#: too, so the evidence survives; a false «mixed» on plain Russian does not.
 KAZAKH_MARKERS = frozenset(
     {
         "мен", "бен", "пен", "және", "бірақ", "сол", "бұл", "ол", "біз", "олар",
         "үшін", "кейін", "содан", "сосын", "ма", "ме", "ба", "бе", "па", "пе",
-        "ғой", "қой", "да", "де", "та", "те", "деп", "керек", "бар", "жоқ",
+        "ғой", "қой", "деп", "керек", "бар", "жоқ",
         "менің", "оның", "біздің", "сонда", "қазір",
     }
 )

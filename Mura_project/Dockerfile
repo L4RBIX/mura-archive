@@ -24,5 +24,7 @@ RUN mkdir -p /app/.mura/audio
 
 EXPOSE 8000
 
-# Railway injects PORT. Default keeps local `docker run` working unchanged.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn apps.api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
+CMD ["/app/docker-entrypoint.sh"]

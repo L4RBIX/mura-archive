@@ -136,11 +136,33 @@ def test_missing_segments_still_produce_a_valid_envelope(tmp_path: Path) -> None
         (MIXED, "mixed"),
         ("Моя бабушка жила в Алматы, затем мы поехали к ней летом", "ru"),
         ("Менің әжем Алматыда тұрды", "kk"),
+        ("Ол бізге келді", "kk"),
         ("", "unknown"),
     ],
 )
 def test_language_reading(text: str, expected: str) -> None:
     assert read_languages(text).detected == expected
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "Да, мы поехали к ней летом",
+        "Те дни я помню",
+        "Та встреча была давно",
+    ],
+)
+def test_russian_particles_are_not_read_as_kazakh(text: str) -> None:
+    """Unambiguous Russian must never be reported as code-switched.
+
+    «да», «де», «та» and «те» are Kazakh clitics and also everyday Russian
+    words. Treating them as Kazakh evidence claimed a language that was never
+    spoken, which is the one thing language reporting must not do.
+    """
+
+    reading = read_languages(text)
+    assert reading.detected == "ru"
+    assert reading.mixed is False
 
 
 class _WhisperSettings:
