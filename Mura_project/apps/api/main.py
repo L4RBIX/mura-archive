@@ -36,6 +36,7 @@ from apps.api.authz import (
 from apps.api.conflicts import register_conflict_routes
 from apps.api.errors import REQUEST_ID_HEADER, register_error_handlers
 from apps.api.identity import register_identity_routes, register_membership_admin_routes
+from mura.asr.factory import ASRConfigurationError, build_asr_client
 from apps.api.operations import register_operations_routes
 from apps.api.profiles import register_profile_routes
 from apps.api.recordings import register_recording_routes
@@ -44,7 +45,7 @@ from mura.capabilities import (
     CapabilitiesView,
     derive_capabilities,
 )
-from mura.config import CoreSettings
+from mura.config import ASRProvider, CoreSettings
 from mura.deepseek import DeepSeekClient, DeepSeekPipelineService
 from mura.domain.models import PipelineRequest, PipelineResult
 from mura.identity.auth import (
@@ -388,17 +389,33 @@ def capabilities(
 
     registration = AsrRegistration.UNKNOWN
     registered_at: datetime | None = None
-    try:
-        with Session(_readiness_engine(settings)) as session:
-            row = session.get(WorkerRegistrationRow, "kaggle-asr")
-        if row is None or row.status != "ready":
+
+    if settings.asr_provider is ASRProvider.KAGGLE:
+        # A tunnelled worker announces itself, so the registration row is the
+        # only evidence there is that a recogniser exists.
+        try:
+            with Session(_readiness_engine(settings)) as session:
+                row = session.get(WorkerRegistrationRow, "kaggle-asr")
+            if row is None or row.status != "ready":
+                registration = AsrRegistration.UNAVAILABLE
+            else:
+                registration = AsrRegistration.REGISTERED
+                registered_at = _aware_required(row.registered_at)
+        except Exception:
+            # The registration table could not be read; say so rather than guess.
+            registration = AsrRegistration.UNKNOWN
+    else:
+        # A hosted recogniser never writes a registration row. Reading one would
+        # report UNAVAILABLE forever and disable the record button on a
+        # deployment whose recogniser is working, so configuration is the
+        # evidence here. It proves a provider is configured, not that it is
+        # reachable -- which is exactly what REGISTERED has always meant.
+        try:
+            build_asr_client(settings)
+        except ASRConfigurationError:
             registration = AsrRegistration.UNAVAILABLE
         else:
             registration = AsrRegistration.REGISTERED
-            registered_at = _aware_required(row.registered_at)
-    except Exception:
-        # The registration table could not be read; say so rather than guess.
-        registration = AsrRegistration.UNKNOWN
 
     return derive_capabilities(
         asr_registration=registration,

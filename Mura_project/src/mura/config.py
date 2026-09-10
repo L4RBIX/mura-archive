@@ -16,6 +16,18 @@ _SQLITE_SCHEME_PREFIX = "sqlite"
 _ALLOWED_ORIGIN_SCHEMES = frozenset({"http", "https"})
 
 
+class ASRProvider(StrEnum):
+    """Which recogniser the worker talks to.
+
+    Chosen in exactly one place (`mura.asr.factory`). Nothing else may branch on
+    it: a cutover that leaves one forgotten branch calling the retired provider
+    is how a migration turns into a hunt through the codebase.
+    """
+
+    KAGGLE = "kaggle"
+    WHISPER = "whisper"
+
+
 class Environment(StrEnum):
     """Deployment environment. Production-like environments fail closed on unsafe settings."""
 
@@ -86,6 +98,12 @@ class CoreSettings(BaseSettings):
     #: token must not be able to activate a release or apply retention.
     operations_api_key: str = Field(alias="OPERATIONS_API_KEY", min_length=32)
     kaggle_asr_api_key: str = Field(alias="KAGGLE_ASR_API_KEY", min_length=32)
+    asr_provider: ASRProvider = Field(default=ASRProvider.KAGGLE, alias="ASR_PROVIDER")
+    whisper_api_key: str | None = Field(default=None, alias="WHISPER_API_KEY")
+    whisper_base_url: str = Field(
+        default="https://api.openai.com/v1", alias="WHISPER_BASE_URL"
+    )
+    whisper_model: str = Field(default="whisper-1", alias="WHISPER_MODEL")
     database_url: str = Field(alias="DATABASE_URL", min_length=1)
     database_auto_create: bool = Field(default=False, alias="DATABASE_AUTO_CREATE")
     audio_storage_backend: AudioStorageBackend = Field(
@@ -279,6 +297,12 @@ class WorkerSettings(BaseSettings):
     #: token must not be able to activate a release or apply retention.
     operations_api_key: str = Field(alias="OPERATIONS_API_KEY", min_length=32)
     kaggle_asr_api_key: str = Field(alias="KAGGLE_ASR_API_KEY", min_length=32)
+    asr_provider: ASRProvider = Field(default=ASRProvider.KAGGLE, alias="ASR_PROVIDER")
+    whisper_api_key: str | None = Field(default=None, alias="WHISPER_API_KEY")
+    whisper_base_url: str = Field(
+        default="https://api.openai.com/v1", alias="WHISPER_BASE_URL"
+    )
+    whisper_model: str = Field(default="whisper-1", alias="WHISPER_MODEL")
     hf_token: str | None = Field(default=None, alias="HF_TOKEN")
     asr_device: str = Field(default="cuda:0", alias="ASR_DEVICE")
     max_upload_mb: int = Field(default=25, alias="MAX_UPLOAD_MB", ge=1, le=200)

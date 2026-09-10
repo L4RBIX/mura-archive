@@ -21,6 +21,10 @@ class ASRClientError(RuntimeError):
 
 
 class RemoteASRClient:
+    #: A tunnelled GPU worker announces itself in `worker_registrations`
+    #: before it can be reached, so the orchestrator must wait for one.
+    requires_registered_worker = True
+
     def __init__(
         self,
         *,

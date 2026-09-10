@@ -44,9 +44,10 @@ const STEPS: ReadonlyArray<{ title: TranslationKey; body: TranslationKey }> = [
  * numbered: «01 / 02 / 03» would assert a sequence the visitor must complete,
  * and this is a description of what the product does, not a checklist.
  *
- * Stacked on a phone, where the motif sits behind the wordmark at low opacity
- * rather than above it — a full-height decorative panel would push both calls
- * to action off a 667px screen.
+ * Stacked on a phone, where the motif is held to the upper band so it sits
+ * behind the wordmark and tagline only. Centred over the full height it landed
+ * squarely under the two calls to action and made the sign-in link hard to
+ * read, which is the one control a returning visitor must never hunt for.
  */
 export function OnboardingView() {
   const { t } = useMuraI18n();
@@ -140,7 +141,7 @@ export function OnboardingView() {
           */}
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 right-[-18%] -z-0 flex w-[86%] items-center text-ink/45 opacity-45 sm:right-[-6%] sm:w-[62%] lg:relative lg:inset-auto lg:right-auto lg:z-0 lg:w-auto lg:text-ink lg:opacity-100"
+            className="pointer-events-none absolute top-0 right-[-18%] -z-0 flex h-[44%] w-[86%] items-start text-ink/45 opacity-40 sm:right-[-6%] sm:h-[50%] sm:w-[62%] lg:relative lg:inset-auto lg:right-auto lg:h-auto lg:w-auto lg:items-center lg:z-0 lg:text-ink lg:opacity-100"
           >
             {/* Allowed past the right edge of the container from `lg`: a motif
                 that stops politely at the gutter leaves exactly the band of

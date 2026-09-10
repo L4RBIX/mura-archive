@@ -19,7 +19,7 @@ import signal
 import sys
 from types import FrameType
 
-from mura.asr import RemoteASRClient
+from mura.asr.factory import build_asr_client
 from mura.config import CoreSettings
 from mura.deepseek import DeepSeekClient, DeepSeekPipelineService
 from mura.orchestration import LocalAudioStorage, RecordingJobWorker
@@ -61,10 +61,7 @@ def build_worker(settings: CoreSettings) -> RecordingJobWorker:
             settings.audio_storage_dir,
             max_upload_bytes=settings.core_max_upload_mb * 1024 * 1024,
         ),
-        asr_client=RemoteASRClient(
-            api_key=settings.kaggle_asr_api_key,
-            timeout_seconds=settings.asr_request_timeout_seconds,
-        ),
+        asr_client=build_asr_client(settings),
         poll_interval_seconds=settings.job_poll_interval_seconds,
         asr_retry_seconds=settings.asr_retry_seconds,
         lease_seconds=settings.job_lease_seconds,

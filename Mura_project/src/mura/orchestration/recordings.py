@@ -5,6 +5,7 @@ import threading
 import time
 
 from mura.asr import ASRClientError, RemoteASRClient
+from mura.asr.whisper import WhisperASRClient
 from mura.domain.models import (
     AudioLanguage,
     OutputLanguage,
@@ -36,7 +37,7 @@ class RecordingJobWorker:
         *,
         repository: RecordingRepository,
         pipeline: MuraPipeline,
-        asr_client: RemoteASRClient,
+        asr_client: RemoteASRClient | WhisperASRClient,
         storage: AudioStorage | None = None,
         poll_interval_seconds: float = 1.0,
         asr_retry_seconds: float = 15.0,
@@ -145,30 +146,39 @@ class RecordingJobWorker:
             attributes={"attempt": job.attempts + 1},
         )
 
-        worker = self.repository.current_worker()
-        if worker is None or worker.status != "ready":
-            trace.instant(
-                stage="asr_transcription",
-                event_name="worker_unavailable",
-                outcome=TraceOutcome.DEFERRED,
-                attributes={"error_code": "asr_worker_unavailable"},
-            )
-            defer_recording_job(
-                self.repository.database,
-                job_id=job.job_id,
-                error_code="asr_worker_unavailable",
-                error_detail="no ready ASR worker is registered",
-                retry_after_seconds=self.asr_retry_seconds,
-                trace_events=trace.events,
-                lease_owner=self.worker_id,
-            )
-            return
+        # Only a tunnelled recogniser has to announce itself first. A hosted
+        # one is reached directly, and deferring its jobs to wait for a
+        # `worker_registrations` row that will never be written would park every
+        # recording forever while the recogniser sat there working.
+        worker_url: str | None = None
+        # Defaults to True: a client that does not declare itself gets the
+        # conservative path and waits, rather than silently skipping the gate.
+        if getattr(self.asr_client, "requires_registered_worker", True):
+            worker = self.repository.current_worker()
+            if worker is None or worker.status != "ready":
+                trace.instant(
+                    stage="asr_transcription",
+                    event_name="worker_unavailable",
+                    outcome=TraceOutcome.DEFERRED,
+                    attributes={"error_code": "asr_worker_unavailable"},
+                )
+                defer_recording_job(
+                    self.repository.database,
+                    job_id=job.job_id,
+                    error_code="asr_worker_unavailable",
+                    error_detail="no ready ASR worker is registered",
+                    retry_after_seconds=self.asr_retry_seconds,
+                    trace_events=trace.events,
+                    lease_owner=self.worker_id,
+                )
+                return
+            worker_url = worker.url
 
         trace.start("asr_transcription")
         try:
             with materialize_recording_audio(recording, self.storage) as audio_file:
                 transcript = self.asr_client.transcribe(
-                    worker_url=worker.url,
+                    worker_url=worker_url,
                     audio_path=audio_file,
                     recording_id=recording.recording_id,
                     content_type=recording.content_type,
